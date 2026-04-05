@@ -1,0 +1,28 @@
+# 记忆殿堂 Gateway 配置
+# V2.0 独立模块配置
+
+cache:
+  enabled: true
+  max_size: 1000        # 最大缓存条目数
+  ttl_days: 7           # 缓存有效期（天），默认7天
+  persist: true         # 持久化到磁盘
+  persist_file: "gateway_cache.json"
+
+paths:
+  vault_dir: "~/.openclaw/memory-vault/data"
+  log_dir: "~/.openclaw/memory-vault/logs"
+  audit_file: "audit.jsonl"
+
+security:
+  max_content_length: 5242880   # 5MB
+  max_field_length: 51200       # 50KB
+  allowed_record_types: "^[a-zA-Z0-9_\\-]+$"
+
+coordinator:
+  enabled: false
+  url: "http://127.0.0.1:8091"
+  timeout: 10
+
+fence:
+  enabled: false
+  script_path: null

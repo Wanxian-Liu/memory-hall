@@ -1,0 +1,84 @@
+{
+  "project": "记忆殿堂v2.0",
+  "version": "2.0",
+  "description": "融合claw-code设计的完美记忆系统",
+  "features": [
+    {
+      "id": "feature_001",
+      "category": "Main",
+      "description": "阶段一：核心架构 - Gateway重构",
+      "steps": [
+        "T1.1: Gateway重构为独立模块",
+        "T1.2: 基座WAL协议实现",
+        "T1.3: 权限引擎集成",
+        "T1.4: 配置文件系统"
+      ],
+      "verification": "Gateway可独立运行，WAL协议正确执行",
+      "passes": true,
+      "completed_at": null,
+      "notes": "Week 1-2"
+    },
+    {
+      "id": "feature_002",
+      "category": "Main",
+      "description": "阶段二：核心模块 - 通感/萃取/归一/分类",
+      "steps": [
+        "T2.1: 通感搜索V2.6集成",
+        "T2.2: 萃取模块V3.2集成",
+        "T2.3: 归一模块V2.5集成",
+        "T2.4: 分类模块V2.0集成"
+      ],
+      "verification": "各模块正确集成并通过测试",
+      "passes": false,
+      "completed_at": null,
+      "notes": "Week 3-5"
+    },
+    {
+      "id": "feature_003",
+      "category": "Main",
+      "description": "阶段三：安全与监控 - 围栏/观自在/权限/审计",
+      "steps": [
+        "T3.1: 围栏隔离V1.3集成",
+        "T3.2: 观自在V3.0集成",
+        "T3.3: 五级权限模型",
+        "T3.4: 审计日志系统"
+      ],
+      "verification": "安全体系完整，权限正确执行",
+      "passes": false,
+      "completed_at": null,
+      "notes": "Week 6-7"
+    },
+    {
+      "id": "feature_004",
+      "category": "Main",
+      "description": "阶段四：CLI与插件 - CLI路由/slash/TUI/插件/任务",
+      "steps": [
+        "T4.1: CLI路由系统",
+        "T4.2: Slash命令实现",
+        "T4.3: TUI组件库",
+        "T4.4: 插件系统框架",
+        "T4.5: 任务管理模块"
+      ],
+      "verification": "CLI可交互，插件可加载",
+      "passes": false,
+      "completed_at": null,
+      "notes": "Week 8-10"
+    },
+    {
+      "id": "feature_005",
+      "category": "Main",
+      "description": "阶段五：测试与优化 - 单元/集成/性能/文档",
+      "steps": [
+        "T5.1: 单元测试 (覆盖率>80%)",
+        "T5.2: 集成测试",
+        "T5.3: 性能基准测试",
+        "T5.4: 文档完善",
+        "T5.5: 独立运行验证"
+      ],
+      "verification": "所有测试通过，可脱离OpenClaw运行",
+      "passes": false,
+      "completed_at": null,
+      "notes": "Week 11-12"
+    }
+  ]
+}
