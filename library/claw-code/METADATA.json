@@ -1,0 +1,38 @@
+{
+  "name": "claw-code知识库",
+  "version": "1.0",
+  "created_at": "2026-04-06",
+  "source": "github.com/Wanxian-Liu/claw-code",
+  "description": "claw-code AI编程Agent系统的核心设计知识",
+  "categories": ["concept", "pattern", "workflow"],
+  "nodes": [
+    {
+      "id": "claw-architecture",
+      "type": "concept",
+      "title": "claw-code架构设计",
+      "path": "claw-code/architecture/架构分析报告.md",
+      "tags": ["架构", "agent", "rust", "python"]
+    },
+    {
+      "id": "claw-tools",
+      "type": "pattern",
+      "title": "工具系统设计",
+      "path": "claw-code/tools/工具系统设计报告.md",
+      "tags": ["工具", "tool-spec", "registry"]
+    },
+    {
+      "id": "claw-security",
+      "type": "rule",
+      "title": "安全机制",
+      "path": "claw-code/security/安全机制报告.md",
+      "tags": ["安全", "权限", "沙盒", "隔离"]
+    },
+    {
+      "id": "claw-ux",
+      "type": "workflow",
+      "title": "CLI/UX设计",
+      "path": "claw-code/ux/UX设计报告.md",
+      "tags": ["UX", "slash命令", "REPL"]
+    }
+  ]
+}
