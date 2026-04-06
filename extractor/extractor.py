@@ -87,36 +87,89 @@ class Extractor:
         return structured, memory_type, key_points
 
     def _classify_memory(self, text: str) -> MemoryType:
-        """根据内容特征分类记忆类型"""
+        """根据内容特征分类记忆类型（优化版 - 更好的分布比例）"""
         # 情景记忆特征：时间词、具体事件、对话
         episodic_patterns = [
-            r'\d{4}[-/年]\d{1,2}[-/月]\d{1,2}',
-            r'昨天|今天|明天|上周|下周|刚才|刚刚|刚才',
-            r'说|告诉|问|答|对话|聊|谈',
-            r'做了|发生|出现|遇到|见到',
+            (r'\d{4}[-/年]\d{1,2}[-/月]\d{1,2}', 2.0),  # 日期加权
+            (r'昨天|今天|明天|上周|下周|前天|后天', 1.5),
+            (r'刚才|刚刚|刚才|之前|之后', 1.0),
+            (r'说|告诉|问|答|对话|聊|谈|讨论', 0.8),
+            (r'做了|发生|出现|遇到|见到|见了', 1.0),
+            (r'去了|回来|离开|到达|抵达', 1.0),
+            (r'会议|出差|访问|参观', 1.2),
+            (r'完成|结束|开始|启动', 0.7),
         ]
 
         # 长期记忆特征：概念、定义、规则、原理
         long_term_patterns = [
-            r'^定义：|^概念：|^原理：|^规则：',
-            r'是.*的|属于|包括|分为',
-            r'总是|通常|一般来说|原则上',
+            (r'^定义：|^概念：|^原理：|^规则：', 2.5),  # 开头定义加权
+            (r'定义是|指的是|即|也就是', 1.5),
+            (r'属于|包括|分为|由.*组成', 1.2),
+            (r'总是|通常|一般来说|原则上', 1.0),
+            (r'用于|用来|目的是|旨在', 1.0),
+            (r'方法|原理|机制|理论', 1.5),
+            (r'特点|特性|特征|优势|劣势', 1.2),
+            (r'是.*的|是一种|为一.*的', 0.8),
         ]
 
-        episodic_score = sum(1 for p in episodic_patterns if re.search(p, text))
-        long_term_score = sum(1 for p in long_term_patterns if re.search(p, text))
+        # 短期记忆特征：当前上下文、临时信息
+        short_term_patterns = [
+            (r'关于|针对|对于', 1.0),
+            (r'当前|现在|目前', 1.2),
+            (r'本次|这项|这个|这次', 1.0),
+            (r'待办|计划|准本|准备', 1.2),
+            (r'注意|提醒|警告', 0.8),
+            (r'最新|最近|近期', 1.0),
+        ]
 
-        if episodic_score > long_term_score:
-            return MemoryType.EPISODIC
-        elif long_term_score > episodic_score:
-            return MemoryType.LONG_TERM
-        else:
+        # 计算带权重的分数
+        episodic_score = sum(weight for pattern, weight in episodic_patterns if re.search(pattern, text))
+        long_term_score = sum(weight for pattern, weight in long_term_patterns if re.search(pattern, text))
+        short_term_score = sum(weight for pattern, weight in short_term_patterns if re.search(pattern, text))
+
+        # 加入内容长度作为辅助判断（长内容更可能是long_term）
+        content_length = len(text)
+        if content_length > 500:
+            long_term_score += 0.5
+        elif content_length < 100:
+            short_term_score += 0.3
+
+        # 加入行数作为辅助判断（多段内容更可能是episodic）
+        lines = [l for l in text.split('\n') if l.strip()]
+        if len(lines) > 5:
+            episodic_score += 0.3
+        elif len(lines) <= 2:
+            short_term_score += 0.2
+
+        # 最终判断逻辑（需要差异化阈值）
+        scores = {
+            MemoryType.EPISODIC: episodic_score,
+            MemoryType.LONG_TERM: long_term_score,
+            MemoryType.SHORT_TERM: short_term_score,
+        }
+
+        # 获取最高分
+        max_type = max(scores, key=scores.get)
+        max_score = scores[max_type]
+
+        # 如果最高分低于阈值，默认为SHORT_TERM
+        if max_score < 1.0:
             return MemoryType.SHORT_TERM
+
+        # 如果EPISODIC和LONG_TERM得分接近，且都高于SHORT_TERM，优先LONG_TERM（避免过度episodic）
+        if abs(episodic_score - long_term_score) < 0.5 and long_term_score >= 1.0:
+            return MemoryType.LONG_TERM
+
+        return max_type
 
     def _extract_key_points(self, text: str, memory_type: MemoryType) -> list[str]:
         """提取关键点"""
         key_points = []
         lines = [l.strip() for l in text.split('\n') if l.strip()]
+
+        # 收集所有符合条件的行
+        episodic_keywords = ['做', '发生', '完成', '开始', '结束', '去了', '见了', '说', '告诉', '讨论', '解决']
+        long_term_keywords = ['是', '定义', '规则', '包括', '属于', '用于', '概念', '原理', '方法', '原则']
 
         # 按记忆类型选择关键行
         for line in lines:
@@ -124,19 +177,77 @@ class Extractor:
             if tokens < 10:  # 太短的行跳过
                 continue
 
+            # 清理格式异常的前缀（如 "- - " 或 "* *" 等）
+            cleaned_line = self._clean_line_prefix(line)
+
             if memory_type == MemoryType.EPISODIC:
                 # 情景记忆：保留含时间/动作/结果的句子
-                if any(k in line for k in ['做', '发生', '完成', '开始', '结束', '去了', '见了']):
-                    key_points.append(line)
+                if any(k in cleaned_line for k in episodic_keywords):
+                    key_points.append(cleaned_line)
             elif memory_type == MemoryType.LONG_TERM:
                 # 长期记忆：保留定义/规则类句子
-                if any(k in line for k in ['是', '定义', '规则', '包括', '属于', '用于']):
-                    key_points.append(line)
+                if any(k in cleaned_line for k in long_term_keywords):
+                    key_points.append(cleaned_line)
             else:
-                # 短期记忆：保留中间段落
-                key_points.append(line)
+                # 短期记忆：保留中间段落（但至少要有一定长度）
+                if tokens >= 20:
+                    key_points.append(cleaned_line)
+
+        # 确保key_points不为空：如果提取后为空， fallback到前5行
+        if not key_points:
+            key_points = [self._clean_line_prefix(l) for l in lines[:5] if self.estimate_tokens(l) >= 10]
 
         return key_points[:10]  # 最多10个关键点
+
+    def _clean_line_prefix(self, line: str) -> str:
+        """清理格式异常的前缀（如 "- - " 或 "* *" 等）"""
+        cleaned = line
+        # 处理 "- - " 或 "- - -" 类型的开头
+        cleaned = re.sub(r'^[-*]\s*[-*]\s*', '', cleaned)
+        # 处理 "**" 类型的开头
+        cleaned = re.sub(r'^\*+\s*', '', cleaned)
+        # 处理多余空格
+        cleaned = re.sub(r'^\s+', '', cleaned)
+        return cleaned
+
+    def _clean_summary_output(self, summary: str) -> str:
+        """清理摘要输出中的异常格式"""
+        if not summary:
+            return "(空摘要)"
+        
+        # 移除开头的 "- - " 或类似格式
+        cleaned = re.sub(r'^[\-\*]\s*[\-\*]\s*', '', summary)
+        # 移除 "**" 类型的强调标记开头
+        cleaned = re.sub(r'^\*+', '', cleaned)
+        # 移除多余的空白字符
+        cleaned = re.sub(r'^\s+', '', cleaned)
+        # 确保摘要不以 --- 结尾或中间截断
+        cleaned = re.sub(r'\s*---\s*.*', '', cleaned)
+        
+        return cleaned if cleaned.strip() else summary
+
+    def _contains_dash_marker(self, text: str) -> bool:
+        """检查文本是否包含截断标记（如 --- 或 --）"""
+        if not text:
+            return False
+        # 检查是否整个文本就是 --- 或类似的截断标记
+        cleaned = text.strip()
+        if cleaned == '---' or cleaned == '--' or cleaned == '-':
+            return True
+        # 检查开头是否有 --- 
+        if cleaned.startswith('---'):
+            return True
+        # 检查是否包含 -- 但不是中文或英文的一部分
+        if '--' in text:
+            # 提取 -- 出现的位置
+            idx = text.find('--')
+            # 检查上下文是否都是空白或特殊字符
+            before = text[:idx].strip() if idx > 0 else ''
+            after = text[idx+2:].strip() if idx + 2 < len(text) else ''
+            # 如果前后都是空的或只有空白，是截断标记
+            if not before and not after:
+                return True
+        return False
 
     def _reconstruct_structured(self, text: str, memory_type: MemoryType, key_points: list[str]) -> str:
         """重构为结构化文本"""
@@ -146,14 +257,24 @@ class Extractor:
         if not non_empty:
             return ""
 
-        # 取前几段作为主体
-        body = non_empty[:5]
+        # 取前几段作为主体，同时过滤掉包含 --- 的截断标记行
+        body = [l for l in non_empty[:5] if '---' not in l and '--' not in l[:5]]
         body_text = '\n'.join(body)
 
-        # 添加关键点摘要
+        # 如果过滤后body_text为空，使用原始body（但清理 --- 行）
+        if not body_text.strip():
+            body = [l for l in non_empty[:5]]
+            body_text = '\n'.join(body)
+
+        # 添加关键点摘要（清理每个key_point的前缀）
         if key_points:
-            kp_section = "【要点】\n" + '\n'.join(f"- {kp}" for kp in key_points[:5])
-            return f"{body_text}\n\n{kp_section}"
+            cleaned_kps = [self._clean_line_prefix(kp) for kp in key_points[:5]]
+            cleaned_kps = [kp for kp in cleaned_kps if kp and len(kp) > 5]
+            if cleaned_kps:
+                kp_section = "【要点】\n" + '\n'.join(f"- {kp}" for kp in cleaned_kps)
+                return f"{body_text}\n\n{kp_section}"
+            # 如果清理后为空，使用body_text
+            return body_text
 
         return body_text
 
@@ -167,8 +288,13 @@ class Extractor:
         sentences = re.split(r'[。！？\n]+', structured_text)
         sentences = [s.strip() for s in sentences if s.strip()]
 
+        # 过滤掉包含 --- 或 -- 的截断标记句子
+        sentences = [s for s in sentences if not self._contains_dash_marker(s)]
+
         if not sentences:
-            return structured_text
+            # 如果没有有效句子，清理structured_text并返回前200字符
+            cleaned = re.sub(r'---.*', '', structured_text)
+            return cleaned[:min(200, target_tokens * 2)].strip() if cleaned.strip() else structured_text[:min(100, target_tokens)]
 
         # 按重要性排序（长度作为代理指标）
         scored = [(s, self.estimate_tokens(s)) for s in sentences]
@@ -189,7 +315,20 @@ class Extractor:
         if summary and not summary.endswith('。'):
             summary += '。'
 
-        return summary if summary else structured_text[:target_tokens*2]
+        # 如果summary为空，尝试从structured_text中提取有效内容
+        if not summary:
+            # 过滤掉dash marker行并取有效内容
+            lines = [l.strip() for l in structured_text.split('\n') if l.strip()]
+            valid_lines = [l for l in lines if not self._contains_dash_marker(l)]
+            if valid_lines:
+                summary = valid_lines[0]
+            else:
+                # 清理structured_text中的dash markers
+                cleaned = re.sub(r'---.*', '', structured_text)
+                cleaned = re.sub(r'^\s*[-*]\s*[-*]\s*', '', cleaned)
+                summary = cleaned.strip() if cleaned.strip() else '(无有效摘要)'
+
+        return summary
 
     # ============ L4: 格式化注入 + WAL协议兼容 ============
     def _l4_format_inject(self, summary: str, memory_type: MemoryType,
@@ -198,20 +337,37 @@ class Extractor:
         # 生成ID
         content_hash = hashlib.md5(summary.encode()).hexdigest()[:8]
 
+        # 清理summary中的异常格式
+        clean_summary = self._clean_summary_output(summary)
+
+        # 确保key_points不为空
+        safe_key_points = key_points if key_points else []
+        # 清理每个key_point的前缀
+        cleaned_kps = [self._clean_line_prefix(kp) for kp in safe_key_points[:5]]
+        # 过滤掉空的或太短的key_points
+        cleaned_kps = [kp for kp in cleaned_kps if kp and len(kp) > 5]
+
         # 构建输出
         output_parts = [
             f"# 萃取摘要 [{memory_type.value}]",
             f"ID: {content_hash}",
             "",
             "## 摘要",
-            summary,
+            clean_summary,
             "",
         ]
 
-        if key_points:
+        if cleaned_kps:
             output_parts.extend([
                 "## 关键点",
-                *[f"- {kp}" for kp in key_points[:5]],
+                *[f"- {kp}" for kp in cleaned_kps],
+                "",
+            ])
+        else:
+            # 如果没有关键点，添加空的关键点占位（保证格式完整）
+            output_parts.extend([
+                "## 关键点",
+                "- (无关键点)",
                 "",
             ])
 
@@ -266,8 +422,11 @@ class Extractor:
             # 本地merge
             summary = self._l3_semantic_merge(structured, memory_type, original_tokens)
 
+        # 清理summary中的格式异常
+        clean_summary = self._clean_summary_output(summary)
+
         # L4: 格式化输出
-        final_output = self._l4_format_inject(summary, memory_type, key_points, metadata)
+        final_output = self._l4_format_inject(clean_summary, memory_type, key_points, metadata)
 
         compressed_tokens = self.estimate_tokens(final_output)
 
@@ -276,7 +435,7 @@ class Extractor:
             compressed_tokens=compressed_tokens,
             compression_ratio=compressed_tokens / original_tokens if original_tokens > 0 else 1.0,
             memory_type=memory_type,
-            summary=summary,
+            summary=clean_summary,
             key_points=key_points,
             confidence=0.85 if not use_llm else 0.95,
             metadata={
