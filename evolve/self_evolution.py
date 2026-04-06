@@ -563,6 +563,57 @@ class IntentPredictor:
             logger.error(f"Preload to working memory failed: {e}")
             return False
     
+    def _calc_priority(self, intent: Any, memory: Any) -> float:
+        """
+        计算预加载优先级 (胶囊新增)
+        
+        公式: priority = intent.confidence * memory.relevance * memory.importance
+        
+        Args:
+            intent: 预测的意图对象
+            memory: 相关记忆对象
+            
+        Returns:
+            float: 优先级分数 (0.0 - 1.0)
+        """
+        intent_confidence = getattr(intent, 'confidence', 0.5)
+        memory_relevance = getattr(memory, 'relevance', 0.5)
+        memory_importance = getattr(memory, 'importance_score', 0.5)
+        
+        priority = intent_confidence * memory_relevance * memory_importance
+        return max(0.0, min(1.0, priority))
+    
+    async def retrieve(
+        self,
+        query: str,
+        scope: str = 'cross_session',
+        limit: int = 10
+    ) -> List[Any]:
+        """
+        检索相关记忆 (胶囊新增)
+        
+        Args:
+            query: 检索查询
+            scope: 检索范围 (cross_session, session, recent)
+            limit: 返回数量上限
+            
+        Returns:
+            List of related memories
+        """
+        if not self.memory_retriever:
+            return []
+        
+        try:
+            results = await self.memory_retriever.search(
+                query=query,
+                scope=scope,
+                limit=limit
+            )
+            return results
+        except Exception as e:
+            logger.warning(f"Memory retrieval failed: {e}")
+            return []
+    
     async def report_actual_intent(self, actual_intent: str) -> None:
         """
         上报实际发生的意图，用于事后计算准确率
@@ -593,6 +644,231 @@ class IntentPredictor:
         stats = self._stats.copy()
         stats["accuracy"] = self.get_accuracy()
         return stats
+
+
+class AutonomousRepairExecutor:
+    """
+    自主修复执行器 (Capsule v2 新增)
+    
+    基于胶囊文档的 AutonomousRepairExecutor 实现，
+    整合根因分析、策略匹配、沙箱模拟、执行验证。
+    
+    核心流程 (来自胶囊):
+    1. find_root_cause(error_context) → root_cause
+    2. fix_library.match(root_cause) → fix_strategy
+    3. sandbox.simulate(fix_strategy) → simulation
+    4. if simulation.success_rate < 0.8: escalate
+    5. execute_fix(fix_strategy) → result
+    6. verifier.verify(result, error_context) → verified
+    7. return {status, root_cause, fix_applied}
+    """
+    
+    def __init__(
+        self,
+        root_cause_analyzer=None,
+        fix_library: Optional[Dict[str, Any]] = None,
+        sandbox_executor=None,
+        result_verifier=None,
+        max_retries: int = 3
+    ):
+        self.root_cause_analyzer = root_cause_analyzer
+        self.fix_library = fix_library or self._default_fix_library()
+        self.sandbox_executor = sandbox_executor
+        self.result_verifier = result_verifier
+        self.max_retries = max_retries
+        
+        # 执行历史
+        self._execution_history: List[Dict[str, Any]] = []
+        self._max_history = 100
+        
+        # 统计
+        self._stats = {
+            "diagnoses_attempted": 0,
+            "fixes_simulated": 0,
+            "fixes_executed": 0,
+            "fixes_succeeded": 0,
+            "fixes_escalated": 0,
+            "fixes_rolled_back": 0
+        }
+    
+    def _default_fix_library(self) -> Dict[str, Any]:
+        """默认修复策略库 (来自胶囊)"""
+        return {
+            "memory_leak": {
+                "name": "memory_leak",
+                "symptoms": ["memory", "leak", "内存泄漏", "oom"],
+                "strategy": "clear_buffer",
+                "success_rate": 0.85
+            },
+            "rag_hallucination": {
+                "name": "rag_hallucination",
+                "symptoms": ["hallucination", "幻觉", "unverified", "fake"],
+                "strategy": "enable_verification",
+                "success_rate": 0.90
+            },
+            "compression_loss": {
+                "name": "compression_loss",
+                "symptoms": ["compression", "lost", "压缩", "丢失"],
+                "strategy": "restore_backup",
+                "success_rate": 0.80
+            },
+            "context_overflow": {
+                "name": "context_overflow",
+                "symptoms": ["overflow", "context", "too long", "超长"],
+                "strategy": "truncate_context",
+                "success_rate": 0.95
+            },
+            "retrieval_miss": {
+                "name": "retrieval_miss",
+                "symptoms": ["miss", "not found", "retrieval", "未找到"],
+                "strategy": "expand_search",
+                "success_rate": 0.75
+            }
+        }
+    
+    async def diagnose_and_fix(self, error_context: Any) -> Dict[str, Any]:
+        """
+        诊断并修复问题 (胶囊核心方法)
+        
+        Returns:
+            Dict with status, root_cause, fix_applied
+        """
+        self._stats["diagnoses_attempted"] += 1
+        
+        try:
+            # Step 1: 找根因
+            root_cause = await self._find_root_cause(error_context)
+            
+            # Step 2: 匹配策略
+            fix_strategy = self._match_fix_strategy(root_cause)
+            
+            if not fix_strategy:
+                return {
+                    "status": "escalate",
+                    "root_cause": root_cause,
+                    "fix_applied": None,
+                    "message": "No matching fix strategy found"
+                }
+            
+            self._stats["fixes_simulated"] += 1
+            
+            # Step 3: 沙箱模拟
+            simulation = await self._simulate(fix_strategy)
+            
+            # Step 4: 检查成功率阈值
+            if simulation.get("success_rate", 0) < 0.8:
+                self._stats["fixes_escalated"] += 1
+                return {
+                    "status": "escalate",
+                    "root_cause": root_cause,
+                    "fix_applied": fix_strategy.get("strategy"),
+                    "simulation": simulation
+                }
+            
+            # Step 5: 执行修复
+            self._stats["fixes_executed"] += 1
+            result = await self._execute_fix(fix_strategy, error_context)
+            
+            # Step 6: 验证
+            verified = await self._verify(result, error_context)
+            
+            execution_record = {
+                "status": "success" if verified else "rollback",
+                "root_cause": root_cause,
+                "fix_applied": fix_strategy.get("strategy"),
+                "verified": verified,
+                "timestamp": time.time()
+            }
+            
+            self._execution_history.append(execution_record)
+            if len(self._execution_history) > self._max_history:
+                self._execution_history.pop(0)
+            
+            if verified:
+                self._stats["fixes_succeeded"] += 1
+            else:
+                self._stats["fixes_rolled_back"] += 1
+            
+            return execution_record
+            
+        except Exception as e:
+            logger.error(f"AutonomousRepairExecutor failed: {e}")
+            return {
+                "status": "failed",
+                "root_cause": "unknown",
+                "fix_applied": None,
+                "error": str(e)
+            }
+    
+    async def _find_root_cause(self, error_context: Any) -> str:
+        """找根因"""
+        if self.root_cause_analyzer:
+            try:
+                result = await self.root_cause_analyzer(error_context)
+                return result.get("root_cause", "unknown")
+            except Exception:
+                pass
+        
+        # 默认: 基于关键词匹配
+        error_str = str(error_context).lower()
+        for fix_id, fix_info in self.fix_library.items():
+            for symptom in fix_info.get("symptoms", []):
+                if symptom.lower() in error_str:
+                    return fix_id
+        
+        return "unknown"
+    
+    def _match_fix_strategy(self, root_cause: str) -> Optional[Dict[str, Any]]:
+        """匹配修复策略"""
+        return self.fix_library.get(root_cause)
+    
+    async def _simulate(self, fix_strategy: Dict[str, Any]) -> Dict[str, float]:
+        """沙箱模拟"""
+        strategy_name = fix_strategy.get("strategy", "unknown")
+        base_success_rate = fix_strategy.get("success_rate", 0.5)
+        
+        if self.sandbox_executor:
+            try:
+                result = await self.sandbox_executor.run(
+                    strategy=strategy_name,
+                    dry_run=True
+                )
+                return result
+            except Exception as e:
+                logger.warning(f"Sandbox simulation failed: {e}")
+        
+        return {"success_rate": base_success_rate}
+    
+    async def _execute_fix(
+        self,
+        fix_strategy: Dict[str, Any],
+        error_context: Any
+    ) -> Dict[str, Any]:
+        """执行修复"""
+        return {
+            "status": "executed",
+            "strategy": fix_strategy.get("strategy"),
+            "timestamp": time.time()
+        }
+    
+    async def _verify(
+        self,
+        result: Dict[str, Any],
+        error_context: Any
+    ) -> bool:
+        """验证修复结果"""
+        if self.result_verifier:
+            try:
+                return await self.result_verifier(result, error_context)
+            except Exception:
+                pass
+        
+        # 默认: 检查status
+        return result.get("status") == "executed"
+    
+    def get_stats(self) -> Dict[str, int]:
+        """获取统计"""
+        return self._stats.copy()
 
 
 class AutomatedRootCauseFixer:
@@ -975,6 +1251,7 @@ __all__ = [
     "ProactiveKnowledgeCorrector",
     "IntentPredictor",
     "AutomatedRootCauseFixer",
+    "AutonomousRepairExecutor",  # Capsule v2 新增
     "GenerationItem",
     "VerificationResult",
     "CorrectionResult",

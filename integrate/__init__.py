@@ -36,12 +36,25 @@ from evolve.self_evolution import (
     ProactiveKnowledgeCorrector,
     IntentPredictor,
     AutomatedRootCauseFixer,
+    AutonomousRepairExecutor,
     GenerationItem,
     VerificationResult,
     CorrectionResult,
     Intent,
     RootCauseAnalysis,
     FixExecutionResult,
+)
+
+from evolve.three_ring_architecture import (
+    ThreeRingClosedLoop,
+    MonitorRing,
+    DecisionRing,
+    ExecutionRing,
+    RingStatus,
+    AnomalyType,
+    MonitorEvent,
+    DecisionOutput,
+    ExecutionOutput,
 )
 from optimize.adaptive_compression import (
     AdaptiveCompressionScheduler,
@@ -146,6 +159,14 @@ class MemoryPalaceIntegration:
         self.root_cause_fixer = AutomatedRootCauseFixer(
             max_retries=3
         )
+        
+        # --- 胶囊v2新增: 自主修复执行器 ---
+        self.autonomous_repair_executor = AutonomousRepairExecutor(
+            max_retries=3
+        )
+        
+        # --- 胶囊v2新增: 三环闭环架构 ---
+        self.three_ring_loop = ThreeRingClosedLoop()
         
         # --- 优化模块 ---
         self.compression_scheduler = AdaptiveCompressionScheduler(
@@ -606,11 +627,47 @@ class MemoryPalaceIntegration:
                 "corrector": self.corrector.get_stats(),
                 "intent_predictor": self.intent_predictor.get_stats(),
                 "root_cause_fixer": self.root_cause_fixer.get_stats(),
+                "autonomous_repair_executor": self.autonomous_repair_executor.get_stats(),
+                "three_ring_loop": self.three_ring_loop.get_status(),
                 "backup_manager": self.backup_manager.get_stats(),
                 "importance_compressor": self.importance_compressor.get_stats(),
             },
             "timestamp": time.time()
         }
+    
+    # ========== 三环闭环 (胶囊v2新增) ==========
+    
+    async def run_evolution_cycle(
+        self,
+        context: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        执行一次三环闭环进化周期 (胶囊v2核心)
+        
+        流程: 监控 → 决策 → 执行 → 验证
+        
+        Args:
+            context: 上下文数据
+            
+        Returns:
+            Dict: 周期执行结果
+        """
+        return await self.three_ring_loop.run_cycle(context)
+    
+    async def autonomous_repair(
+        self,
+        error_context: Any
+    ) -> Dict[str, Any]:
+        """
+        自主修复执行 (胶囊v2新增)
+        
+        Args:
+            error_context: 错误上下文
+            
+        Returns:
+            Dict: 修复结果 {status, root_cause, fix_applied}
+        """
+        return await self.autonomous_repair_executor.diagnose_and_fix(error_context)
     
     def get_all_snapshots(
         self,
@@ -641,12 +698,24 @@ __all__ = [
     "ProactiveKnowledgeCorrector",
     "IntentPredictor",
     "AutomatedRootCauseFixer",
+    "AutonomousRepairExecutor",
     "GenerationItem",
     "VerificationResult",
     "CorrectionResult",
     "Intent",
     "RootCauseAnalysis",
     "FixExecutionResult",
+    
+    # 三环闭环架构 (胶囊v2)
+    "ThreeRingClosedLoop",
+    "MonitorRing",
+    "DecisionRing",
+    "ExecutionRing",
+    "RingStatus",
+    "AnomalyType",
+    "MonitorEvent",
+    "DecisionOutput",
+    "ExecutionOutput",
     
     # 优化模块
     "AdaptiveCompressionScheduler",
