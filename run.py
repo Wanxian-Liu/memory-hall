@@ -10,6 +10,7 @@
 2. WAL 操作
 3. CLI 命令
 4. 插件加载
+5. Agent 代理模块 (DAME)
 
 运行方式:
     python run.py              # 运行所有测试
@@ -17,6 +18,7 @@
     python run.py --wal        # 只测WAL
     python run.py --cli        # 只测CLI
     python run.py --plugin     # 只测插件
+    python run.py --agent      # 只测Agent
     python run.py --verbose    # 详细输出
 """
 
@@ -33,13 +35,82 @@ from typing import Dict, Any, Optional
 PROJECT_ROOT = Path(__file__).parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+# ============ Agent 模块导入 (DAME) ============
+from agent import (
+    RoleRegistry,
+    RoleType,
+    AgentLifecycleManager,
+    AgentState,
+)
+from agent.role_registry import get_global_registry
+from agent.lifecycle_manager import get_global_lifecycle_manager
+
+# ============ Mini Agent 模块导入 ============
+from mini_agent import (
+    HookManager,
+    TaskRegistry,
+    HookEvent,
+    HookResult,
+    BeforeToolCallHook,
+    ToolResultPersistHook,
+    Task,
+    TaskStatus,
+)
+from mini_agent.registry import TaskPriority
+from mini_agent.test_mini_agent import main as run_mini_agent_tests
+
 # ============ 测试结果收集 ============
 test_results: Dict[str, Any] = {
     "gateway": {"passed": False, "tests": [], "errors": []},
     "wal": {"passed": False, "tests": [], "errors": []},
     "cli": {"passed": False, "tests": [], "errors": []},
     "plugin": {"passed": False, "tests": [], "errors": []},
+    "agent": {"passed": False, "tests": [], "errors": []},
+    "mini_agent": {"passed": False, "tests": [], "errors": []},
 }
+
+# ============ 全局Agent组件实例 ============
+# 全局RoleRegistry单例 - 通过get_global_registry()获取
+_global_role_registry: Optional[RoleRegistry] = None
+
+# 全局AgentLifecycleManager单例 - 通过get_global_lifecycle_manager()获取
+_global_lifecycle_manager: Optional[AgentLifecycleManager] = None
+
+# 全局Mini Agent组件实例
+_global_hook_manager: Optional[HookManager] = None
+_global_task_registry: Optional[TaskRegistry] = None
+
+
+def get_role_registry() -> RoleRegistry:
+    """获取全局角色注册表"""
+    global _global_role_registry
+    if _global_role_registry is None:
+        _global_role_registry = get_global_registry()
+    return _global_role_registry
+
+
+def get_lifecycle_manager() -> AgentLifecycleManager:
+    """获取全局生命周期管理器"""
+    global _global_lifecycle_manager
+    if _global_lifecycle_manager is None:
+        _global_lifecycle_manager = get_global_lifecycle_manager()
+    return _global_lifecycle_manager
+
+
+def get_hook_manager() -> HookManager:
+    """获取全局Hook管理器"""
+    global _global_hook_manager
+    if _global_hook_manager is None:
+        _global_hook_manager = HookManager()
+    return _global_hook_manager
+
+
+def get_task_registry() -> TaskRegistry:
+    """获取全局任务注册表"""
+    global _global_task_registry
+    if _global_task_registry is None:
+        _global_task_registry = TaskRegistry()
+    return _global_task_registry
 
 def log(msg: str, verbose: bool = False):
     """打印日志"""
@@ -60,6 +131,225 @@ def result_error(category: str, error: str):
     """记录错误"""
     test_results[category]["errors"].append(error)
     print(f"  ⚠️  ERROR: {error}")
+
+
+# ============ 5. Agent 测试 ============
+def test_agent(verbose: bool = False) -> bool:
+    """测试Agent代理模块 (DAME)"""
+    print("\n" + "="*50)
+    print("🤖 测试5: Agent 代理模块 (DAME)")
+    print("="*50)
+    
+    try:
+        from agent.role_registry import Role, RoleType
+        from agent.lifecycle_manager import AgentLifecycleManager, LifecycleConfig
+        from agent.models import AgentState
+        
+        # 获取全局组件
+        log("获取全局RoleRegistry", verbose)
+        registry = get_role_registry()
+        reg_ok = registry is not None
+        result_test("agent", "全局RoleRegistry单例", reg_ok)
+        
+        log("获取全局AgentLifecycleManager", verbose)
+        lifecycle = get_lifecycle_manager()
+        lc_ok = lifecycle is not None
+        result_test("agent", "全局AgentLifecycleManager单例", lc_ok)
+        
+        # 测试1: RoleRegistry单例模式
+        log("测试RoleRegistry单例模式", verbose)
+        registry2 = get_role_registry()
+        singleton_ok = registry is registry2
+        result_test("agent", "RoleRegistry单例一致性", singleton_ok, "same instance")
+        
+        # 测试2: AgentLifecycleManager单例模式
+        log("测试AgentLifecycleManager单例模式", verbose)
+        lifecycle2 = get_lifecycle_manager()
+        mgr_singleton_ok = lifecycle is lifecycle2
+        result_test("agent", "AgentLifecycleManager单例一致性", mgr_singleton_ok, "same instance")
+        
+        # 测试3: RoleRegistry注册自定义角色
+        log("测试注册自定义角色", verbose)
+        test_role = Role(
+            name="测试代理角色",
+            role_type=RoleType.DEVELOPER,
+            description="用于测试的临时角色",
+            capabilities=["code", "test", "debug"]
+        )
+        reg_result = registry.register(test_role)
+        result_test("agent", "RoleRegistry.register()", reg_result)
+        
+        # 测试4: RoleRegistry.get()
+        log("测试获取角色", verbose)
+        retrieved = registry.get("测试代理角色")
+        get_ok = retrieved is not None and retrieved.name == "测试代理角色"
+        result_test("agent", "RoleRegistry.get()", get_ok, f"name={retrieved.name if retrieved else 'N/A'}")
+        
+        # 测试5: RoleRegistry.find_can_handle()
+        log("测试能力查询", verbose)
+        capable = registry.find_can_handle("code")
+        cap_ok = len(capable) > 0
+        result_test("agent", "RoleRegistry.find_can_handle()", cap_ok, f"found {len(capable)} role(s)")
+        
+        # 测试6: AgentLifecycleManager.spawn()
+        log("测试spawn()启动代理", verbose)
+        agent = lifecycle.spawn("测试代理角色")
+        spawn_ok = agent is not None and agent.state == AgentState.RUNNING
+        result_test("agent", "AgentLifecycleManager.spawn()", spawn_ok, 
+                   f"agent_id={agent.agent_id[:16]}..." if agent else "failed")
+        
+        # 测试7: AgentLifecycleManager.heartbeat()
+        log("测试heartbeat()", verbose)
+        if agent:
+            hb_ok = lifecycle.heartbeat(agent.agent_id)
+            result_test("agent", "AgentLifecycleManager.heartbeat()", hb_ok)
+            hb_count_ok = agent.heartbeat_count == 1
+            result_test("agent", "heartbeat计数", hb_count_ok, f"count={agent.heartbeat_count}")
+        
+        # 测试8: AgentLifecycleManager.set_idle()
+        log("测试set_idle()", verbose)
+        if agent:
+            idle_ok = lifecycle.set_idle(agent.agent_id)
+            result_test("agent", "AgentLifecycleManager.set_idle()", idle_ok)
+            state_ok = agent.state == AgentState.IDLE
+            result_test("agent", "代理状态切换到IDLE", state_ok, f"state={agent.state.value}")
+        
+        # 测试9: AgentLifecycleManager.terminate()
+        log("测试terminate()", verbose)
+        if agent:
+            term_ok = lifecycle.terminate(agent.agent_id, reason="completed")
+            result_test("agent", "AgentLifecycleManager.terminate()", term_ok)
+            term_state_ok = agent.state == AgentState.COMPLETED
+            result_test("agent", "代理状态切换到COMPLETED", term_state_ok, f"state={agent.state.value}")
+        
+        # 测试10: list_alive()
+        log("测试list_alive()", verbose)
+        alive = lifecycle.list_alive()
+        alive_ok = isinstance(alive, list)
+        result_test("agent", "AgentLifecycleManager.list_alive()", alive_ok, f"alive={len(alive)}")
+        
+        # 测试11: RoleRegistry注销
+        log("测试注销角色", verbose)
+        unreg_ok = registry.unregister("测试代理角色")
+        result_test("agent", "RoleRegistry.unregister()", unreg_ok)
+        after_unreg = registry.get("测试代理角色")
+        unreg_check = after_unreg is None
+        result_test("agent", "注销后无法获取", unreg_check)
+        
+        # 判断通过
+        all_passed = all(t["passed"] for t in test_results["agent"]["tests"])
+        test_results["agent"]["passed"] = all_passed
+        return all_passed
+        
+    except Exception as e:
+        result_error("agent", str(e))
+        import traceback
+        log(traceback.format_exc(), verbose)
+        return False
+
+
+# ============ 6. Mini Agent 测试 ============
+def test_mini_agent(verbose: bool = False) -> bool:
+    """测试Mini Agent模块 (HookManager + TaskRegistry)"""
+    print("\n" + "="*50)
+    print("🧩 测试6: Mini Agent 模块")
+    print("="*50)
+    
+    try:
+        # 获取全局组件
+        log("获取全局HookManager", verbose)
+        hook_mgr = get_hook_manager()
+        hook_ok = hook_mgr is not None
+        result_test("mini_agent", "全局HookManager单例", hook_ok)
+        
+        log("获取全局TaskRegistry", verbose)
+        task_reg = get_task_registry()
+        task_ok = task_reg is not None
+        result_test("mini_agent", "全局TaskRegistry单例", task_ok)
+        
+        # 测试1: HookManager单例模式
+        log("测试HookManager单例模式", verbose)
+        hook_mgr2 = get_hook_manager()
+        hook_singleton_ok = hook_mgr is hook_mgr2
+        result_test("mini_agent", "HookManager单例一致性", hook_singleton_ok, "same instance")
+        
+        # 测试2: TaskRegistry单例模式
+        log("测试TaskRegistry单例模式", verbose)
+        task_reg2 = get_task_registry()
+        task_singleton_ok = task_reg is task_reg2
+        result_test("mini_agent", "TaskRegistry单例一致性", task_singleton_ok, "same instance")
+        
+        # 测试3: HookManager注册before_tool_hook
+        log("测试注册before_tool_hook", verbose)
+        from mini_agent.hooks import BeforeToolCallHook, HookContext, ToolCall
+        
+        class TestBeforeHook(BeforeToolCallHook):
+            def handle(self, context, tool_call):
+                from mini_agent.hooks import HookResult
+                return HookResult()
+        
+        hook_mgr.register_before_tool_hook(TestBeforeHook())
+        reg_hook_ok = len(hook_mgr._before_tool_hooks) > 0
+        result_test("mini_agent", "HookManager.register_before_tool_hook()", reg_hook_ok)
+        
+        # 测试4: HookManager.run_before_tool_call()
+        log("测试run_before_tool_call()", verbose)
+        context = HookContext(session_id="test-session")
+        tool_call = ToolCall(name="read", arguments={"path": "/tmp/test"})
+        hook_result = hook_mgr.run_before_tool_call(context, tool_call)
+        run_hook_ok = hook_result is not None
+        result_test("mini_agent", "HookManager.run_before_tool_call()", run_hook_ok)
+        
+        # 测试5: TaskRegistry.create()
+        log("测试创建任务", verbose)
+        from mini_agent.registry import TaskPriority
+        task = task_reg.create(
+            name="测试任务",
+            description="mini_agent集成测试",
+            priority=TaskPriority.HIGH
+        )
+        create_ok = task is not None and task.name == "测试任务"
+        result_test("mini_agent", "TaskRegistry.create()", create_ok, f"task_id={task.id[:16]}...")
+        
+        # 测试6: TaskRegistry.start()
+        log("测试启动任务", verbose)
+        start_ok = task_reg.start(task.id)
+        result_test("mini_agent", "TaskRegistry.start()", start_ok)
+        task_after_start = task_reg.get(task.id)
+        start_state_ok = task_after_start.status.value == "running"
+        result_test("mini_agent", "任务状态转为RUNNING", start_state_ok)
+        
+        # 测试7: TaskRegistry.complete()
+        log("测试完成任务", verbose)
+        complete_ok = task_reg.complete(task.id, result="test_success")
+        result_test("mini_agent", "TaskRegistry.complete()", complete_ok)
+        task_after_complete = task_reg.get(task.id)
+        complete_state_ok = task_after_complete.status.value == "completed"
+        result_test("mini_agent", "任务状态转为COMPLETED", complete_state_ok)
+        
+        # 测试8: TaskRegistry.stats()
+        log("测试统计信息", verbose)
+        stats = task_reg.stats()
+        stats_ok = isinstance(stats, dict) and "total" in stats
+        result_test("mini_agent", "TaskRegistry.stats()", stats_ok, f"total={stats.get('total', 'N/A')}")
+        
+        # 测试9: TaskRegistry.list()
+        log("测试列出任务", verbose)
+        all_tasks = task_reg.list()
+        list_ok = isinstance(all_tasks, list)
+        result_test("mini_agent", "TaskRegistry.list()", list_ok, f"count={len(all_tasks)}")
+        
+        # 判断通过
+        all_passed = all(t["passed"] for t in test_results["mini_agent"]["tests"])
+        test_results["mini_agent"]["passed"] = all_passed
+        return all_passed
+        
+    except Exception as e:
+        result_error("mini_agent", str(e))
+        import traceback
+        log(traceback.format_exc(), verbose)
+        return False
+
 
 # ============ 1. Gateway 测试 ============
 def test_gateway(verbose: bool = False) -> bool:
@@ -465,6 +755,8 @@ def main():
     parser.add_argument("--wal", action="store_true", help="只测试WAL")
     parser.add_argument("--cli", action="store_true", help="只测试CLI")
     parser.add_argument("--plugin", action="store_true", help="只测试插件")
+    parser.add_argument("--test-agent", action="store_true", help="只测Agent (DAME)")
+    parser.add_argument("--test-mini-agent", action="store_true", help="只测Mini Agent模块")
     parser.add_argument("--verbose", "-v", action="store_true", help="详细输出")
     args = parser.parse_args()
     
@@ -478,7 +770,7 @@ def main():
     os.makedirs(PROJECT_ROOT / "wal", exist_ok=True)
     
     # 确定要运行的测试
-    run_all = not any([args.gateway, args.wal, args.cli, args.plugin])
+    run_all = not any([args.gateway, args.wal, args.cli, args.plugin, args.test_mini_agent])
     
     results = {}
     
@@ -493,6 +785,12 @@ def main():
     
     if run_all or args.plugin:
         results["plugin"] = test_plugin(args.verbose)
+    
+    if run_all or args.test_agent:
+        results["agent"] = test_agent(args.verbose)
+    
+    if run_all or args.test_mini_agent:
+        results["mini_agent"] = test_mini_agent(args.verbose)
     
     # 汇总报告
     print("\n" + "="*60)

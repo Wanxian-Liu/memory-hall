@@ -19,6 +19,18 @@ from enum import IntEnum
 from typing import Callable, Optional
 from dataclasses import dataclass, field
 import re
+from urllib.parse import urlparse
+
+
+# ============================================================================
+# 安全常量
+# ============================================================================
+
+# 允许的协议白名单
+ALLOWED_PROTOCOLS = frozenset({"http", "https"})
+
+# 禁止的协议黑名单
+BLOCKED_PROTOCOLS = frozenset({"file", "ftp", "sftp", "smb", "nfs", "ssh", "scp"})
 
 
 class PermissionLevel(IntEnum):
@@ -99,9 +111,9 @@ class PermissionEngine:
                 min_level=PermissionLevel.WORKSPACE_WRITE,
                 description="SSH配置需要确认"
             ),
-            # 外部网络操作 - 询问
+            # 外部网络操作 - 询问 (只允许http/https)
             Rule(
-                pattern=r":(http|https|ftp)://",
+                pattern=r":https?://",
                 action=RuleAction.ASK,
                 min_level=PermissionLevel.WORKSPACE_WRITE,
                 description="外部网络请求需要确认"
@@ -114,6 +126,57 @@ class PermissionEngine:
                 description="删除操作需要确认"
             ),
         ])
+
+    def _check_path_traversal(self, target: str) -> bool:
+        """
+        检查路径遍历攻击
+        
+        阻止包含 .. 的路径，防止 ../../../etc/passwd 等攻击
+        
+        Args:
+            target: 目标路径
+            
+        Returns:
+            bool: True表示检测到路径遍历攻击
+        """
+        # 检查是否有 .. 路径遍历
+        if ".." in target:
+            return True
+        
+        # 检查是否有多余的斜杠变体 (如 ///etc/passwd)
+        normalized = target.replace("//", "/")
+        if "../" in normalized or normalized.endswith(".."):
+            return True
+        
+        return False
+
+    def _validate_protocol(self, target: str) -> tuple[bool, str]:
+        """
+        验证协议安全性
+        
+        只允许 http/https 协议
+        
+        Args:
+            target: 目标URL
+            
+        Returns:
+            tuple: (是否安全, 错误消息)
+        """
+        # 提取协议
+        if ":" not in target:
+            return True, ""
+        
+        protocol = target.split(":")[0].lower()
+        
+        # 检查是否是危险协议
+        if protocol in BLOCKED_PROTOCOLS:
+            return False, f"协议 {protocol} 被禁止使用"
+        
+        # 网络URL必须使用白名单协议
+        if "://" in target and protocol not in ALLOWED_PROTOCOLS:
+            return False, f"协议 {protocol} 不在白名单中，仅允许: {', '.join(ALLOWED_PROTOCOLS)}"
+        
+        return True, ""
     
     def check(self, context: PermissionContext, user_level: PermissionLevel) -> PermissionResult:
         """
@@ -132,9 +195,35 @@ class PermissionEngine:
             if result is not None:
                 return result
         
+        # ============================================================================
+        # 安全检查层
+        # ============================================================================
+        
+        # 检查路径遍历攻击 (fix_002)
+        if self._check_path_traversal(context.target):
+            return PermissionResult(
+                allowed=False,
+                action=RuleAction.DENY,
+                required_level=PermissionLevel.DANGER_FULL_ACCESS,
+                message="路径遍历攻击被阻止: 操作拒绝"
+            )
+        
+        # 检查协议安全性 (fix_003)
+        is_safe, error_msg = self._validate_protocol(context.target)
+        if not is_safe:
+            return PermissionResult(
+                allowed=False,
+                action=RuleAction.DENY,
+                required_level=PermissionLevel.DANGER_FULL_ACCESS,
+                message=f"协议验证失败: {error_msg}"
+            )
+        
+        # ============================================================================
+        # 规则匹配
+        # ============================================================================
+        
         # 按优先级检查规则
         for rule in self.rules:
-            if self._match_rule(rule.pattern, context, user_level):
                 # 权限级别检查
                 if user_level < rule.min_level:
                     return PermissionResult(

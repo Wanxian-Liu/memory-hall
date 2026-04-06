@@ -11,6 +11,57 @@ from enum import Enum
 from typing import Optional, Callable, Any
 from datetime import datetime
 import json
+import signal
+import threading
+
+
+# ============================================================================
+# 安全常量
+# ============================================================================
+
+# Hook执行默认超时时间(秒)
+DEFAULT_HOOK_TIMEOUT_SECONDS = 30
+
+# 超时时的错误消息
+HOOK_TIMEOUT_MESSAGE = "Hook execution timed out - operation cancelled for safety"
+
+
+# ============================================================================
+# 超时上下文管理器
+# ============================================================================
+
+class TimeoutError(Exception):
+    """Hook执行超时异常"""
+    pass
+
+
+class timeout:
+    """
+    超时上下文管理器
+    
+    使用signal.SIGALRM实现超时控制(仅Unix)
+    超时时抛出TimeoutError
+    """
+    
+    def __init__(self, seconds: int):
+        self.seconds = seconds
+        self.old_handler = None
+    
+    def __enter__(self):
+        if self.seconds > 0:
+            self.old_handler = signal.signal(signal.SIGALRM, self._handle_timeout)
+            signal.alarm(self.seconds)
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.seconds > 0:
+            signal.alarm(0)
+            if self.old_handler is not None:
+                signal.signal(signal.SIGALRM, self.old_handler)
+        return False
+    
+    def _handle_timeout(self, signum, frame):
+        raise TimeoutError()
 
 
 # ============================================================================
@@ -230,10 +281,11 @@ class DefaultToolResultPersistHook(ToolResultPersistHook):
 class HookManager:
     """Hook管理器"""
     
-    def __init__(self):
+    def __init__(self, timeout_seconds: int = DEFAULT_HOOK_TIMEOUT_SECONDS):
         self._before_tool_hooks: list[BeforeToolCallHook] = []
         self._persist_hooks: list[ToolResultPersistHook] = []
         self._global_filters: list[Callable] = []
+        self._timeout_seconds = timeout_seconds  # fix_006: 超时配置
     
     def register_before_tool_hook(self, hook: BeforeToolCallHook) -> None:
         """注册before_tool_call hook"""
@@ -250,15 +302,35 @@ class HookManager:
     def run_before_tool_call(
         self,
         context: HookContext,
-        tool_call: ToolCall
+        tool_call: ToolCall,
+        timeout_seconds: Optional[int] = None
     ) -> HookResult:
-        """运行所有before_tool_call hooks"""
+        """运行所有before_tool_call hooks (fix_006: 添加超时保护)
+        
+        Args:
+            context: Hook上下文
+            tool_call: 工具调用
+            timeout_seconds: 可选的覆盖超时时间
+        """
+        timeout_val = timeout_seconds if timeout_seconds is not None else self._timeout_seconds
+        
         # 应用全局过滤器
         for filter_fn in self._global_filters:
             try:
-                filtered_tool_call = filter_fn(tool_call)
+                if timeout_val > 0:
+                    with timeout(timeout_val):
+                        filtered_tool_call = filter_fn(tool_call)
+                else:
+                    filtered_tool_call = filter_fn(tool_call)
+                
                 if filtered_tool_call is not None:
                     tool_call = filtered_tool_call
+            except TimeoutError:
+                return HookResult(
+                    denied=True,
+                    failed=True,
+                    messages=[HOOK_TIMEOUT_MESSAGE],
+                )
             except Exception as e:
                 return HookResult(
                     denied=True,
@@ -269,10 +341,22 @@ class HookManager:
         # 运行所有hooks
         all_messages = []
         for hook in self._before_tool_hooks:
-            result = hook.handle(context, tool_call)
-            all_messages.extend(result.messages)
-            if result.denied or result.failed:
-                return result
+            try:
+                if timeout_val > 0:
+                    with timeout(timeout_val):
+                        result = hook.handle(context, tool_call)
+                else:
+                    result = hook.handle(context, tool_call)
+                
+                all_messages.extend(result.messages)
+                if result.denied or result.failed:
+                    return result
+            except TimeoutError:
+                return HookResult(
+                    denied=True,
+                    failed=True,
+                    messages=[HOOK_TIMEOUT_MESSAGE],
+                )
         
         return HookResult(denied=False, messages=all_messages)
     
@@ -280,21 +364,38 @@ class HookManager:
         self,
         context: HookContext,
         tool_call: ToolCall,
-        result: ToolResult
+        result: ToolResult,
+        timeout_seconds: Optional[int] = None
     ) -> HookResult:
-        """运行所有tool_result_persist hooks"""
+        """运行所有tool_result_persist hooks (fix_006: 添加超时保护)
+        
+        Args:
+            context: Hook上下文
+            tool_call: 工具调用
+            result: 工具执行结果
+            timeout_seconds: 可选的覆盖超时时间
+        """
+        timeout_val = timeout_seconds if timeout_seconds is not None else self._timeout_seconds
         combined_result = HookResult()
         
         for hook in self._persist_hooks:
-            hook_result = hook.handle(context, tool_call, result)
-            
-            # 合并结果
-            combined_result.messages.extend(hook_result.messages)
-            
-            if hook_result.failed:
+            try:
+                if timeout_val > 0:
+                    with timeout(timeout_val):
+                        hook_result = hook.handle(context, tool_call, result)
+                else:
+                    hook_result = hook.handle(context, tool_call, result)
+                
+                # 合并结果
+                combined_result.messages.extend(hook_result.messages)
+                
+                if hook_result.failed:
+                    combined_result.failed = True
+                
+                combined_result.metadata.update(hook_result.metadata)
+            except TimeoutError:
                 combined_result.failed = True
-            
-            combined_result.metadata.update(hook_result.metadata)
+                combined_result.messages.append(HOOK_TIMEOUT_MESSAGE)
         
         return combined_result
     

@@ -198,9 +198,16 @@ class _AuditDB:
                     cls._instance._init_db()
         return cls._instance
 
+    def _get_conn(self):
+        """获取配置好的数据库连接"""
+        conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA synchronous=NORMAL")
+        return conn
+
     def _init_db(self):
         """初始化数据库表"""
-        with sqlite3.connect(DB_PATH, check_same_thread=False) as conn:
+        with self._get_conn() as conn:
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS audit_log (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -238,7 +245,7 @@ class _AuditDB:
 
     def insert(self, entry: AuditEntry):
         """写入单条审计日志"""
-        with sqlite3.connect(DB_PATH, check_same_thread=False) as conn:
+        with self._get_conn() as conn:
             conn.execute("""
                 INSERT INTO audit_log (
                     timestamp, operation, category, level, risk, actor, target,
@@ -292,8 +299,12 @@ class _AuditDB:
             conditions.append("timestamp <= ?")
             params.append(end_time.isoformat())
         if operation:
-            conditions.append("operation LIKE ?")
-            params.append(f"%{operation}%")
+            # Escape LIKE wildcards to prevent semantic SQL injection
+            # Use ESCAPE clause so \% and \_ are treated as literals
+            safe_op = operation.replace("\\", "\\\\").replace("%", r"\%").replace("_", r"\_")
+            conditions.append("operation LIKE ? ESCAPE ?")
+            params.append(f"%{safe_op}%")
+            params.append("\\")
         if category:
             conditions.append("category = ?")
             params.append(category.name)
@@ -307,8 +318,11 @@ class _AuditDB:
             conditions.append("actor = ?")
             params.append(actor)
         if target:
-            conditions.append("target LIKE ?")
-            params.append(f"%{target}%")
+            # Escape LIKE wildcards to prevent semantic SQL injection
+            safe_target = target.replace("\\", "\\\\").replace("%", r"\%").replace("_", r"\_")
+            conditions.append("target LIKE ? ESCAPE ?")
+            params.append(f"%{safe_target}%")
+            params.append("\\")
         if session_id:
             conditions.append("session_id = ?")
             params.append(session_id)
@@ -330,7 +344,7 @@ class _AuditDB:
         """
         params.extend([limit, offset])
 
-        with sqlite3.connect(DB_PATH, check_same_thread=False) as conn:
+        with self._get_conn() as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute(sql, params).fetchall()
 
@@ -360,7 +374,7 @@ class _AuditDB:
         if high_risk_only:
             conditions.append("is_high_risk = 1")
         where = " AND ".join(conditions) if conditions else "1=1"
-        with sqlite3.connect(DB_PATH, check_same_thread=False) as conn:
+        with self._get_conn() as conn:
             row = conn.execute(
                 f"SELECT COUNT(*) FROM audit_log WHERE {where}", params
             ).fetchone()
@@ -371,7 +385,7 @@ class _AuditDB:
     ) -> Dict[str, Any]:
         """获取高风险操作汇总"""
         since = datetime.now(timezone.utc) - timedelta(days=days)
-        with sqlite3.connect(DB_PATH, check_same_thread=False) as conn:
+        with self._get_conn() as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute("""
                 SELECT operation, COUNT(*) as count, MAX(timestamp) as last_time
@@ -396,6 +410,42 @@ class _AuditDB:
 # 文本日志写入器
 # ==============================================================================
 
+def _sanitize_path(path: str) -> str:
+    """Sanitize a file path to prevent path traversal attacks.
+    
+    Removes leading slashes, dots, and null bytes that could be used
+    for path traversal (e.g., ../../etc/passwd).
+    """
+    if not path:
+        return path
+    # Replace common path traversal patterns
+    sanitized = path.replace('../', '').replace('..\\', '')
+    # Remove leading slashes/dots that could escape the log directory
+    sanitized = sanitized.lstrip('/\\')
+    # Remove null bytes
+    sanitized = sanitized.replace('\x00', '')
+    return sanitized
+
+
+def _sanitize_entry_for_log(entry: AuditEntry) -> Dict[str, Any]:
+    """Sanitize an audit entry for safe logging.
+    
+    Prevents path traversal attacks in log content by sanitizing
+    target paths and any file paths in details.
+    """
+    d = entry.to_dict()
+    # Sanitize target field (common path carrier)
+    if d.get('target'):
+        d['target'] = _sanitize_path(d['target'])
+    # Sanitize details dict (may contain file paths)
+    if d.get('details') and isinstance(d['details'], dict):
+        for key, value in d['details'].items():
+            if isinstance(value, str) and ('/' in value or '\\' in value):
+                # Likely a path - sanitize it
+                d['details'][key] = _sanitize_path(value)
+    return d
+
+
 class _TextLogWriter:
     """文本日志写入（按日分割）"""
 
@@ -405,7 +455,9 @@ class _TextLogWriter:
         with self._lock:
             date_str = entry.timestamp.strftime("%Y-%m-%d")
             log_file = LOG_TEXT_DIR / f"audit_{date_str}.log"
-            line = json.dumps(entry.to_dict(), ensure_ascii=False)
+            # Sanitize entry to prevent path traversal via log content
+            safe_entry = _sanitize_entry_for_log(entry)
+            line = json.dumps(safe_entry, ensure_ascii=False)
             with open(log_file, "a", encoding="utf-8") as f:
                 f.write(line + "\n")
 

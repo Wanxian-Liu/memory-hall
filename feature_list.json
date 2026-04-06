@@ -29,8 +29,8 @@
         "T2.4: 分类模块V2.0集成"
       ],
       "verification": "各模块正确集成并通过测试",
-      "passes": false,
-      "completed_at": null,
+      "passes": true,
+      "completed_at": "2026-04-06T11:06:00+08:00",
       "notes": "Week 3-5"
     },
     {

@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from heapq import heappush, heappop
 
-from .models import Task, TaskStatus, TaskResult, RoleType
+from .models import Task, TaskStatus, TaskResult, RoleType, AgentState
 from .role_registry import RoleRegistry, get_global_registry
 from .lifecycle_manager import AgentLifecycleManager, get_global_lifecycle_manager
 
@@ -148,14 +148,14 @@ class TaskDispatcher:
     def _find_available_agent(self, task: Task) -> Optional[Any]:
         """查找可用的代理"""
         # 首先尝试查找空闲代理
-        idle_agents = self.lifecycle.list_by_state("idle")  # 直接用字符串避免导入问题
+        idle_agents = self.lifecycle.list_by_state(AgentState.IDLE)
         for agent in idle_agents:
             if task.required_role is None or agent.role.role_type == task.required_role:
                 if agent.role.can_handle(task.task_type):
                     return agent
-        
+
         # 如果没有空闲代理，查找运行中的代理
-        running_agents = self.lifecycle.list_by_state("running")
+        running_agents = self.lifecycle.list_by_state(AgentState.RUNNING)
         for agent in running_agents:
             if agent.current_task_id is None:  # 没有分配任务
                 if task.required_role is None or agent.role.role_type == task.required_role:
