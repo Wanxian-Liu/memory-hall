@@ -1,11 +1,14 @@
 """
 记忆殿堂v2.0 - 统一集成接口
-Capsule: 01-innovate + 01-optimize + 01-repair
+Capsule: 01-innovate + 01-optimize + 01-repair + 03-optimize-capsules
 
-整合三个胶囊模块，提供统一的接入接口:
+整合五个胶囊模块，提供统一的接入接口:
 - evolve: 自进化闭环 (ProactiveKnowledgeCorrector, IntentPredictor, AutomatedRootCauseFixer)
 - optimize: 自适应压缩 (AdaptiveCompressionScheduler, IncrementalMemoryIndex, PredictiveCompressor)
 - repair: 备份恢复 (MemoryBackupManager, ImportanceAwareCompressor, verify_rag_source)
+- sensory: 缓存失效 (HybridCacheInvalidator, MemorySensoryIndex) [Cache Invalidation Capsule]
+- extractor: 自适应压缩 (AdaptiveCompressionController, AdaptiveExtractionPipeline) [Context Optimization Capsule]
+- memory_layer: RL记忆访问 (RLMemoryLayerManager, MemoryTier) [RL Memory Access Capsule]
 
 使用示例:
     from integrate import MemoryPalaceIntegration
@@ -76,6 +79,34 @@ from repair.backup_manager import (
     CompressedItem,
     VerificationStatus,
     ImportanceLevel,
+)
+
+# ============ Capsule v3 新增: 03-optimize-capsules ============
+
+# Cache Invalidation Capsule (sensory模块)
+from sensory.cache_invalidation import (
+    HybridCacheInvalidator,
+    MemorySensoryIndex,
+    CacheEntry,
+)
+
+# Context Optimization Adaptive Compression Capsule (extractor模块)
+from extractor.adaptive_compression import (
+    CompressionLevel,
+    AdaptiveThresholds,
+    CompressionContext,
+    AdaptiveCompressionController,
+    AdaptiveExtractionPipeline,
+)
+
+# RL Memory Access Capsule (memory_layer模块)
+from memory_layer.rl_access import (
+    MemoryTier,
+    MemoryAccessAction,
+    MemoryAccessState,
+    MemoryBlock,
+    SimplePolicyNetwork,
+    RLMemoryLayerManager,
 )
 
 
@@ -194,6 +225,34 @@ class MemoryPalaceIntegration:
         self.importance_compressor = ImportanceAwareCompressor(
             target_ratio=self.config.compression_target_ratio,
             backup_manager=self.backup_manager
+        )
+        
+        # ========== Capsule v3新增: 03-optimize-capsules ==========
+        
+        # --- Cache Invalidation Capsule ---
+        self.cache_invalidator = HybridCacheInvalidator(
+            ttl_base=self.config.base_compression_interval,
+            max_size=1000
+        )
+        
+        self.sensory_index = MemorySensoryIndex(
+            ttl_base=self.config.base_compression_interval,
+            max_size=1000
+        )
+        
+        # --- Context Optimization Capsule ---
+        self.adaptive_compression_controller = AdaptiveCompressionController()
+        
+        self.adaptive_extraction_pipeline = AdaptiveExtractionPipeline(
+            controller=self.adaptive_compression_controller
+        )
+        
+        # --- RL Memory Access Capsule ---
+        self.rl_memory_manager = RLMemoryLayerManager(
+            hot_size=100,
+            warm_size=500,
+            cold_size=2000,
+            training_interval=100
         )
         
         # ========== 会话状态 ==========
@@ -631,6 +690,11 @@ class MemoryPalaceIntegration:
                 "three_ring_loop": self.three_ring_loop.get_status(),
                 "backup_manager": self.backup_manager.get_stats(),
                 "importance_compressor": self.importance_compressor.get_stats(),
+                # Capsule v3新增模块
+                "cache_invalidator": self.cache_invalidator.get_stats(),
+                "sensory_index": self.sensory_index.cache.get_stats() if hasattr(self.sensory_index, 'cache') else {},
+                "adaptive_compression_controller": self.adaptive_compression_controller.get_stats(),
+                "rl_memory_manager": self.rl_memory_manager.get_stats(),
             },
             "timestamp": time.time()
         }
@@ -737,4 +801,25 @@ __all__ = [
     "CompressedItem",
     "VerificationStatus",
     "ImportanceLevel",
+    
+    # ============ Capsule v3新增: 03-optimize-capsules ============
+    
+    # Cache Invalidation Capsule (sensory模块)
+    "HybridCacheInvalidator",
+    "MemorySensoryIndex",
+    "CacheEntry",
+    
+    # Context Optimization Capsule (extractor模块)
+    "AdaptiveThresholds",
+    "CompressionContext",
+    "AdaptiveCompressionController",
+    "AdaptiveExtractionPipeline",
+    
+    # RL Memory Access Capsule (memory_layer模块)
+    "MemoryTier",
+    "MemoryAccessAction",
+    "MemoryAccessState",
+    "MemoryBlock",
+    "SimplePolicyNetwork",
+    "RLMemoryLayerManager",
 ]
