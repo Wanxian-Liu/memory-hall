@@ -1,0 +1,324 @@
+digraph MimirCore {
+    rankdir=LR;
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    edge [color=gray40];
+
+    "agent" [label="agent"];
+    "audit" [label="audit"];
+    "base_wal" [label="base_wal"];
+    "benchmark" [label="benchmark"];
+    "capsule_generator" [label="capsule_generator"];
+    "classifier" [label="classifier"];
+    "cli" [label="cli"];
+    "config" [label="config"];
+    "evolve" [label="evolve"];
+    "evomap_validator" [label="evomap_validator"];
+    "extractor" [label="extractor"];
+    "fence" [label="fence"];
+    "gateway" [label="gateway"];
+    "gdi_scorer" [label="gdi_scorer"];
+    "gene_mapper" [label="gene_mapper"];
+    "health" [label="health"];
+    "integrate" [label="integrate"];
+    "interfaces" [label="interfaces"];
+    "memory_layer" [label="memory_layer"];
+    "mini_agent" [label="mini_agent"];
+    "normalizer" [label="normalizer"];
+    "optimize" [label="optimize"];
+    "permission" [label="permission"];
+    "pipeline" [label="pipeline"];
+    "plugin" [label="plugin"];
+    "repair" [label="repair"];
+    "run" [label="run"];
+    "sensory" [label="sensory"];
+    "task" [label="task"];
+    "test_gdi_gene" [label="test_gdi_gene"];
+    "tests" [label="tests"];
+    "utils" [label="utils"];
+    "verify_tool_invocation" [label="verify_tool_invocation"];
+    subgraph cluster_agent {
+        label="agent";
+        color=lightblue;
+        "agent.lifecycle_manager" [label="agent.lifecycle_manager"];
+        "agent.models" [label="agent.models"];
+        "agent.role_registry" [label="agent.role_registry"];
+        "agent.task_dispatcher" [label="agent.task_dispatcher"];
+        "agent.test_agent" [label="agent.test_agent"];
+    }
+    subgraph cluster_audit {
+        label="audit";
+        color=lightblue;
+        "audit.audit" [label="audit.audit"];
+    }
+    subgraph cluster_base_wal {
+        label="base_wal";
+        color=lightblue;
+        "base_wal.wal" [label="base_wal.wal"];
+    }
+    subgraph cluster_classifier {
+        label="classifier";
+        color=lightblue;
+        "classifier.classifier" [label="classifier.classifier"];
+        "classifier.monitor" [label="classifier.monitor"];
+    }
+    subgraph cluster_cli {
+        label="cli";
+        color=lightblue;
+        "cli.commands" [label="cli.commands"];
+        "cli.router" [label="cli.router"];
+        "cli.tui" [label="cli.tui"];
+    }
+    subgraph cluster_config {
+        label="config";
+        color=lightblue;
+        "config.loader" [label="config.loader"];
+    }
+    subgraph cluster_evolve {
+        label="evolve";
+        color=lightblue;
+        "evolve.self_evolution" [label="evolve.self_evolution"];
+        "evolve.three_ring_architecture" [label="evolve.three_ring_architecture"];
+    }
+    subgraph cluster_extractor {
+        label="extractor";
+        color=lightblue;
+        "extractor.adaptive_compression" [label="extractor.adaptive_compression"];
+        "extractor.extractor" [label="extractor.extractor"];
+    }
+    subgraph cluster_fence {
+        label="fence";
+        color=lightblue;
+        "fence.fence" [label="fence.fence"];
+    }
+    subgraph cluster_gateway {
+        label="gateway";
+        color=lightblue;
+        "gateway.gateway" [label="gateway.gateway"];
+    }
+    subgraph cluster_health {
+        label="health";
+        color=lightblue;
+        "health.checker" [label="health.checker"];
+        "health.circuit_breaker" [label="health.circuit_breaker"];
+        "health.data_classes" [label="health.data_classes"];
+        "health.diagnostic" [label="health.diagnostic"];
+        "health.enums" [label="health.enums"];
+        "health.health_check" [label="health.health_check"];
+        "health.metrics" [label="health.metrics"];
+        "health.panel" [label="health.panel"];
+        "health.threshold" [label="health.threshold"];
+    }
+    subgraph cluster_integrate {
+        label="integrate";
+        color=lightblue;
+        "integrate.config" [label="integrate.config"];
+        "integrate.stats" [label="integrate.stats"];
+    }
+    subgraph cluster_interfaces {
+        label="interfaces";
+        color=lightblue;
+        "interfaces.adapters" [label="interfaces.adapters"];
+        "interfaces.adapters.file_system_adapter" [label="interfaces.adapters.file_system_adapter"];
+        "interfaces.imemory_vault" [label="interfaces.imemory_vault"];
+        "interfaces.verify_interface" [label="interfaces.verify_interface"];
+    }
+    subgraph cluster_memory_layer {
+        label="memory_layer";
+        color=lightblue;
+        "memory_layer.rl_access" [label="memory_layer.rl_access"];
+    }
+    subgraph cluster_mini_agent {
+        label="mini_agent";
+        color=lightblue;
+        "mini_agent.compact" [label="mini_agent.compact"];
+        "mini_agent.hooks" [label="mini_agent.hooks"];
+        "mini_agent.registry" [label="mini_agent.registry"];
+        "mini_agent.test_mini_agent" [label="mini_agent.test_mini_agent"];
+    }
+    subgraph cluster_normalizer {
+        label="normalizer";
+        color=lightblue;
+        "normalizer.deduplicator" [label="normalizer.deduplicator"];
+    }
+    subgraph cluster_optimize {
+        label="optimize";
+        color=lightblue;
+        "optimize.adaptive_compression" [label="optimize.adaptive_compression"];
+    }
+    subgraph cluster_permission {
+        label="permission";
+        color=lightblue;
+        "permission.engine" [label="permission.engine"];
+    }
+    subgraph cluster_pipeline {
+        label="pipeline";
+        color=lightblue;
+        "pipeline.cross_reference" [label="pipeline.cross_reference"];
+    }
+    subgraph cluster_plugin {
+        label="plugin";
+        color=lightblue;
+        "plugin.plugin" [label="plugin.plugin"];
+        "plugin.test_plugins.test_dummy" [label="plugin.test_plugins.test_dummy"];
+    }
+    subgraph cluster_repair {
+        label="repair";
+        color=lightblue;
+        "repair.backup_manager" [label="repair.backup_manager"];
+    }
+    subgraph cluster_sensory {
+        label="sensory";
+        color=lightblue;
+        "sensory.cache_invalidation" [label="sensory.cache_invalidation"];
+        "sensory.semantic_search" [label="sensory.semantic_search"];
+    }
+    subgraph cluster_task {
+        label="task";
+        color=lightblue;
+        "task.task_manager" [label="task.task_manager"];
+    }
+    subgraph cluster_tests {
+        label="tests";
+        color=lightblue;
+        "tests.conftest" [label="tests.conftest"];
+        "tests.integration" [label="tests.integration"];
+        "tests.integration.conftest" [label="tests.integration.conftest"];
+        "tests.integration.integration_test_cli_modules" [label="tests.integration.integration_test_cli_modules"];
+        "tests.integration.integration_test_gateway_permission" [label="tests.integration.integration_test_gateway_permission"];
+        "tests.integration.integration_test_gateway_wal" [label="tests.integration.integration_test_gateway_wal"];
+        "tests.integration.integration_test_plugin_modules" [label="tests.integration.integration_test_plugin_modules"];
+        "tests.integration.run_tests" [label="tests.integration.run_tests"];
+        "tests.test_audit" [label="tests.test_audit"];
+        "tests.test_base_wal" [label="tests.test_base_wal"];
+        "tests.test_classifier" [label="tests.test_classifier"];
+        "tests.test_cli_commands" [label="tests.test_cli_commands"];
+        "tests.test_cli_router" [label="tests.test_cli_router"];
+        "tests.test_extractor" [label="tests.test_extractor"];
+        "tests.test_fence" [label="tests.test_fence"];
+        "tests.test_gateway" [label="tests.test_gateway"];
+        "tests.test_health" [label="tests.test_health"];
+        "tests.test_normalizer" [label="tests.test_normalizer"];
+        "tests.test_permission" [label="tests.test_permission"];
+        "tests.test_plugin" [label="tests.test_plugin"];
+        "tests.test_sensory" [label="tests.test_sensory"];
+        "tests.test_task" [label="tests.test_task"];
+    }
+    subgraph cluster_utils {
+        label="utils";
+        color=lightblue;
+        "utils.deepseek_client" [label="utils.deepseek_client"];
+    }
+
+    "benchmark" -> "gateway" [style=solid];
+    "benchmark" -> "sensory" [style=solid];
+    "benchmark" -> "extractor" [style=solid];
+    "test_gdi_gene" -> "gdi_scorer" [style=solid];
+    "test_gdi_gene" -> "gene_mapper" [style=solid];
+    "test_gdi_gene" -> "capsule_generator" [style=solid];
+    "test_gdi_gene" -> "gdi_scorer" [style=solid];
+    "test_gdi_gene" -> "gene_mapper" [style=solid];
+    "test_gdi_gene" -> "capsule_generator" [style=solid];
+    "run" -> "agent" [style=solid];
+    "run" -> "agent" [style=solid];
+    "run" -> "agent" [style=solid];
+    "run" -> "mini_agent" [style=solid];
+    "run" -> "mini_agent" [style=solid];
+    "run" -> "mini_agent" [style=solid];
+    "run" -> "agent" [style=solid];
+    "run" -> "agent" [style=solid];
+    "run" -> "agent" [style=solid];
+    "run" -> "mini_agent" [style=solid];
+    "run" -> "mini_agent" [style=solid];
+    "run" -> "gateway" [style=solid];
+    "run" -> "base_wal" [style=solid];
+    "run" -> "cli" [style=solid];
+    "run" -> "plugin" [style=solid];
+    "run" -> "mini_agent" [style=solid];
+    "capsule_generator" -> "gdi_scorer" [style=solid];
+    "capsule_generator" -> "evomap_validator" [style=solid];
+    "verify_tool_invocation" -> "gateway" [style=solid];
+    "verify_tool_invocation" -> "plugin" [style=solid];
+    "verify_tool_invocation" -> "agent" [style=solid];
+    "verify_tool_invocation" -> "agent" [style=solid];
+    "verify_tool_invocation" -> "agent" [style=solid];
+    "cli.commands" -> "base_wal" [style=solid];
+    "cli.commands" -> "health" [style=solid];
+    "cli.commands" -> "sensory" [style=solid];
+    "cli.commands" -> "interfaces" [style=solid];
+    "optimize" -> "optimize" [style=solid];
+    "repair" -> "repair" [style=solid];
+    "gateway.gateway" -> "interfaces" [style=solid];
+    "gateway" -> "gateway" [style=solid];
+    "interfaces.verify_interface" -> "interfaces" [style=solid];
+    "interfaces.verify_interface" -> "interfaces" [style=solid];
+    "interfaces.verify_interface" -> "interfaces" [style=solid];
+    "agent.test_agent" -> "agent" [style=solid];
+    "agent.test_agent" -> "agent" [style=solid];
+    "agent.test_agent" -> "agent" [style=solid];
+    "agent.test_agent" -> "agent" [style=solid];
+    "agent.test_agent" -> "agent" [style=solid];
+    "agent.test_agent" -> "agent" [style=solid];
+    "agent.test_agent" -> "agent" [style=solid];
+    "agent.test_agent" -> "agent" [style=solid];
+    "agent.test_agent" -> "agent" [style=solid];
+    "agent.test_agent" -> "agent" [style=solid];
+    "agent.test_agent" -> "agent" [style=solid];
+    "agent.test_agent" -> "agent" [style=solid];
+    "fence" -> "fence" [style=solid];
+    "health.health_check" -> "health" [style=solid];
+    "integrate" -> "config" [style=solid];
+    "integrate" -> "evolve" [style=solid];
+    "integrate" -> "evolve" [style=solid];
+    "integrate" -> "optimize" [style=solid];
+    "integrate" -> "repair" [style=solid];
+    "integrate" -> "sensory" [style=solid];
+    "integrate" -> "extractor" [style=solid];
+    "integrate" -> "memory_layer" [style=solid];
+    "plugin" -> "plugin" [style=solid];
+    "extractor" -> "extractor" [style=solid];
+    "evolve" -> "evolve" [style=solid];
+    "evolve" -> "evolve" [style=solid];
+    "audit" -> "audit" [style=solid];
+    "classifier" -> "classifier" [style=solid];
+    "tests.test_cli_commands" -> "cli" [style=solid];
+    "tests.test_fence" -> "fence" [style=solid];
+    "tests.test_plugin" -> "plugin" [style=solid];
+    "tests.test_task" -> "task" [style=solid];
+    "tests.test_extractor" -> "extractor" [style=solid];
+    "tests.test_sensory" -> "sensory" [style=solid];
+    "tests.test_normalizer" -> "normalizer" [style=solid];
+    "tests.test_classifier" -> "classifier" [style=solid];
+    "tests.test_permission" -> "permission" [style=solid];
+    "tests.test_audit" -> "audit" [style=solid];
+    "tests.test_health" -> "health" [style=solid];
+    "tests.test_base_wal" -> "base_wal" [style=solid];
+    "tests.test_cli_router" -> "cli" [style=solid];
+    "tests.test_gateway" -> "gateway" [style=solid];
+    "interfaces.adapters.file_system_adapter" -> "config" [style=solid];
+    "plugin.test_plugins.test_dummy" -> "plugin" [style=solid];
+    "plugin.test_plugins.test_dummy" -> "plugin" [style=solid];
+    "tests.integration.integration_test_gateway_wal" -> "base_wal" [style=solid];
+    "tests.integration.integration_test_gateway_wal" -> "gateway" [style=solid];
+    "tests.integration.integration_test_gateway_wal" -> "tests" [style=solid];
+    "tests.integration.integration_test_gateway_wal" -> "gateway" [style=solid];
+    "tests.integration.integration_test_gateway_permission" -> "permission" [style=solid];
+    "tests.integration.integration_test_gateway_permission" -> "gateway" [style=solid];
+    "tests.integration.integration_test_gateway_permission" -> "tests" [style=solid];
+    "tests.integration.integration_test_gateway_permission" -> "gateway" [style=solid];
+    "tests.integration.integration_test_plugin_modules" -> "plugin" [style=solid];
+    "tests.integration.integration_test_plugin_modules" -> "gateway" [style=solid];
+    "tests.integration.integration_test_plugin_modules" -> "permission" [style=solid];
+    "tests.integration.integration_test_plugin_modules" -> "base_wal" [style=solid];
+    "tests.integration.integration_test_plugin_modules" -> "tests" [style=solid];
+    "tests.integration.integration_test_plugin_modules" -> "gateway" [style=solid];
+    "tests.integration.integration_test_cli_modules" -> "cli" [style=solid];
+    "tests.integration.integration_test_cli_modules" -> "base_wal" [style=solid];
+    "tests.integration.integration_test_cli_modules" -> "gateway" [style=solid];
+    "tests.integration.integration_test_cli_modules" -> "permission" [style=solid];
+    "tests.integration.integration_test_cli_modules" -> "health" [style=solid];
+    "tests.integration.integration_test_cli_modules" -> "tests" [style=solid];
+    "tests.integration.integration_test_cli_modules" -> "gateway" [style=solid];
+    "tests.integration.integration_test_cli_modules" -> "gateway" [style=solid];
+    "tests.integration.integration_test_cli_modules" -> "cli" [style=solid];
+    "tests.integration.conftest" -> "plugin" [style=solid];
+}

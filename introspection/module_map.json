@@ -1,0 +1,3500 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-04-10T22:52:03.430449",
+  "project_root": "/home/rayliu/.openclaw/projects/Mimir-Core",
+  "total_modules": 105,
+  "modules": {
+    "gene_mapper.py": {
+      "name": "gene_mapper",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/gene_mapper.py",
+      "relative_path": "gene_mapper.py",
+      "classes": [
+        "GeneType",
+        "CapsuleType",
+        "GeneSignal",
+        "GeneMatch",
+        "GeneMapper"
+      ],
+      "functions": [
+        "get_mapper",
+        "match_gene",
+        "select_capsule_type",
+        "analyze_signals"
+      ],
+      "public_api": [
+        "GeneMapper.extract_signals",
+        "GeneMapper.match_gene",
+        "GeneMapper.select_capsule_type",
+        "GeneMapper.select_capsule_type_batch",
+        "GeneMapper.find_related_genes",
+        "get_mapper",
+        "match_gene",
+        "select_capsule_type",
+        "analyze_signals"
+      ],
+      "imports": [
+        "re",
+        "time",
+        "typing",
+        "dataclasses",
+        "enum"
+      ],
+      "docstring": "记忆殿堂v2.0 基因图谱映射器 V1.0\n\n功能:\n1. 信号提取: 从问题中提取信号\n2. 基因匹配: 匹配适合的基因类型\n3. 胶囊选择: 根据信号选择胶囊类型\n\n作者: engineering_software_architect\n版本: 1.0.0"
+    },
+    "gdi_scorer.py": {
+      "name": "gdi_scorer",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/gdi_scorer.py",
+      "relative_path": "gdi_scorer.py",
+      "classes": [
+        "CapsuleType",
+        "GDIResult",
+        "GDIScorer"
+      ],
+      "functions": [
+        "get_scorer",
+        "score_capsule",
+        "score_capsules",
+        "filter_publishable"
+      ],
+      "public_api": [
+        "GDIResult.should_publish",
+        "GDIResult.to_dict",
+        "GDIScorer.score",
+        "GDIScorer.score_batch",
+        "GDIScorer.filter_by_threshold",
+        "get_scorer",
+        "score_capsule",
+        "score_capsules",
+        "filter_publishable"
+      ],
+      "imports": [
+        "time",
+        "hashlib",
+        "typing",
+        "dataclasses",
+        "enum"
+      ],
+      "docstring": "记忆殿堂v2.0 GDI评分器 V1.0\n\nGDI四维评分体系:\n- GDI_intrinsic (35%): 内容质量\n- GDI_usage (30%): 使用指标\n- GDI_social (20%): 社交信号\n- GDI_freshness (15%): 新鲜度\n\n作者: engineering_software_architect\n版本: 1.0.0"
+    },
+    "benchmark.py": {
+      "name": "benchmark",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/benchmark.py",
+      "relative_path": "benchmark.py",
+      "classes": [],
+      "functions": [
+        "random_string",
+        "random_record",
+        "measure_time",
+        "bench_gateway_read_write",
+        "bench_wal_write",
+        "bench_search",
+        "bench_extractor_compression",
+        "main"
+      ],
+      "public_api": [
+        "random_string",
+        "random_record",
+        "measure_time",
+        "bench_gateway_read_write",
+        "bench_wal_write",
+        "bench_search",
+        "bench_extractor_compression",
+        "main"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "time",
+        "json",
+        "tempfile",
+        "random",
+        "string",
+        "pathlib",
+        "typing",
+        "tracemalloc",
+        "statistics"
+      ],
+      "docstring": "记忆殿堂v2.0 性能基准测试\nBenchmark for 记忆殿堂v2.0\n\n测试项：\n1. Gateway 读写性能\n2. WAL 写入性能\n3. 搜索响应时间\n4. 萃取压缩率"
+    },
+    "test_gdi_gene.py": {
+      "name": "test_gdi_gene",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/test_gdi_gene.py",
+      "relative_path": "test_gdi_gene.py",
+      "classes": [],
+      "functions": [
+        "test_gdi_scorer",
+        "test_gene_mapper",
+        "test_capsule_generator",
+        "test_integration",
+        "main"
+      ],
+      "public_api": [
+        "test_gdi_scorer",
+        "test_gene_mapper",
+        "test_capsule_generator",
+        "test_integration",
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "time"
+      ],
+      "docstring": "记忆殿堂v2.0 GDI评分与基因图谱测试\n验证: gdi_scorer.py, gene_mapper.py, capsule_generator.py"
+    },
+    "run.py": {
+      "name": "run",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/run.py",
+      "relative_path": "run.py",
+      "classes": [],
+      "functions": [
+        "get_role_registry",
+        "get_lifecycle_manager",
+        "get_hook_manager",
+        "get_task_registry",
+        "log",
+        "result_test",
+        "result_error",
+        "test_agent",
+        "test_mini_agent",
+        "test_gateway",
+        "test_wal",
+        "test_cli",
+        "test_plugin",
+        "main"
+      ],
+      "public_api": [
+        "get_role_registry",
+        "get_lifecycle_manager",
+        "get_hook_manager",
+        "get_task_registry",
+        "log",
+        "result_test",
+        "result_error",
+        "test_agent",
+        "test_mini_agent",
+        "test_gateway",
+        "test_wal",
+        "test_cli",
+        "test_plugin",
+        "main"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "json",
+        "time",
+        "argparse",
+        "subprocess",
+        "pathlib",
+        "typing",
+        "agent",
+        "agent.role_registry",
+        "agent.lifecycle_manager",
+        "mini_agent",
+        "mini_agent.registry",
+        "mini_agent.test_mini_agent"
+      ],
+      "docstring": "记忆殿堂v2.0 - 独立运行验证脚本\n=====================================\n\n目标: 验证记忆殿堂可脱离OpenClaw独立运行\n\n测试内容:\n1. Gateway 读写\n2. WAL 操作\n3. CLI 命令\n4. 插件加载\n5. Agent 代理模块 (DAME)\n\n运行方式:\n    python run.py              # 运行所有测"
+    },
+    "capsule_generator.py": {
+      "name": "capsule_generator",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/capsule_generator.py",
+      "relative_path": "capsule_generator.py",
+      "classes": [
+        "GeneType",
+        "Capsule",
+        "GeneSignal",
+        "GeneMatch",
+        "GeneMapper",
+        "CapsuleGenerator"
+      ],
+      "functions": [
+        "get_generator",
+        "generate_capsule"
+      ],
+      "public_api": [
+        "Capsule.to_dict",
+        "Capsule.from_dict",
+        "GeneMapper.extract_signals",
+        "GeneMapper.match_gene",
+        "GeneMapper.select_capsule_type",
+        "CapsuleGenerator.generate",
+        "CapsuleGenerator.generate_and_evaluate",
+        "get_generator",
+        "generate_capsule"
+      ],
+      "imports": [
+        "re",
+        "time",
+        "hashlib",
+        "json",
+        "typing",
+        "dataclasses",
+        "enum",
+        "gdi_scorer",
+        "evomap_validator"
+      ],
+      "docstring": "记忆殿堂v2.0 胶囊类型生成器 V1.0\n\n根据基因图谱决定生成的胶囊类型:\n- repair: 修复胶囊\n- optimize: 优化胶囊\n- innovate: 创新胶囊\n\n作者: engineering_software_architect\n版本: 1.0.0"
+    },
+    "evomap_validator.py": {
+      "name": "evomap_validator",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/evomap_validator.py",
+      "relative_path": "evomap_validator.py",
+      "classes": [
+        "EvoMapStatus",
+        "EvoMapCheck",
+        "EvoMapValidationResult",
+        "EvoMapValidator"
+      ],
+      "functions": [
+        "get_validator",
+        "validate_for_evomap",
+        "validate_batch_for_evomap",
+        "filter_evomap_ready"
+      ],
+      "public_api": [
+        "EvoMapValidationResult.to_dict",
+        "EvoMapValidationResult.get_summary",
+        "EvoMapValidator.validate",
+        "EvoMapValidator.validate_batch",
+        "EvoMapValidator.filter_by_evomap_ready",
+        "get_validator",
+        "validate_for_evomap",
+        "validate_batch_for_evomap",
+        "filter_evomap_ready"
+      ],
+      "imports": [
+        "re",
+        "time",
+        "typing",
+        "dataclasses",
+        "enum"
+      ],
+      "docstring": "记忆殿堂v2.0 EvoMap兼容性验证器 V1.0\n\n在胶囊发布前检查是否符合EvoMap标准，避免无效发布。\n\nEvoMap关键指标:\n- outcome.score: ≥0.98 (最重要)\n- confidence: =0.99\n- success_streak: 影响GDI\n- kg_enriched: true (promotion门槛)\n- kg_entities_used: =5\n"
+    },
+    "verify_tool_invocation.py": {
+      "name": "verify_tool_invocation",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/verify_tool_invocation.py",
+      "relative_path": "verify_tool_invocation.py",
+      "classes": [],
+      "functions": [
+        "test_gateway_file_io",
+        "test_wal_real_persistence",
+        "test_plugin_real_execution",
+        "test_agent_lifecycle_real",
+        "main"
+      ],
+      "public_api": [
+        "test_gateway_file_io",
+        "test_wal_real_persistence",
+        "test_plugin_real_execution",
+        "test_agent_lifecycle_real",
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "os",
+        "time",
+        "hashlib",
+        "pathlib"
+      ],
+      "docstring": "Mimir Core 工具调用验证测试\n============================\n目标：验证Mimir Core是否能真实执行工具，而非仅在内存层面成功\n\n测试内容：\n1. Gateway write/read - 验证文件系统真实写入\n2. WAL write - 验证WAL日志真实持久化\n3. Plugin execute - 验证插件能真实执行代码"
+    },
+    "permission/engine.py": {
+      "name": "permission.engine",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/permission/engine.py",
+      "relative_path": "permission/engine.py",
+      "classes": [
+        "PermissionLevel",
+        "RuleAction",
+        "Rule",
+        "PermissionContext",
+        "PermissionResult",
+        "PermissionEngine"
+      ],
+      "functions": [
+        "get_engine",
+        "check_permission"
+      ],
+      "public_api": [
+        "PermissionEngine.check",
+        "PermissionEngine.add_rule",
+        "PermissionEngine.remove_rule",
+        "PermissionEngine.register_hook",
+        "PermissionEngine.unregister_hook",
+        "PermissionEngine.get_level_name",
+        "PermissionEngine.set_level",
+        "get_engine",
+        "check_permission"
+      ],
+      "imports": [
+        "enum",
+        "typing",
+        "dataclasses",
+        "re",
+        "urllib.parse"
+      ],
+      "docstring": "记忆殿堂v2.0 - 权限引擎\nPermission Engine with 5-level model and Rule Engine\n\n五级权限模型:\n- ReadOnly: 只读访问\n- WorkspaceWrite: 工作区写入\n- DangerFullAccess: 危险操作完全访问\n- Prompt: 需要确认提示\n- Allow: 完全允许\n\n规则引擎:\n- allow: 允许操作\n"
+    },
+    "permission/__init__.py": {
+      "name": "permission",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/permission/__init__.py",
+      "relative_path": "permission/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "engine"
+      ],
+      "docstring": "记忆殿堂v2.0 - 权限引擎模块\n\n五级权限模型:\n- ReadOnly: 只读访问\n- WorkspaceWrite: 工作区写入\n- DangerFullAccess: 危险操作完全访问\n- Prompt: 需要确认提示\n- Allow: 完全允许\n\n规则引擎:\n- allow: 允许操作\n- deny: 拒绝操作\n- ask: 需要用户确认\n\nUsage:\n    from permiss"
+    },
+    "cli/router.py": {
+      "name": "cli.router",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/cli/router.py",
+      "relative_path": "cli/router.py",
+      "classes": [
+        "ArgType",
+        "Arg",
+        "Command",
+        "ParsedArgs",
+        "Router"
+      ],
+      "functions": [
+        "get_router",
+        "parse_and_run"
+      ],
+      "public_api": [
+        "Arg.validate",
+        "Command.get_arg",
+        "ParsedArgs.get",
+        "Router.arg",
+        "Router.command",
+        "Router.add_command",
+        "Router.parse",
+        "Router.validate",
+        "Router.execute",
+        "Router.get_help",
+        "Router.run",
+        "get_router",
+        "parse_and_run"
+      ],
+      "imports": [
+        "re",
+        "shlex",
+        "dataclasses",
+        "enum",
+        "typing"
+      ],
+      "docstring": "记忆殿堂v2.0 - CLI路由系统\n命令解析、参数验证、帮助系统"
+    },
+    "cli/commands.py": {
+      "name": "cli.commands",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/cli/commands.py",
+      "relative_path": "cli/commands.py",
+      "classes": [
+        "MemoryStore",
+        "MemoryCommands"
+      ],
+      "functions": [
+        "main"
+      ],
+      "public_api": [
+        "MemoryStore.write",
+        "MemoryStore.write_raw",
+        "MemoryStore.read",
+        "MemoryStore.delete",
+        "MemoryStore.list_keys",
+        "MemoryStore.count",
+        "MemoryStore.get_all",
+        "MemoryCommands.write",
+        "MemoryCommands.read",
+        "MemoryCommands.search_memories",
+        "MemoryCommands.stats",
+        "MemoryCommands.health_check",
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "os",
+        "json",
+        "hashlib",
+        "argparse",
+        "typing",
+        "base_wal.wal",
+        "health.health_check",
+        "sensory.semantic_search",
+        "interfaces.adapters"
+      ],
+      "docstring": "记忆殿堂v2.0 - Slash命令系统 (CLI)\n\n提供以下slash命令:\n- /memory write <key> <value>  - 写入记忆\n- /memory read <key>            - 读取记忆\n- /memory search <query>        - 语义搜索记忆\n- /memory stats                - 查看统计信息\n-"
+    },
+    "cli/__init__.py": {
+      "name": "cli",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/cli/__init__.py",
+      "relative_path": "cli/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "router"
+      ],
+      "docstring": "记忆殿堂v2.0 - CLI模块\n\n提供命令行路由功能：\n- 命令解析\n- 参数验证\n- 帮助系统\n\nUsage:\n    from cli import get_router, parse_and_run\n\n    router = get_router()\n    success, result, errors = router.run(\"search --query hello\")"
+    },
+    "cli/tui.py": {
+      "name": "cli.tui",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/cli/tui.py",
+      "relative_path": "cli/tui.py",
+      "classes": [
+        "Colors",
+        "Column",
+        "Table",
+        "ProgressBar",
+        "Spinner",
+        "Pager"
+      ],
+      "functions": [
+        "colorize",
+        "has_color_support",
+        "print_header",
+        "print_success",
+        "print_error",
+        "print_warning",
+        "print_info",
+        "confirm",
+        "input_with_default"
+      ],
+      "public_api": [
+        "colorize",
+        "has_color_support",
+        "Table.add_row",
+        "Table.render",
+        "Table.print",
+        "ProgressBar.update",
+        "ProgressBar.finish",
+        "Spinner.update",
+        "Spinner.start",
+        "Spinner.stop",
+        "Pager.get_page",
+        "Pager.display_page",
+        "Pager.browse",
+        "print_header",
+        "print_success",
+        "print_error",
+        "print_warning",
+        "print_info",
+        "confirm",
+        "input_with_default"
+      ],
+      "imports": [
+        "sys",
+        "shutil",
+        "typing",
+        "dataclasses"
+      ],
+      "docstring": "记忆殿堂v2.0 - TUI组件库\n提供表格渲染、进度条、颜色输出、分页显示等组件"
+    },
+    "sensory/cache_invalidation.py": {
+      "name": "sensory.cache_invalidation",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/sensory/cache_invalidation.py",
+      "relative_path": "sensory/cache_invalidation.py",
+      "classes": [
+        "CacheEntry",
+        "HybridCacheInvalidator",
+        "MemorySensoryIndex"
+      ],
+      "functions": [],
+      "public_api": [
+        "CacheEntry.touch",
+        "HybridCacheInvalidator.should_invalidate",
+        "HybridCacheInvalidator.get",
+        "HybridCacheInvalidator.set",
+        "HybridCacheInvalidator.invalidate",
+        "HybridCacheInvalidator.touch",
+        "HybridCacheInvalidator.invalidate_pattern",
+        "HybridCacheInvalidator.clear",
+        "HybridCacheInvalidator.get_stats",
+        "HybridCacheInvalidator.reset_stats",
+        "MemorySensoryIndex.search",
+        "MemorySensoryIndex.add_entry",
+        "MemorySensoryIndex.get_entry",
+        "MemorySensoryIndex.invalidate"
+      ],
+      "imports": [
+        "time",
+        "threading",
+        "typing",
+        "dataclasses",
+        "collections"
+      ],
+      "docstring": "记忆殿堂v2.0 缓存失效模块\nCache Invalidation Optimization Capsule\n\n混合失效策略：TTL + 版本号\n减少90% false positives\n\n作者: 织界中枢\n版本: 1.0.0"
+    },
+    "sensory/semantic_search.py": {
+      "name": "sensory.semantic_search",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/sensory/semantic_search.py",
+      "relative_path": "sensory/semantic_search.py",
+      "classes": [
+        "GatewayConfig",
+        "TaskStatus",
+        "SearchQuery",
+        "SearchResult",
+        "QueryTask",
+        "TaskRegistry",
+        "VectorIndex",
+        "SemanticSearchEngine"
+      ],
+      "functions": [
+        "get_task_registry",
+        "create_engine"
+      ],
+      "public_api": [
+        "GatewayConfig.get",
+        "GatewayConfig.reload",
+        "SearchResult.to_dict",
+        "QueryTask.duration_ms",
+        "QueryTask.to_dict",
+        "TaskRegistry.create_task",
+        "TaskRegistry.get_task",
+        "TaskRegistry.update_status",
+        "TaskRegistry.register_callback",
+        "TaskRegistry.cancel_task",
+        "TaskRegistry.get_stats",
+        "get_task_registry",
+        "VectorIndex.add",
+        "VectorIndex.get",
+        "VectorIndex.search",
+        "VectorIndex.delete",
+        "VectorIndex.get_stats",
+        "SemanticSearchEngine.add_document",
+        "SemanticSearchEngine.search",
+        "SemanticSearchEngine.search_by_task",
+        "SemanticSearchEngine.get_task_status",
+        "SemanticSearchEngine.cancel_search",
+        "SemanticSearchEngine.get_stats",
+        "create_engine"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "json",
+        "time",
+        "hashlib",
+        "asyncio",
+        "threading",
+        "uuid",
+        "pathlib",
+        "dataclasses",
+        "typing",
+        "collections",
+        "enum",
+        "re"
+      ],
+      "docstring": "记忆殿堂v2.0 语义搜索引擎 V2.6\n通感模块核心实现\n\n融合claw-code设计理念：\n- 向量索引 (Vector Index)\n- 相似度匹配 (Similarity Matching)\n- 分页/超时控制 (Pagination/Timeout Control)\n- TaskRegistry追踪 (Query Task Tracking)\n- Gateway配置对接 (Gateway"
+    },
+    "sensory/__init__.py": {
+      "name": "sensory",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/sensory/__init__.py",
+      "relative_path": "sensory/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "semantic_search",
+        "cache_invalidation"
+      ],
+      "docstring": "记忆殿堂v2.0 通感模块 (Sensory)\n语义搜索系统 V2.6\n\n融合claw-code设计：\n- 向量索引\n- 相似度匹配\n- 分页/超时控制\n- TaskRegistry追踪\n- Gateway配置对接\n- HybridCacheInvalidator (Cache Invalidation Capsule)\n\n作者: 织界中枢\n版本: 2.7.0"
+    },
+    "optimize/adaptive_compression.py": {
+      "name": "optimize.adaptive_compression",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/optimize/adaptive_compression.py",
+      "relative_path": "optimize/adaptive_compression.py",
+      "classes": [
+        "CompressionLevel",
+        "CompressionTask",
+        "MemoryEntry",
+        "CompressionResult",
+        "IndexSearchResult",
+        "AdaptiveCompressionScheduler",
+        "IncrementalMemoryIndex",
+        "PredictiveCompressor"
+      ],
+      "functions": [],
+      "public_api": [
+        "AdaptiveCompressionScheduler.calculate_interval",
+        "AdaptiveCompressionScheduler.get_current_interval",
+        "AdaptiveCompressionScheduler.get_next_compress_time",
+        "AdaptiveCompressionScheduler.should_compress_now",
+        "AdaptiveCompressionScheduler.get_stats",
+        "IncrementalMemoryIndex.add_entry",
+        "IncrementalMemoryIndex.search",
+        "IncrementalMemoryIndex.update_access",
+        "IncrementalMemoryIndex.delete_entry",
+        "IncrementalMemoryIndex.get_stats",
+        "PredictiveCompressor.add_feature_extractor",
+        "PredictiveCompressor.predict_next_compress_time",
+        "PredictiveCompressor.record_actual_benefit",
+        "PredictiveCompressor.get_prediction_accuracy",
+        "PredictiveCompressor.get_stats"
+      ],
+      "imports": [
+        "time",
+        "asyncio",
+        "logging",
+        "hashlib",
+        "bisect",
+        "typing",
+        "dataclasses",
+        "enum",
+        "collections"
+      ],
+      "docstring": "记忆殿堂v2.0 - 自适应压缩优化模块\nCapsule: 01-optimize-memory-palace-v2\nGDI: 65.7 | 性能优化 | 自适应压缩 | 增量索引 | 预测压缩\n\n包含:\n- AdaptiveCompressionScheduler: 自适应压缩间隔调度器\n- IncrementalMemoryIndex: 增量内存索引\n- PredictiveCompresso"
+    },
+    "optimize/__init__.py": {
+      "name": "optimize",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/optimize/__init__.py",
+      "relative_path": "optimize/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "optimize.adaptive_compression"
+      ],
+      "docstring": "记忆殿堂v2.0 - 自适应压缩优化模块\nCapsule: 01-optimize-memory-palace-v2\n\n导出:\n- AdaptiveCompressionScheduler: 自适应压缩间隔调度器\n- IncrementalMemoryIndex: 增量内存索引\n- PredictiveCompressor: 预测性压缩器"
+    },
+    "repair/backup_manager.py": {
+      "name": "repair.backup_manager",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/repair/backup_manager.py",
+      "relative_path": "repair/backup_manager.py",
+      "classes": [
+        "VerificationStatus",
+        "ImportanceLevel",
+        "BackupSnapshot",
+        "RestorationResult",
+        "RAGVerificationResult",
+        "CompressedItem",
+        "MemoryBackupManager",
+        "ImportanceAwareCompressor"
+      ],
+      "functions": [
+        "_simple_similarity"
+      ],
+      "public_api": [
+        "MemoryBackupManager.backup_before_compress",
+        "MemoryBackupManager.restore",
+        "MemoryBackupManager.restore_critical_only",
+        "MemoryBackupManager.list_snapshots",
+        "MemoryBackupManager.cleanup_expired",
+        "MemoryBackupManager.get_stats",
+        "ImportanceAwareCompressor.calculate_importance",
+        "ImportanceAwareCompressor.compress_with_importance",
+        "ImportanceAwareCompressor.compress_with_backup",
+        "ImportanceAwareCompressor.get_importance_distribution",
+        "ImportanceAwareCompressor.get_stats"
+      ],
+      "imports": [
+        "time",
+        "asyncio",
+        "logging",
+        "hashlib",
+        "json",
+        "os",
+        "typing",
+        "dataclasses",
+        "enum",
+        "collections"
+      ],
+      "docstring": "记忆殿堂v2.0 - 备份恢复与修复模块\nCapsule: 01-repair-memory-palace-v2\nGDI: 67.6 | 记忆殿堂 | RAG修复 | 备份恢复 | 压缩优化\n\n包含:\n- MemoryBackupManager: 记忆备份与恢复管理器\n- ImportanceAwareCompressor: 重要性感知压缩器\n- verify_rag_source: RAG源码验"
+    },
+    "repair/__init__.py": {
+      "name": "repair",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/repair/__init__.py",
+      "relative_path": "repair/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "repair.backup_manager"
+      ],
+      "docstring": "记忆殿堂v2.0 - 备份恢复与修复模块\nCapsule: 01-repair-memory-palace-v2\n\n导出:\n- verify_rag_source: RAG源码验证函数\n- MemoryBackupManager: 记忆备份与恢复管理器\n- ImportanceAwareCompressor: 重要性感知压缩器"
+    },
+    "config/loader.py": {
+      "name": "config.loader",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/config/loader.py",
+      "relative_path": "config/loader.py",
+      "classes": [
+        "ConfigLoader"
+      ],
+      "functions": [
+        "get_loader",
+        "load_config",
+        "get_config"
+      ],
+      "public_api": [
+        "ConfigLoader.load",
+        "ConfigLoader.get",
+        "ConfigLoader.reload",
+        "get_loader",
+        "load_config",
+        "get_config"
+      ],
+      "imports": [
+        "os",
+        "yaml",
+        "pathlib",
+        "typing"
+      ],
+      "docstring": "记忆殿堂v2.0 配置加载器\n支持YAML配置 + 环境变量覆盖\n\n环境变量格式: MEMORY_HALL_* 前缀\n示例:\n  MEMORY_HALL_STORAGE_BASE_DIR -> storage.base_dir\n  MEMORY_HALL_CACHE_LRU_MEMORY_CACHE_SIZE -> cache.lru.memory_cache_size\n  MEMORY_HALL"
+    },
+    "config/__init__.py": {
+      "name": "config",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/config/__init__.py",
+      "relative_path": "config/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "loader"
+      ],
+      "docstring": "记忆殿堂v2.0 配置模块\n\n用法:\n    from config import load_config, get_config\n    \n    # 加载全部配置\n    config = load_config()\n    \n    # 获取特定配置\n    cache_size = get_config('cache', 'lru', 'memory_cache_size')\n    \n "
+    },
+    "task/task_manager.py": {
+      "name": "task.task_manager",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/task/task_manager.py",
+      "relative_path": "task/task_manager.py",
+      "classes": [
+        "TaskStatus",
+        "PhaseType",
+        "CircuitState",
+        "TaskContext",
+        "CircuitBreaker",
+        "TaskManager",
+        "CircuitOpenError",
+        "TaskNotFoundError"
+      ],
+      "functions": [
+        "get_default_manager",
+        "create_task"
+      ],
+      "public_api": [
+        "TaskManager.register_task",
+        "TaskManager.get_task",
+        "TaskManager.list_tasks",
+        "TaskManager.cancel_task",
+        "TaskManager.delete_task",
+        "TaskManager.transition_to",
+        "TaskManager.set_phase",
+        "TaskManager.register_phase_handler",
+        "TaskManager.get_circuit_state",
+        "TaskManager.reset_circuit",
+        "TaskManager.is_circuit_closed",
+        "TaskManager.register_observer",
+        "TaskManager.get_stats",
+        "get_default_manager",
+        "create_task"
+      ],
+      "imports": [
+        "time",
+        "uuid",
+        "asyncio",
+        "enum",
+        "typing",
+        "dataclasses",
+        "collections"
+      ],
+      "docstring": "记忆殿堂v2.0 - 任务管理模块\n基于织界中枢V2.0的任务管理系统\n\n功能：\n- 任务注册和状态机\n- 熔断机制\n- 阶段协议"
+    },
+    "task/__init__.py": {
+      "name": "task",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/task/__init__.py",
+      "relative_path": "task/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "task_manager"
+      ],
+      "docstring": "记忆殿堂v2.0 - 任务管理模块\n\n基于织界中枢V2.0的任务管理系统"
+    },
+    "mini_agent/hooks.py": {
+      "name": "mini_agent.hooks",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/mini_agent/hooks.py",
+      "relative_path": "mini_agent/hooks.py",
+      "classes": [
+        "TimeoutError",
+        "timeout",
+        "HookEvent",
+        "HookResult",
+        "ToolCall",
+        "ToolResult",
+        "HookContext",
+        "BeforeToolCallHook",
+        "ToolResultPersistHook",
+        "DefaultBeforeToolCallHook",
+        "DefaultToolResultPersistHook",
+        "HookManager"
+      ],
+      "functions": [
+        "create_default_hook_manager"
+      ],
+      "public_api": [
+        "BeforeToolCallHook.name",
+        "BeforeToolCallHook.handle",
+        "ToolResultPersistHook.name",
+        "ToolResultPersistHook.handle",
+        "DefaultBeforeToolCallHook.handle",
+        "DefaultToolResultPersistHook.handle",
+        "DefaultToolResultPersistHook.get_recent_results",
+        "DefaultToolResultPersistHook.clear",
+        "HookManager.register_before_tool_hook",
+        "HookManager.register_persist_hook",
+        "HookManager.register_global_filter",
+        "HookManager.run_before_tool_call",
+        "HookManager.run_tool_result_persist",
+        "HookManager.clear",
+        "create_default_hook_manager"
+      ],
+      "imports": [
+        "dataclasses",
+        "enum",
+        "typing",
+        "datetime",
+        "json",
+        "signal",
+        "threading"
+      ],
+      "docstring": "Hook机制模块 - 精简自Claude Code hooks.rs\n\n实现两种核心Hook：\n1. before_tool_call - 工具调用前执行\n2. tool_result_persist - 工具结果持久化"
+    },
+    "mini_agent/test_mini_agent.py": {
+      "name": "mini_agent.test_mini_agent",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/mini_agent/test_mini_agent.py",
+      "relative_path": "mini_agent/test_mini_agent.py",
+      "classes": [
+        "TestRunner"
+      ],
+      "functions": [
+        "test_compact_config",
+        "test_message_creation",
+        "test_should_compact",
+        "test_compact_session",
+        "test_hooks_basic",
+        "test_default_before_tool_hook",
+        "test_hook_manager",
+        "test_task_creation",
+        "test_task_status_transitions",
+        "test_task_dependencies",
+        "test_task_queue",
+        "test_task_registry_stats",
+        "test_export_import",
+        "main"
+      ],
+      "public_api": [
+        "TestRunner.check",
+        "TestRunner.summary",
+        "test_compact_config",
+        "test_message_creation",
+        "test_should_compact",
+        "test_compact_session",
+        "test_hooks_basic",
+        "test_default_before_tool_hook",
+        "test_hook_manager",
+        "test_task_creation",
+        "test_task_status_transitions",
+        "test_task_dependencies",
+        "test_task_queue",
+        "test_task_registry_stats",
+        "test_export_import",
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "os",
+        "compact",
+        "hooks",
+        "registry"
+      ],
+      "docstring": "test_mini_agent.py - 记忆殿堂v2.0 Mini Agent 测试\n\n执行: python3 test_mini_agent.py\n期望: 返回 0 表示所有测试通过"
+    },
+    "mini_agent/registry.py": {
+      "name": "mini_agent.registry",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/mini_agent/registry.py",
+      "relative_path": "mini_agent/registry.py",
+      "classes": [
+        "TaskStatus",
+        "TaskPriority",
+        "Task",
+        "TaskRegistry"
+      ],
+      "functions": [
+        "create_task_registry"
+      ],
+      "public_api": [
+        "Task.to_dict",
+        "TaskRegistry.create",
+        "TaskRegistry.get",
+        "TaskRegistry.list",
+        "TaskRegistry.update",
+        "TaskRegistry.delete",
+        "TaskRegistry.start",
+        "TaskRegistry.complete",
+        "TaskRegistry.fail",
+        "TaskRegistry.cancel",
+        "TaskRegistry.next_task",
+        "TaskRegistry.get_queue",
+        "TaskRegistry.on",
+        "TaskRegistry.stats",
+        "TaskRegistry.to_json",
+        "TaskRegistry.load_from_json",
+        "create_task_registry"
+      ],
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "enum",
+        "typing",
+        "datetime",
+        "json",
+        "uuid"
+      ],
+      "docstring": "任务注册表模块 - 简单任务管理\n\n实现功能：\n1. 任务注册与跟踪\n2. 状态管理\n3. 优先级队列\n4. 简单调度"
+    },
+    "mini_agent/compact.py": {
+      "name": "mini_agent.compact",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/mini_agent/compact.py",
+      "relative_path": "mini_agent/compact.py",
+      "classes": [
+        "CompactionConfig",
+        "CompactionResult",
+        "Message"
+      ],
+      "functions": [
+        "estimate_message_tokens",
+        "estimate_session_tokens",
+        "should_compact",
+        "_get_compactable_start",
+        "_has_existing_summary",
+        "summarize_messages",
+        "merge_compact_summaries",
+        "format_compact_summary",
+        "compress_summary_text",
+        "compact_session",
+        "_extract_summary_content",
+        "_build_continuation_message"
+      ],
+      "public_api": [
+        "estimate_message_tokens",
+        "estimate_session_tokens",
+        "should_compact",
+        "summarize_messages",
+        "merge_compact_summaries",
+        "format_compact_summary",
+        "compress_summary_text",
+        "compact_session"
+      ],
+      "imports": [
+        "dataclasses",
+        "typing",
+        "datetime",
+        "re"
+      ],
+      "docstring": "上下文压缩模块 - 精简自Claude Code compact.rs\n\n实现5层压缩体系：\n- L1: Tool Result Budget (限制工具结果大小)\n- L2: Snip Compact (删除旧对话历史)\n- L3: Microcompact (缓存工具结果到磁盘)\n- L4: Context Collapse (将消息组归档为摘要)\n- L5: Autocompact (LLM"
+    },
+    "mini_agent/__init__.py": {
+      "name": "mini_agent",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/mini_agent/__init__.py",
+      "relative_path": "mini_agent/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "compact",
+        "hooks",
+        "registry"
+      ],
+      "docstring": "记忆殿堂v2.0 Mini Agent - 精简Claude Code实现\n\n基于claw-code源码设计，实现小模型代理功能：\n- 上下文压缩 (compact)\n- Hook机制 (before_tool_call, tool_result_persist)\n- 任务注册表 (registry)"
+    },
+    "gateway/gateway.py": {
+      "name": "gateway.gateway",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/gateway/gateway.py",
+      "relative_path": "gateway/gateway.py",
+      "classes": [
+        "Config",
+        "LRUCache",
+        "Gateway"
+      ],
+      "functions": [
+        "_get_vault_adapter",
+        "_expand_path",
+        "_get_vault_dir",
+        "_get_log_dir",
+        "_get_audit_file",
+        "_get_cache_file",
+        "audit_log",
+        "_sanitize_string",
+        "_validate_path",
+        "_validate_record_type",
+        "read_record",
+        "write_record",
+        "generate_id",
+        "fence_checkpoint",
+        "notify_coordinator",
+        "write",
+        "read",
+        "search",
+        "delete",
+        "get_audit_logs",
+        "get_cache_stats",
+        "clear_cache"
+      ],
+      "public_api": [
+        "Config.get",
+        "Config.reload",
+        "LRUCache.get",
+        "LRUCache.set",
+        "LRUCache.invalidate",
+        "LRUCache.get_stats",
+        "audit_log",
+        "read_record",
+        "write_record",
+        "generate_id",
+        "fence_checkpoint",
+        "notify_coordinator",
+        "write",
+        "read",
+        "search",
+        "delete",
+        "get_audit_logs",
+        "get_cache_stats",
+        "clear_cache",
+        "Gateway.put",
+        "Gateway.get",
+        "Gateway.find",
+        "Gateway.remove",
+        "Gateway.logs",
+        "Gateway.stats"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "json",
+        "re",
+        "hashlib",
+        "time",
+        "asyncio",
+        "subprocess",
+        "datetime",
+        "pathlib",
+        "typing",
+        "collections"
+      ],
+      "docstring": "记忆殿堂 Gateway V2.0\n独立Python模块 - 不依赖OpenClaw\n\n特性：\n- LRU缓存 (1000条目)\n- TTL过期 (默认7天)\n- 写时失效机制\n- 审计日志\n- IMemoryVault接口统一访问\n\n配置：通过 config.yaml 管理"
+    },
+    "gateway/__init__.py": {
+      "name": "gateway",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/gateway/__init__.py",
+      "relative_path": "gateway/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "gateway"
+      ],
+      "docstring": "记忆殿堂 Gateway V2.0\n独立模块 - 不依赖OpenClaw\n\n功能：\n- LRU缓存 (1000条目)\n- TTL过期 (默认7天)\n- 写时失效机制\n- 审计日志"
+    },
+    "interfaces/imemory_vault.py": {
+      "name": "interfaces.imemory_vault",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/interfaces/imemory_vault.py",
+      "relative_path": "interfaces/imemory_vault.py",
+      "classes": [
+        "SearchResult",
+        "IMemoryVault"
+      ],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "abc",
+        "typing",
+        "dataclasses"
+      ],
+      "docstring": "记忆殿堂抽象接口 (IMemoryVault)\n\n定义记忆殿堂的标准接口契约，任何存储实现必须实现此接口。\nMimir-Core只通过此接口访问存储，不关心底层实现。\n\n接口方法：\n- read(key) -> Optional[Any]: 读取记忆\n- write(key, value, metadata) -> bool: 写入记忆\n- delete(key) -> bool: 删除记忆\n- "
+    },
+    "interfaces/verify_interface.py": {
+      "name": "interfaces.verify_interface",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/interfaces/verify_interface.py",
+      "relative_path": "interfaces/verify_interface.py",
+      "classes": [],
+      "functions": [
+        "verify_interface"
+      ],
+      "public_api": [
+        "verify_interface"
+      ],
+      "imports": [
+        "sys",
+        "os"
+      ],
+      "docstring": "接口契约验证脚本\n\n验证 FileSystemAdapter 正确实现了 IMemoryVault 接口的所有方法。"
+    },
+    "interfaces/__init__.py": {
+      "name": "interfaces",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/interfaces/__init__.py",
+      "relative_path": "interfaces/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "imemory_vault",
+        "adapters"
+      ],
+      "docstring": "记忆殿堂接口模块\n\n导出：\n- IMemoryVault: 抽象接口\n- SearchResult: 搜索结果数据结构\n- FileSystemAdapter: 文件系统实现"
+    },
+    "agent/task_dispatcher.py": {
+      "name": "agent.task_dispatcher",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/agent/task_dispatcher.py",
+      "relative_path": "agent/task_dispatcher.py",
+      "classes": [
+        "DispatcherConfig",
+        "TaskDispatcher"
+      ],
+      "functions": [
+        "get_global_dispatcher"
+      ],
+      "public_api": [
+        "TaskDispatcher.set_callbacks",
+        "TaskDispatcher.submit",
+        "TaskDispatcher.dispatch",
+        "TaskDispatcher.complete",
+        "TaskDispatcher.cancel",
+        "TaskDispatcher.get",
+        "TaskDispatcher.list_all",
+        "TaskDispatcher.list_pending",
+        "TaskDispatcher.list_running",
+        "TaskDispatcher.list_completed",
+        "TaskDispatcher.count",
+        "TaskDispatcher.count_pending",
+        "TaskDispatcher.start_dispatch_thread",
+        "TaskDispatcher.stop_dispatch_thread",
+        "get_global_dispatcher"
+      ],
+      "imports": [
+        "threading",
+        "uuid",
+        "time",
+        "typing",
+        "dataclasses",
+        "datetime",
+        "heapq",
+        "models",
+        "role_registry",
+        "lifecycle_manager"
+      ],
+      "docstring": "任务分发器 (TaskDispatcher) - 记忆殿堂v2.0 DAME\n基于claw-code任务调度设计\n\n功能:\n    - 任务提交与排队\n    - 任务分配给合适的代理\n    - 优先级调度\n    - 任务状态追踪"
+    },
+    "agent/lifecycle_manager.py": {
+      "name": "agent.lifecycle_manager",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/agent/lifecycle_manager.py",
+      "relative_path": "agent/lifecycle_manager.py",
+      "classes": [
+        "LifecycleConfig",
+        "AgentLifecycleManager"
+      ],
+      "functions": [
+        "get_global_lifecycle_manager"
+      ],
+      "public_api": [
+        "AgentLifecycleManager.set_callbacks",
+        "AgentLifecycleManager.spawn",
+        "AgentLifecycleManager.spawn_by_type",
+        "AgentLifecycleManager.heartbeat",
+        "AgentLifecycleManager.terminate",
+        "AgentLifecycleManager.set_idle",
+        "AgentLifecycleManager.assign_task",
+        "AgentLifecycleManager.get",
+        "AgentLifecycleManager.list_all",
+        "AgentLifecycleManager.list_by_state",
+        "AgentLifecycleManager.list_alive",
+        "AgentLifecycleManager.count",
+        "AgentLifecycleManager.count_alive",
+        "AgentLifecycleManager.start_cleanup_thread",
+        "AgentLifecycleManager.stop_cleanup_thread",
+        "get_global_lifecycle_manager"
+      ],
+      "imports": [
+        "threading",
+        "time",
+        "uuid",
+        "typing",
+        "dataclasses",
+        "datetime",
+        "models",
+        "role_registry"
+      ],
+      "docstring": "代理生命周期管理器 (AgentLifecycleManager) - 记忆殿堂v2.0 DAME\n基于claw-code worker_boot.rs和task_packet.rs设计\n\n功能:\n    - spawn: 启动新代理\n    - heartbeat: 心跳保活\n    - terminate: 终止代理"
+    },
+    "agent/role_registry.py": {
+      "name": "agent.role_registry",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/agent/role_registry.py",
+      "relative_path": "agent/role_registry.py",
+      "classes": [
+        "RegistryInner",
+        "RoleRegistry"
+      ],
+      "functions": [
+        "get_global_registry"
+      ],
+      "public_api": [
+        "RegistryInner.next_id",
+        "RoleRegistry.register",
+        "RoleRegistry.unregister",
+        "RoleRegistry.get",
+        "RoleRegistry.get_by_type",
+        "RoleRegistry.find_can_handle",
+        "RoleRegistry.list_all",
+        "RoleRegistry.list_types",
+        "RoleRegistry.count",
+        "RoleRegistry.clear",
+        "get_global_registry"
+      ],
+      "imports": [
+        "threading",
+        "typing",
+        "dataclasses",
+        "models"
+      ],
+      "docstring": "角色注册表 (RoleRegistry) - 记忆殿堂v2.0 DAME\n基于claw-code TaskRegistry设计模式\n\n功能:\n    - 注册/注销角色\n    - 角色查询与匹配\n    - 并发控制"
+    },
+    "agent/models.py": {
+      "name": "agent.models",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/agent/models.py",
+      "relative_path": "agent/models.py",
+      "classes": [
+        "RoleType",
+        "AgentState",
+        "TaskStatus",
+        "Role",
+        "Agent",
+        "Task",
+        "TaskResult"
+      ],
+      "functions": [],
+      "public_api": [
+        "Role.can_handle",
+        "Agent.is_alive",
+        "Agent.mark_heartbeat",
+        "Task.can_retry"
+      ],
+      "imports": [
+        "enum",
+        "dataclasses",
+        "typing",
+        "datetime"
+      ],
+      "docstring": "数据模型定义 - 记忆殿堂v2.0 DAME"
+    },
+    "agent/test_agent.py": {
+      "name": "agent.test_agent",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/agent/test_agent.py",
+      "relative_path": "agent/test_agent.py",
+      "classes": [],
+      "functions": [
+        "test_role_registry",
+        "test_lifecycle_manager",
+        "test_task_dispatcher",
+        "test_integration",
+        "main"
+      ],
+      "public_api": [
+        "test_role_registry",
+        "test_lifecycle_manager",
+        "test_task_dispatcher",
+        "test_integration",
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "time",
+        "datetime"
+      ],
+      "docstring": "DAME 动态代理测试 - 记忆殿堂v2.0\n\n验证:\n1. RoleRegistry - 角色注册表\n2. AgentLifecycleManager - 代理生命周期管理\n3. TaskDispatcher - 任务分发器\n\n返回码:\n    0 - 所有测试通过\n    1 - 测试失败"
+    },
+    "agent/__init__.py": {
+      "name": "agent",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/agent/__init__.py",
+      "relative_path": "agent/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "role_registry",
+        "lifecycle_manager",
+        "task_dispatcher"
+      ],
+      "docstring": "记忆殿堂v2.0 动态代理 DAME (Dynamic Agent Management Engine)\n基于claw-code的TaskRegistry和生命周期管理设计\n\n模块:\n    - RoleRegistry: 角色注册表\n    - AgentLifecycleManager: 代理生命周期管理器\n    - TaskDispatcher: 任务分发器"
+    },
+    "memory_layer/rl_access.py": {
+      "name": "memory_layer.rl_access",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/memory_layer/rl_access.py",
+      "relative_path": "memory_layer/rl_access.py",
+      "classes": [
+        "MemoryTier",
+        "MemoryAccessAction",
+        "MemoryAccessState",
+        "MemoryBlock",
+        "SimplePolicyNetwork",
+        "RLMemoryLayerManager"
+      ],
+      "functions": [],
+      "public_api": [
+        "MemoryAccessState.to_vector",
+        "MemoryBlock.record_access",
+        "SimplePolicyNetwork.predict_q",
+        "SimplePolicyNetwork.choose_action",
+        "SimplePolicyNetwork.update",
+        "RLMemoryLayerManager.on_access",
+        "RLMemoryLayerManager.add",
+        "RLMemoryLayerManager.get_stats",
+        "RLMemoryLayerManager.get_tier_distribution"
+      ],
+      "imports": [
+        "time",
+        "random",
+        "threading",
+        "enum",
+        "typing",
+        "dataclasses",
+        "collections"
+      ],
+      "docstring": "记忆殿堂v2.0 记忆层级管理模块\nRL Memory Access Optimization Capsule\n\n通过强化学习动态优化记忆访问策略\n根据访问频率和使用模式自动调整记忆层级\n\n效果：\n- 缓存命中率：65% → 89% (+37%)\n- 平均延迟：45ms → 23ms (-49%)\n- 记忆利用率：40% → 78% (+95%)\n\n作者: 织界中枢\n版本: 1.0.0"
+    },
+    "memory_layer/__init__.py": {
+      "name": "memory_layer",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/memory_layer/__init__.py",
+      "relative_path": "memory_layer/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "rl_access"
+      ],
+      "docstring": "记忆殿堂v2.0 记忆层级管理模块 (Memory Layer)\nRL Memory Access Optimization Capsule\n\n通过强化学习动态优化记忆访问策略：\n- 根据访问频率自动调整记忆层级\n- 热记忆 → 温记忆 → 冷记忆 动态流转\n- 策略网络持续学习优化\n\n效果：\n- 缓存命中率：65% → 89% (+37%)\n- 平均延迟：45ms → 23ms (-49%)\n-"
+    },
+    "fence/fence.py": {
+      "name": "fence.fence",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/fence/fence.py",
+      "relative_path": "fence/fence.py",
+      "classes": [
+        "SpaceType",
+        "Permission",
+        "SpaceBoundary",
+        "ViolationEvent",
+        "FenceAlert",
+        "MemoryPalaceFence"
+      ],
+      "functions": [
+        "get_fence",
+        "check_boundary",
+        "validate_access"
+      ],
+      "public_api": [
+        "FenceAlert.register_handler",
+        "FenceAlert.trigger",
+        "FenceAlert.get_recent_violations",
+        "MemoryPalaceFence.set_current_context",
+        "MemoryPalaceFence.check_boundary",
+        "MemoryPalaceFence.validate_access",
+        "MemoryPalaceFence.enforce_isolation",
+        "MemoryPalaceFence.get_fence_status",
+        "get_fence",
+        "check_boundary",
+        "validate_access"
+      ],
+      "imports": [
+        "os",
+        "json",
+        "pathlib",
+        "typing",
+        "dataclasses",
+        "enum",
+        "time",
+        "hashlib"
+      ],
+      "docstring": "记忆殿堂 - 围栏隔离模块 V1.3\n空间隔离、权限边界检查、越界检测和告警"
+    },
+    "fence/__init__.py": {
+      "name": "fence",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/fence/__init__.py",
+      "relative_path": "fence/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "fence"
+      ],
+      "docstring": "记忆殿堂 - 围栏隔离模块 V1.3\n导出核心类和函数"
+    },
+    "utils/deepseek_client.py": {
+      "name": "utils.deepseek_client",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/utils/deepseek_client.py",
+      "relative_path": "utils/deepseek_client.py",
+      "classes": [
+        "LLMConfig",
+        "RateLimiter",
+        "DeepSeekClient"
+      ],
+      "functions": [
+        "get_client"
+      ],
+      "public_api": [
+        "RateLimiter.acquire",
+        "DeepSeekClient.chat",
+        "DeepSeekClient.completion",
+        "DeepSeekClient.config",
+        "DeepSeekClient.set_api_key",
+        "get_client"
+      ],
+      "imports": [
+        "os",
+        "time",
+        "threading",
+        "queue",
+        "typing",
+        "dataclasses",
+        "json"
+      ],
+      "docstring": "记忆殿堂v2.0 - DeepSeek LLM 共享客户端\n单例模式 + 线程安全 + 请求队列 + 重试逻辑"
+    },
+    "utils/__init__.py": {
+      "name": "utils",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/utils/__init__.py",
+      "relative_path": "utils/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [],
+      "docstring": ""
+    },
+    "health/threshold.py": {
+      "name": "health.threshold",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/threshold.py",
+      "relative_path": "health/threshold.py",
+      "classes": [
+        "AdaptiveThresholdCalculator"
+      ],
+      "functions": [],
+      "public_api": [
+        "AdaptiveThresholdCalculator.calculate_iqr",
+        "AdaptiveThresholdCalculator.calculate_adaptive_thresholds"
+      ],
+      "imports": [
+        "typing"
+      ],
+      "docstring": "记忆殿堂-观自在 V3.0.0 - 自适应阈值计算器"
+    },
+    "health/data_classes.py": {
+      "name": "health.data_classes",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/data_classes.py",
+      "relative_path": "health/data_classes.py",
+      "classes": [
+        "SixDimensionData",
+        "CircuitBreakerInfo",
+        "DiagnosisResult"
+      ],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "dataclasses",
+        "typing",
+        "enums"
+      ],
+      "docstring": "记忆殿堂-观自在 V3.0.0 - 数据类定义"
+    },
+    "health/metrics.py": {
+      "name": "health.metrics",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/metrics.py",
+      "relative_path": "health/metrics.py",
+      "classes": [
+        "SixDimensionMetrics"
+      ],
+      "functions": [],
+      "public_api": [
+        "SixDimensionMetrics.record_task",
+        "SixDimensionMetrics.record_tool_failure",
+        "SixDimensionMetrics.get_current_metrics",
+        "SixDimensionMetrics.get_history_for_adaptive"
+      ],
+      "imports": [
+        "os",
+        "json",
+        "time",
+        "datetime",
+        "typing",
+        "data_classes"
+      ],
+      "docstring": "记忆殿堂-观自在 V3.0.0 - 六维指标收集器"
+    },
+    "health/circuit_breaker.py": {
+      "name": "health.circuit_breaker",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/circuit_breaker.py",
+      "relative_path": "health/circuit_breaker.py",
+      "classes": [
+        "CircuitBreaker"
+      ],
+      "functions": [],
+      "public_api": [
+        "CircuitBreaker.call",
+        "CircuitBreaker.get_info",
+        "CircuitBreaker.reset"
+      ],
+      "imports": [
+        "os",
+        "json",
+        "time",
+        "threading",
+        "typing",
+        "enums",
+        "data_classes"
+      ],
+      "docstring": "记忆殿堂-观自在 V3.0.0 - 断路器"
+    },
+    "health/checker.py": {
+      "name": "health.checker",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/checker.py",
+      "relative_path": "health/checker.py",
+      "classes": [
+        "HealthChecker"
+      ],
+      "functions": [],
+      "public_api": [
+        "HealthChecker.get_full_report",
+        "HealthChecker.get_quick_status",
+        "HealthChecker.record_task_completion",
+        "HealthChecker.record_failure"
+      ],
+      "imports": [
+        "typing",
+        "enums",
+        "data_classes",
+        "metrics",
+        "panel",
+        "diagnostic"
+      ],
+      "docstring": "记忆殿堂-观自在 V3.0.0 - 健康检查器"
+    },
+    "health/health_check.py": {
+      "name": "health.health_check",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/health_check.py",
+      "relative_path": "health/health_check.py",
+      "classes": [],
+      "functions": [
+        "main"
+      ],
+      "public_api": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "json",
+        "health"
+      ],
+      "docstring": "记忆殿堂-观自在 V3.0.0 - CLI入口"
+    },
+    "health/enums.py": {
+      "name": "health.enums",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/enums.py",
+      "relative_path": "health/enums.py",
+      "classes": [
+        "HealthStatus",
+        "CircuitState"
+      ],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "enum"
+      ],
+      "docstring": "记忆殿堂-观自在 V3.0.0 - 枚举定义"
+    },
+    "health/panel.py": {
+      "name": "health.panel",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/panel.py",
+      "relative_path": "health/panel.py",
+      "classes": [
+        "CircuitBreakerPanel"
+      ],
+      "functions": [],
+      "public_api": [
+        "CircuitBreakerPanel.get_panel_status",
+        "CircuitBreakerPanel.get_breaker",
+        "CircuitBreakerPanel.reset_breaker",
+        "CircuitBreakerPanel.call_with_circuit"
+      ],
+      "imports": [
+        "typing",
+        "circuit_breaker"
+      ],
+      "docstring": "记忆殿堂-观自在 V3.0.0 - 断路器状态面板"
+    },
+    "health/diagnostic.py": {
+      "name": "health.diagnostic",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/diagnostic.py",
+      "relative_path": "health/diagnostic.py",
+      "classes": [
+        "DiagnosticEngine"
+      ],
+      "functions": [],
+      "public_api": [
+        "DiagnosticEngine.diagnose",
+        "DiagnosticEngine.save_diagnosis"
+      ],
+      "imports": [
+        "os",
+        "json",
+        "datetime",
+        "typing",
+        "enums",
+        "data_classes",
+        "threshold"
+      ],
+      "docstring": "记忆殿堂-观自在 V3.0.0 - 问题诊断引擎"
+    },
+    "health/__init__.py": {
+      "name": "health",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/__init__.py",
+      "relative_path": "health/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "enums",
+        "data_classes",
+        "threshold",
+        "circuit_breaker",
+        "metrics",
+        "panel",
+        "diagnostic",
+        "checker"
+      ],
+      "docstring": "记忆殿堂-观自在 V3.0.0 - 健康检查模块\n\n六维指标:\n1. 任务成功率 (task_success_rate)\n2. 平均步数 (steps_per_task)  \n3. Token消耗 (token_per_task)\n4. 工具失败率 (tool_failure_rate)\n5. 验证通过率 (verification_pass_rate)\n6. 延迟百分位 (latency_p50"
+    },
+    "integrate/stats.py": {
+      "name": "integrate.stats",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/integrate/stats.py",
+      "relative_path": "integrate/stats.py",
+      "classes": [
+        "MemoryStats"
+      ],
+      "functions": [],
+      "public_api": [
+        "MemoryStats.to_dict"
+      ],
+      "imports": [
+        "dataclasses"
+      ],
+      "docstring": "记忆殿堂 统计模块\n\n提供MemoryPalaceIntegration所需的统计类"
+    },
+    "integrate/config.py": {
+      "name": "integrate.config",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/integrate/config.py",
+      "relative_path": "integrate/config.py",
+      "classes": [
+        "IntegrationConfig"
+      ],
+      "functions": [],
+      "public_api": [
+        "IntegrationConfig.to_dict",
+        "IntegrationConfig.from_dict"
+      ],
+      "imports": [
+        "dataclasses",
+        "typing"
+      ],
+      "docstring": "记忆殿堂 配置模块\n\n提供MemoryPalaceIntegration所需的配置类"
+    },
+    "integrate/__init__.py": {
+      "name": "integrate",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/integrate/__init__.py",
+      "relative_path": "integrate/__init__.py",
+      "classes": [
+        "MemoryPalaceIntegration"
+      ],
+      "functions": [
+        "create_integration"
+      ],
+      "public_api": [
+        "MemoryPalaceIntegration.register_hook",
+        "MemoryPalaceIntegration.get_stats",
+        "MemoryPalaceIntegration.get_health_report",
+        "MemoryPalaceIntegration.get_all_snapshots",
+        "create_integration"
+      ],
+      "imports": [
+        "time",
+        "asyncio",
+        "logging",
+        "typing",
+        "dataclasses",
+        "config",
+        "stats",
+        "evolve.self_evolution",
+        "evolve.three_ring_architecture",
+        "optimize.adaptive_compression",
+        "repair.backup_manager",
+        "sensory.cache_invalidation",
+        "extractor.adaptive_compression",
+        "memory_layer.rl_access"
+      ],
+      "docstring": "记忆殿堂v2.0 - 统一集成接口\nCapsule: 01-innovate + 01-optimize + 01-repair + 03-optimize-capsules\n\n整合五个胶囊模块，提供统一的接入接口:\n- evolve: 自进化闭环 (ProactiveKnowledgeCorrector, IntentPredictor, AutomatedRootCauseFixer)\n- o"
+    },
+    "plugin/plugin.py": {
+      "name": "plugin.plugin",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/plugin/plugin.py",
+      "relative_path": "plugin/plugin.py",
+      "classes": [
+        "PluginState",
+        "PluginMetadata",
+        "PluginInterface",
+        "PluginRegistry",
+        "_PluginEntry",
+        "PluginLoader"
+      ],
+      "functions": [
+        "plugin_metadata"
+      ],
+      "public_api": [
+        "PluginInterface.id",
+        "PluginInterface.state",
+        "PluginInterface.set_config",
+        "PluginInterface.get_config",
+        "PluginInterface.on_load",
+        "PluginInterface.on_enable",
+        "PluginInterface.on_disable",
+        "PluginInterface.on_unload",
+        "PluginInterface.log_info",
+        "PluginInterface.log_warning",
+        "PluginInterface.log_error",
+        "PluginRegistry.register",
+        "PluginRegistry.unregister",
+        "PluginRegistry.load_plugin",
+        "PluginRegistry.enable_plugin",
+        "PluginRegistry.disable_plugin",
+        "PluginRegistry.unload_plugin",
+        "PluginRegistry.reload_plugin",
+        "PluginRegistry.get_plugin",
+        "PluginRegistry.get_metadata",
+        "PluginRegistry.list_plugins",
+        "PluginRegistry.get_all_loaded",
+        "PluginRegistry.register_hook",
+        "PluginRegistry.unregister_hook",
+        "PluginRegistry.log_info",
+        "PluginRegistry.log_error",
+        "PluginRegistry.plugin_count",
+        "PluginLoader.discover",
+        "PluginLoader.load_discovered",
+        "PluginLoader.import_plugin_module",
+        "plugin_metadata"
+      ],
+      "imports": [
+        "__future__",
+        "importlib",
+        "importlib.util",
+        "logging",
+        "os",
+        "sys",
+        "abc",
+        "dataclasses",
+        "enum",
+        "pathlib",
+        "typing"
+      ],
+      "docstring": "记忆殿堂v2.0 插件系统框架\n=======================\n提供插件接口定义、动态加载机制和全局注册表。\n\n核心概念：\n- PluginInterface: 所有插件必须实现的接口\n- PluginLoader: 根据配置路径动态发现并加载插件\n- PluginRegistry: 全局单例注册表，管理插件生命周期"
+    },
+    "plugin/__init__.py": {
+      "name": "plugin",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/plugin/__init__.py",
+      "relative_path": "plugin/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "__future__",
+        "plugin.plugin"
+      ],
+      "docstring": "记忆殿堂v2.0 插件系统\n====================\n\n使用示例::\n\n    from plugin import (\n        PluginInterface, PluginRegistry, PluginLoader,\n        PluginMetadata, PluginState, plugin_metadata\n    )\n\n    # 定义插件\n    @"
+    },
+    "extractor/adaptive_compression.py": {
+      "name": "extractor.adaptive_compression",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/extractor/adaptive_compression.py",
+      "relative_path": "extractor/adaptive_compression.py",
+      "classes": [
+        "CompressionLevel",
+        "AdaptiveThresholds",
+        "CompressionContext",
+        "AdaptiveCompressionController",
+        "AdaptiveExtractionPipeline"
+      ],
+      "functions": [],
+      "public_api": [
+        "AdaptiveCompressionController.evaluate_complexity",
+        "AdaptiveCompressionController.determine_compression_level",
+        "AdaptiveCompressionController.get_target_ratio",
+        "AdaptiveCompressionController.set_level",
+        "AdaptiveCompressionController.calculate_optimal_tokens",
+        "AdaptiveCompressionController.record_compression",
+        "AdaptiveCompressionController.get_stats",
+        "AdaptiveExtractionPipeline.create_context",
+        "AdaptiveExtractionPipeline.should_use_llm",
+        "AdaptiveExtractionPipeline.get_extraction_config"
+      ],
+      "imports": [
+        "time",
+        "threading",
+        "enum",
+        "typing",
+        "dataclasses"
+      ],
+      "docstring": "记忆殿堂v2.0 自适应压缩模块\nContext Optimization Adaptive Compression Capsule\n\n根据实时需求动态调整压缩阈值\n在信息保留和资源效率之间取得平衡\n\n场景：\n- 简单查询：高压缩率，快速响应\n- 复杂推理：低压缩率，保留细节\n- 混合任务：自适应切换\n\n作者: 织界中枢\n版本: 1.0.0"
+    },
+    "extractor/extractor.py": {
+      "name": "extractor.extractor",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/extractor/extractor.py",
+      "relative_path": "extractor/extractor.py",
+      "classes": [
+        "MemoryType",
+        "CompressionResult",
+        "Extractor",
+        "SimpleLLMClient"
+      ],
+      "functions": [],
+      "public_api": [
+        "Extractor.estimate_tokens",
+        "Extractor.extract",
+        "Extractor.extract_batch",
+        "Extractor.extract_episodic",
+        "Extractor.extract_short_term",
+        "Extractor.extract_long_term",
+        "SimpleLLMClient.call"
+      ],
+      "imports": [
+        "re",
+        "json",
+        "hashlib",
+        "enum",
+        "dataclasses",
+        "typing"
+      ],
+      "docstring": "记忆殿堂 萃取模块 V3.2\n智能摘要系统 - 4层压缩流水线\n\n层级：\n  L1: Token预算检查 + 快速裁剪\n  L2: 结构化记忆提取（episodic/short_term/long_term分类）\n  L3: 链式语义摘要merge算法\n  L4: 格式化注入 + WAL协议兼容"
+    },
+    "extractor/__init__.py": {
+      "name": "extractor",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/extractor/__init__.py",
+      "relative_path": "extractor/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "extractor",
+        "adaptive_compression"
+      ],
+      "docstring": "记忆殿堂 萃取模块 V3.2\n智能摘要系统 - 4层压缩流水线\n\nV3.3新增：\n- AdaptiveCompressionController (Context Optimization Capsule)\n- AdaptiveExtractionPipeline\n\n作者: 织界中枢\n版本: 3.3.0"
+    },
+    "base_wal/wal.py": {
+      "name": "base_wal.wal",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/base_wal/wal.py",
+      "relative_path": "base_wal/wal.py",
+      "classes": [
+        "WALPhase",
+        "WALEntryType",
+        "WALEntry",
+        "Transaction",
+        "WALManager"
+      ],
+      "functions": [
+        "get_default_wal_manager",
+        "begin",
+        "prepare_write",
+        "execute_write",
+        "commit",
+        "rollback",
+        "wal_write",
+        "wal_delete",
+        "compact",
+        "recover",
+        "status"
+      ],
+      "public_api": [
+        "WALEntry.to_dict",
+        "WALEntry.from_dict",
+        "WALEntry.compute_checksum",
+        "WALManager.begin_transaction",
+        "WALManager.prepare_write",
+        "WALManager.execute_write",
+        "WALManager.commit",
+        "WALManager.rollback",
+        "WALManager.add_entry",
+        "WALManager.compact",
+        "WALManager.recover",
+        "WALManager.get_status",
+        "WALManager.create_checkpoint",
+        "get_default_wal_manager",
+        "begin",
+        "prepare_write",
+        "execute_write",
+        "commit",
+        "rollback",
+        "wal_write",
+        "wal_delete",
+        "compact",
+        "recover",
+        "status"
+      ],
+      "imports": [
+        "os",
+        "json",
+        "time",
+        "uuid",
+        "struct",
+        "hashlib",
+        "threading",
+        "enum",
+        "dataclasses",
+        "typing",
+        "pathlib"
+      ],
+      "docstring": "记忆殿堂v2.0 - WAL (Write-Ahead Log) 协议实现\n\n三段式提交: PREPARE → EXECUTE → COMMIT/ROLLBACK\n支持 WAL 压缩 (Compaction) 和重放恢复 (Replay Recovery)"
+    },
+    "base_wal/__init__.py": {
+      "name": "base_wal",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/base_wal/__init__.py",
+      "relative_path": "base_wal/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "wal"
+      ],
+      "docstring": "记忆殿堂v2.0 - WAL (Write-Ahead Log) 基座\n\n三段式提交: PREPARE → EXECUTE → COMMIT/ROLLBACK\n支持 WAL 压缩 (Compaction) 和重放恢复 (Replay Recovery)\n\nUsage:\n    from base_wal import WALManager, begin, prepare_write, execut"
+    },
+    "normalizer/deduplicator.py": {
+      "name": "normalizer.deduplicator",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/normalizer/deduplicator.py",
+      "relative_path": "normalizer/deduplicator.py",
+      "classes": [
+        "SimHash",
+        "TaskStatus",
+        "TaskRecord",
+        "LLMSemanticDeduplicator",
+        "TaskRegistry",
+        "Deduplicator"
+      ],
+      "functions": [],
+      "public_api": [
+        "SimHash.compute",
+        "SimHash.hamming_distance",
+        "SimHash.is_similar",
+        "TaskRecord.to_dict",
+        "TaskRecord.from_dict",
+        "TaskRegistry.register",
+        "TaskRegistry.get",
+        "TaskRegistry.update",
+        "TaskRegistry.find_by_hash",
+        "TaskRegistry.get_active_tasks",
+        "TaskRegistry.get_merged_history",
+        "Deduplicator.compute_hash",
+        "Deduplicator.check_duplicate",
+        "Deduplicator.merge_tasks",
+        "Deduplicator.discard_task",
+        "Deduplicator.get_task_status",
+        "Deduplicator.get_stats"
+      ],
+      "imports": [
+        "hashlib",
+        "json",
+        "os",
+        "re",
+        "time",
+        "dataclasses",
+        "datetime",
+        "enum",
+        "pathlib",
+        "typing"
+      ],
+      "docstring": "记忆殿堂归一模块 V2.5\n去重引擎：SimHash指纹 + LLM语义去重 + 任务注册追踪"
+    },
+    "normalizer/__init__.py": {
+      "name": "normalizer",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/normalizer/__init__.py",
+      "relative_path": "normalizer/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "deduplicator"
+      ],
+      "docstring": "记忆殿堂归一模块 V2.5\n去重引擎：SimHash指纹 + LLM语义去重 + 任务注册追踪\n\n导出:\n- Deduplicator: 归一化去重主引擎\n- TaskRegistry: 任务注册追踪器\n- TaskRecord: 任务记录数据结构\n- TaskStatus: 任务状态枚举\n- SimHash: SimHash指纹算法"
+    },
+    "evolve/three_ring_architecture.py": {
+      "name": "evolve.three_ring_architecture",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/evolve/three_ring_architecture.py",
+      "relative_path": "evolve/three_ring_architecture.py",
+      "classes": [
+        "RingStatus",
+        "AnomalyType",
+        "MonitorEvent",
+        "DecisionOutput",
+        "ExecutionOutput",
+        "MonitorRing",
+        "DecisionRing",
+        "ExecutionRing",
+        "ThreeRingClosedLoop"
+      ],
+      "functions": [],
+      "public_api": [
+        "MonitorRing.set_threshold",
+        "MonitorRing.register_observer",
+        "MonitorRing.get_anomaly_history",
+        "MonitorRing.get_status",
+        "DecisionRing.get_decision_history",
+        "ExecutionRing.get_execution_history",
+        "ThreeRingClosedLoop.set_cycle_complete_callback",
+        "ThreeRingClosedLoop.set_escalation_callback",
+        "ThreeRingClosedLoop.get_status"
+      ],
+      "imports": [
+        "time",
+        "asyncio",
+        "logging",
+        "typing",
+        "dataclasses",
+        "enum"
+      ],
+      "docstring": "记忆殿堂v2.0 - 三环闭环进化架构\nCapsule: 02-innovate-proactive-evolution-engine\n\n三环闭环:\n- 监控环 (Monitor Ring): 状态感知 + 异常检测\n- 决策环 (Decision Ring): 根因分析 + 策略生成\n- 执行环 (Execution Ring): 方案选择 + 效果验证\n\n核心流程:\n监控环 → 决策环 → 执"
+    },
+    "evolve/self_evolution.py": {
+      "name": "evolve.self_evolution",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/evolve/self_evolution.py",
+      "relative_path": "evolve/self_evolution.py",
+      "classes": [
+        "ConfidenceLevel",
+        "GenerationItem",
+        "VerificationResult",
+        "CorrectionResult",
+        "Intent",
+        "RootCauseAnalysis",
+        "FixExecutionResult",
+        "ProactiveKnowledgeCorrector",
+        "IntentPredictor",
+        "AutonomousRepairExecutor",
+        "AutomatedRootCauseFixer"
+      ],
+      "functions": [],
+      "public_api": [
+        "ProactiveKnowledgeCorrector.get_stats",
+        "ProactiveKnowledgeCorrector.get_recent_corrections",
+        "IntentPredictor.get_accuracy",
+        "IntentPredictor.get_stats",
+        "AutonomousRepairExecutor.get_stats",
+        "AutomatedRootCauseFixer.get_stats",
+        "AutomatedRootCauseFixer.get_execution_history"
+      ],
+      "imports": [
+        "time",
+        "asyncio",
+        "logging",
+        "typing",
+        "dataclasses",
+        "enum"
+      ],
+      "docstring": "记忆殿堂v2.0 - 自进化闭环模块\nCapsule: 01-innovate-memory-palace-v2\nGDI: 66.7 | 自进化 | 智能闭环 | 意图预测 | 主动纠错\n\n包含:\n- ProactiveKnowledgeCorrector: 主动式知识纠错\n- IntentPredictor: 意图预测与预加载\n- AutomatedRootCauseFixer: 自动化根因修复"
+    },
+    "evolve/__init__.py": {
+      "name": "evolve",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/evolve/__init__.py",
+      "relative_path": "evolve/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "evolve.self_evolution",
+        "evolve.three_ring_architecture"
+      ],
+      "docstring": "记忆殿堂v2.0 - 自进化闭环模块\nCapsule: 01-innovate-memory-palace-v2 + 02-innovate-proactive-evolution-engine\n\n导出:\n- ProactiveKnowledgeCorrector: 主动式知识纠错器\n- IntentPredictor: 意图预测与预加载器\n- AutomatedRootCauseFixer: 自"
+    },
+    "audit/audit.py": {
+      "name": "audit.audit",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/audit/audit.py",
+      "relative_path": "audit/audit.py",
+      "classes": [
+        "AuditLevel",
+        "AuditCategory",
+        "RiskLevel",
+        "AuditEntry",
+        "_AuditDB",
+        "_TextLogWriter",
+        "AuditLogger"
+      ],
+      "functions": [
+        "infer_risk",
+        "_sanitize_path",
+        "_sanitize_entry_for_log",
+        "get_audit_logger",
+        "log_operation",
+        "log_high_risk_operation",
+        "query_logs"
+      ],
+      "public_api": [
+        "AuditEntry.to_dict",
+        "AuditEntry.from_dict",
+        "infer_risk",
+        "_AuditDB.insert",
+        "_AuditDB.query",
+        "_AuditDB.count",
+        "_AuditDB.get_high_risk_summary",
+        "_AuditDB.get_recent_failures",
+        "_TextLogWriter.write",
+        "AuditLogger.track",
+        "AuditLogger.log",
+        "AuditLogger.log_read",
+        "AuditLogger.log_write",
+        "AuditLogger.log_delete",
+        "AuditLogger.log_security",
+        "AuditLogger.log_permission",
+        "AuditLogger.log_error",
+        "AuditLogger.query",
+        "AuditLogger.query_high_risk",
+        "AuditLogger.count",
+        "AuditLogger.get_high_risk_summary",
+        "AuditLogger.get_recent_failures",
+        "get_audit_logger",
+        "log_operation",
+        "log_high_risk_operation",
+        "query_logs"
+      ],
+      "imports": [
+        "json",
+        "os",
+        "sqlite3",
+        "threading",
+        "traceback",
+        "datetime",
+        "enum",
+        "pathlib",
+        "typing"
+      ],
+      "docstring": "记忆殿堂v2.0 - 审计日志核心实现\nFull operation tracking, high-risk operation auditing, log persistence and querying."
+    },
+    "audit/__init__.py": {
+      "name": "audit",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/audit/__init__.py",
+      "relative_path": "audit/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "audit"
+      ],
+      "docstring": "记忆殿堂v2.0 - 审计日志系统\nAudit logging system for 记忆殿堂"
+    },
+    "classifier/monitor.py": {
+      "name": "classifier.monitor",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/classifier/monitor.py",
+      "relative_path": "classifier/monitor.py",
+      "classes": [
+        "ClassificationStats",
+        "LatencyStats",
+        "ClassificationMonitor"
+      ],
+      "functions": [
+        "get_monitor"
+      ],
+      "public_api": [
+        "ClassificationMonitor.record_classification",
+        "ClassificationMonitor.get_error_rate",
+        "ClassificationMonitor.get_average_confidence",
+        "ClassificationMonitor.get_alerts",
+        "get_monitor"
+      ],
+      "imports": [
+        "dataclasses",
+        "typing",
+        "datetime",
+        "threading"
+      ],
+      "docstring": ""
+    },
+    "classifier/classifier.py": {
+      "name": "classifier.classifier",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/classifier/classifier.py",
+      "relative_path": "classifier/classifier.py",
+      "classes": [
+        "TaskStatus",
+        "ClassificationResult",
+        "ClassificationTask",
+        "TaskRegistry",
+        "TaxonomyClassifier",
+        "KnowledgeTypeClassifier",
+        "AutoTagger",
+        "ClassificationEngine"
+      ],
+      "functions": [
+        "get_engine",
+        "classify",
+        "classify_dual",
+        "register_task",
+        "get_task",
+        "get_stats"
+      ],
+      "public_api": [
+        "ClassificationResult.to_dict",
+        "ClassificationTask.to_dict",
+        "TaskRegistry.register",
+        "TaskRegistry.update",
+        "TaskRegistry.get",
+        "TaskRegistry.list_tasks",
+        "TaskRegistry.record_history",
+        "TaskRegistry.get_popular_tags",
+        "TaskRegistry.get_stats",
+        "TaxonomyClassifier.classify",
+        "TaxonomyClassifier.classify_multi_label",
+        "KnowledgeTypeClassifier.classify",
+        "AutoTagger.classify",
+        "AutoTagger.classify_dual",
+        "AutoTagger.classify_taxonomy_only",
+        "AutoTagger.classify_knowledge_type_only",
+        "ClassificationEngine.classify",
+        "ClassificationEngine.classify_batch",
+        "ClassificationEngine.get_stats",
+        "ClassificationEngine.add_custom_taxonomy",
+        "get_engine",
+        "classify",
+        "classify_dual",
+        "register_task",
+        "get_task",
+        "get_stats"
+      ],
+      "imports": [
+        "re",
+        "time",
+        "uuid",
+        "json",
+        "hashlib",
+        "typing",
+        "dataclasses",
+        "enum",
+        "collections"
+      ],
+      "docstring": "记忆殿堂v2.0 分类模块 V2.0\n智能分类系统 - 双维度分类（Taxonomy + Knowledge Type）\n\n融合claw-code设计：\n- 自动标签生成\n- 分类任务注册\n- 多标签支持\n- TaskRegistry追踪\n- Gateway配置对接\n\n作者: 织界中枢\n版本: 2.0.0"
+    },
+    "classifier/__init__.py": {
+      "name": "classifier",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/classifier/__init__.py",
+      "relative_path": "classifier/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "classifier"
+      ],
+      "docstring": "记忆殿堂v2.0 分类模块 V2.0\n智能分类系统 - 双维度分类（Taxonomy + Knowledge Type）\n\n主要功能：\n- 自动标签生成（Taxonomy + 知识类型双维度）\n- 分类任务注册（TaskRegistry）\n- 多标签支持\n- Gateway配置对接\n\n作者: 织界中枢\n版本: 2.0.0"
+    },
+    "tests/test_cli_commands.py": {
+      "name": "tests.test_cli_commands",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_cli_commands.py",
+      "relative_path": "tests/test_cli_commands.py",
+      "classes": [
+        "TestMemoryStore",
+        "TestMain"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestMemoryStore.test_store_init",
+        "TestMemoryStore.test_write_and_read",
+        "TestMemoryStore.test_write_raw",
+        "TestMemoryStore.test_read_nonexistent",
+        "TestMemoryStore.test_delete",
+        "TestMemoryStore.test_delete_nonexistent",
+        "TestMemoryStore.test_list_keys",
+        "TestMemoryStore.test_count",
+        "TestMemoryStore.test_get_all",
+        "TestMain.test_main_help",
+        "TestMain.test_main_write_command",
+        "TestMain.test_main_read_command"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "json",
+        "tempfile",
+        "shutil",
+        "cli.commands"
+      ],
+      "docstring": "测试 cli/commands 模块 - CLI命令系统"
+    },
+    "tests/test_fence.py": {
+      "name": "tests.test_fence",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_fence.py",
+      "relative_path": "tests/test_fence.py",
+      "classes": [
+        "TestSpaceType",
+        "TestPermission",
+        "TestSpaceBoundary",
+        "TestViolationEvent",
+        "TestFenceAlert",
+        "TestMemoryPalaceFence",
+        "TestFenceGlobalFunctions"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestSpaceType.test_types",
+        "TestPermission.test_permissions",
+        "TestSpaceBoundary.test_boundary_creation",
+        "TestViolationEvent.test_event_creation",
+        "TestFenceAlert.test_alert_init",
+        "TestFenceAlert.test_register_handler",
+        "TestFenceAlert.test_get_recent_violations",
+        "TestMemoryPalaceFence.test_fence_init",
+        "TestMemoryPalaceFence.test_set_current_context",
+        "TestMemoryPalaceFence.test_check_boundary_allowed",
+        "TestMemoryPalaceFence.test_check_boundary_denied",
+        "TestMemoryPalaceFence.test_validate_access_read",
+        "TestMemoryPalaceFence.test_validate_access_denied",
+        "TestMemoryPalaceFence.test_enforce_isolation",
+        "TestMemoryPalaceFence.test_get_fence_status",
+        "TestFenceGlobalFunctions.test_get_fence",
+        "TestFenceGlobalFunctions.test_check_boundary_function",
+        "TestFenceGlobalFunctions.test_validate_access_function",
+        "TestFenceGlobalFunctions.test_fence_singleton"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "time",
+        "fence.fence"
+      ],
+      "docstring": "测试 fence 模块 - 围栏隔离系统"
+    },
+    "tests/test_plugin.py": {
+      "name": "tests.test_plugin",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_plugin.py",
+      "relative_path": "tests/test_plugin.py",
+      "classes": [
+        "TestPlugin",
+        "AnotherTestPlugin",
+        "FailingPlugin",
+        "TestPluginMetadata",
+        "TestPluginState",
+        "TestPluginInterface",
+        "TestPluginRegistry",
+        "TestPluginLoader",
+        "TestPluginMetadataDecorator",
+        "Test_PluginEntry"
+      ],
+      "functions": [
+        "fresh_registry",
+        "plugin_a",
+        "plugin_b"
+      ],
+      "public_api": [
+        "TestPlugin.on_load",
+        "TestPlugin.on_enable",
+        "TestPlugin.on_disable",
+        "TestPlugin.on_unload",
+        "AnotherTestPlugin.on_load",
+        "FailingPlugin.on_load",
+        "fresh_registry",
+        "plugin_a",
+        "plugin_b",
+        "TestPluginMetadata.test_metadata_creation",
+        "TestPluginMetadata.test_metadata_required_fields",
+        "TestPluginState.test_states",
+        "TestPluginInterface.test_plugin_init",
+        "TestPluginInterface.test_plugin_config",
+        "TestPluginInterface.test_plugin_lifecycle_hooks",
+        "TestPluginInterface.test_plugin_logging",
+        "TestPluginRegistry.test_registry_singleton",
+        "TestPluginRegistry.test_register_plugin",
+        "TestPluginRegistry.test_register_duplicate",
+        "TestPluginRegistry.test_unregister_plugin",
+        "TestPluginRegistry.test_load_plugin",
+        "TestPluginRegistry.test_load_plugin_not_registered",
+        "TestPluginRegistry.test_load_plugin_already_loaded",
+        "TestPluginRegistry.test_enable_plugin",
+        "TestPluginRegistry.test_disable_plugin",
+        "TestPluginRegistry.test_unload_plugin",
+        "TestPluginRegistry.test_reload_plugin",
+        "TestPluginRegistry.test_get_plugin",
+        "TestPluginRegistry.test_list_plugins",
+        "TestPluginRegistry.test_get_all_loaded",
+        "TestPluginRegistry.test_register_hook",
+        "TestPluginRegistry.test_unregister_hook",
+        "TestPluginRegistry.test_plugin_count",
+        "TestPluginLoader.test_loader_init",
+        "TestPluginLoader.test_discover_empty_dir",
+        "TestPluginLoader.test_discover_with_plugins",
+        "TestPluginMetadataDecorator.test_decorator",
+        "Test_PluginEntry.test_entry_creation"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "tempfile",
+        "shutil",
+        "pathlib",
+        "plugin.plugin"
+      ],
+      "docstring": "测试 plugin 模块 - 插件系统框架"
+    },
+    "tests/test_task.py": {
+      "name": "tests.test_task",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_task.py",
+      "relative_path": "tests/test_task.py",
+      "classes": [
+        "TestTaskStatus",
+        "TestPhaseType",
+        "TestCircuitStateEnum",
+        "TestTaskContext",
+        "TestTaskManager",
+        "TestTaskManagerAsync",
+        "TestGlobalFunctions"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestTaskStatus.test_statuses",
+        "TestPhaseType.test_phases",
+        "TestCircuitStateEnum.test_states",
+        "TestTaskContext.test_context_creation",
+        "TestTaskContext.test_context_with_metadata",
+        "TestTaskManager.test_manager_init",
+        "TestTaskManager.test_register_task",
+        "TestTaskManager.test_get_task",
+        "TestTaskManager.test_list_tasks",
+        "TestTaskManager.test_cancel_task",
+        "TestTaskManager.test_cancel_running_task",
+        "TestTaskManager.test_delete_task",
+        "TestTaskManager.test_transition_to",
+        "TestTaskManager.test_set_phase",
+        "TestTaskManager.test_circuit_breaker_failure",
+        "TestTaskManager.test_circuit_breaker_success",
+        "TestTaskManager.test_get_circuit_state",
+        "TestTaskManager.test_reset_circuit",
+        "TestTaskManager.test_is_circuit_closed",
+        "TestTaskManager.test_register_observer",
+        "TestTaskManager.test_get_stats",
+        "TestTaskManager.test_phase_timeouts",
+        "TestTaskManagerAsync.test_execute_phase",
+        "TestTaskManagerAsync.test_run_task",
+        "TestTaskManagerAsync.test_run_task_with_circuit_open",
+        "TestGlobalFunctions.test_get_default_manager",
+        "TestGlobalFunctions.test_create_task"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "asyncio",
+        "time",
+        "task.task_manager"
+      ],
+      "docstring": "测试 task 模块 - 任务管理系统"
+    },
+    "tests/test_extractor.py": {
+      "name": "tests.test_extractor",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_extractor.py",
+      "relative_path": "tests/test_extractor.py",
+      "classes": [
+        "TestMemoryType",
+        "TestCompressionResult",
+        "TestExtractor",
+        "TestSimpleLLMClient",
+        "TestExtractorAdvanced"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestMemoryType.test_types",
+        "TestCompressionResult.test_result_creation",
+        "TestCompressionResult.test_result_with_confidence",
+        "TestCompressionResult.test_result_with_metadata",
+        "TestExtractor.test_extractor_init",
+        "TestExtractor.test_extract",
+        "TestExtractor.test_extract_batch",
+        "TestExtractor.test_classify_memory",
+        "TestExtractor.test_estimate_tokens",
+        "TestExtractor.test_estimate_tokens_mixed",
+        "TestExtractor.test_l1_fast_prune_short_text",
+        "TestExtractor.test_l1_fast_prune_long_text",
+        "TestExtractor.test_classify_episodic",
+        "TestExtractor.test_classify_short_term",
+        "TestExtractor.test_classify_long_term",
+        "TestExtractor.test_extract_key_points_episodic",
+        "TestExtractor.test_extract_key_points_long_term",
+        "TestExtractor.test_reconstruct_structured",
+        "TestExtractor.test_get_stats",
+        "TestSimpleLLMClient.test_client_init",
+        "TestSimpleLLMClient.test_generate_not_implemented",
+        "TestSimpleLLMClient.test_client_with_api_key",
+        "TestExtractorAdvanced.test_extract_with_memory_type_hint",
+        "TestExtractorAdvanced.test_extract_short_content",
+        "TestExtractorAdvanced.test_batch_extract_empty_list",
+        "TestExtractorAdvanced.test_l2_structured_short_term",
+        "TestExtractorAdvanced.test_target_ratios"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "extractor.extractor"
+      ],
+      "docstring": "测试 extractor 模块 - 内容萃取器"
+    },
+    "tests/test_sensory.py": {
+      "name": "tests.test_sensory",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_sensory.py",
+      "relative_path": "tests/test_sensory.py",
+      "classes": [
+        "TestGatewayConfig",
+        "TestTaskStatus",
+        "TestSearchQuery",
+        "TestSearchResult",
+        "TestQueryTask",
+        "TestTaskRegistry",
+        "TestVectorIndex",
+        "TestSemanticSearchEngine",
+        "TestCreateEngine"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestGatewayConfig.test_config_defaults",
+        "TestTaskStatus.test_statuses",
+        "TestSearchQuery.test_query_creation",
+        "TestSearchResult.test_result_creation",
+        "TestQueryTask.test_task_creation",
+        "TestTaskRegistry.test_registry_init",
+        "TestTaskRegistry.test_get_registry",
+        "TestVectorIndex.test_index_init",
+        "TestVectorIndex.test_add_and_search",
+        "TestSemanticSearchEngine.test_engine_creation",
+        "TestSemanticSearchEngine.test_add_document",
+        "TestSemanticSearchEngine.test_search",
+        "TestSemanticSearchEngine.test_delete_document",
+        "TestSemanticSearchEngine.test_get_stats",
+        "TestCreateEngine.test_create_engine"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "numpy",
+        "sensory.semantic_search"
+      ],
+      "docstring": "测试 sensory 模块 - 语义搜索引擎"
+    },
+    "tests/test_normalizer.py": {
+      "name": "tests.test_normalizer",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_normalizer.py",
+      "relative_path": "tests/test_normalizer.py",
+      "classes": [
+        "TestSimHash",
+        "TestTaskStatus",
+        "TestTaskRecord",
+        "TestLLMSemanticDeduplicator",
+        "TestTaskRegistry",
+        "TestDeduplicator",
+        "TestSimHashAdvanced",
+        "TestTaskRecordAdvanced",
+        "TestTaskRegistryAdvanced",
+        "TestDeduplicatorAdvanced",
+        "TestLLMSemanticDeduplicatorAdvanced"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestSimHash.test_simhash_init",
+        "TestSimHash.test_compute",
+        "TestSimHash.test_compute_different",
+        "TestSimHash.test_distance",
+        "TestSimHash.test_is_similar",
+        "TestTaskStatus.test_statuses",
+        "TestTaskRecord.test_record_creation",
+        "TestLLMSemanticDeduplicator.test_dedup_init",
+        "TestLLMSemanticDeduplicator.test_are_semantically_duplicate",
+        "TestTaskRegistry.test_registry_init",
+        "TestDeduplicator.test_dedup_init",
+        "TestDeduplicator.test_check_duplicate",
+        "TestDeduplicator.test_check_duplicate_candidates",
+        "TestDeduplicator.test_stats",
+        "TestSimHashAdvanced.test_tokenize_english",
+        "TestSimHashAdvanced.test_tokenize_chinese",
+        "TestSimHashAdvanced.test_tokenize_mixed",
+        "TestSimHashAdvanced.test_hash_token",
+        "TestSimHashAdvanced.test_compute_empty_string",
+        "TestSimHashAdvanced.test_hamming_distance_identical",
+        "TestSimHashAdvanced.test_is_similar_with_high_threshold",
+        "TestTaskRecordAdvanced.test_record_to_dict",
+        "TestTaskRecordAdvanced.test_record_from_dict",
+        "TestTaskRegistryAdvanced.test_registry_register_and_get",
+        "TestTaskRegistryAdvanced.test_registry_update",
+        "TestTaskRegistryAdvanced.test_registry_update_nonexistent",
+        "TestTaskRegistryAdvanced.test_registry_find_by_hash",
+        "TestTaskRegistryAdvanced.test_registry_get_active_tasks",
+        "TestTaskRegistryAdvanced.test_registry_get_merged_history",
+        "TestDeduplicatorAdvanced.test_compute_hash",
+        "TestDeduplicatorAdvanced.test_merge_tasks",
+        "TestDeduplicatorAdvanced.test_merge_nonexistent_tasks",
+        "TestDeduplicatorAdvanced.test_discard_task",
+        "TestDeduplicatorAdvanced.test_discard_nonexistent_task",
+        "TestDeduplicatorAdvanced.test_get_task_status",
+        "TestDeduplicatorAdvanced.test_get_task_status_nonexistent",
+        "TestDeduplicatorAdvanced.test_stats_by_status",
+        "TestLLMSemanticDeduplicatorAdvanced.test_fallback_compare_empty_text",
+        "TestLLMSemanticDeduplicatorAdvanced.test_fallback_compare_both_empty",
+        "TestLLMSemanticDeduplicatorAdvanced.test_fallback_compare_identical",
+        "TestLLMSemanticDeduplicatorAdvanced.test_fallback_compare_different"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "normalizer.deduplicator"
+      ],
+      "docstring": "测试 normalizer 模块 - 去重归一化"
+    },
+    "tests/test_classifier.py": {
+      "name": "tests.test_classifier",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_classifier.py",
+      "relative_path": "tests/test_classifier.py",
+      "classes": [
+        "TestTaskStatus",
+        "TestClassificationResult",
+        "TestClassificationTask",
+        "TestTaskRegistry",
+        "TestTaxonomyClassifier",
+        "TestKnowledgeTypeClassifier",
+        "TestAutoTagger",
+        "TestClassificationEngine",
+        "TestGlobalFunctions",
+        "TestClassificationResultAdvanced",
+        "TestClassificationTaskAdvanced",
+        "TestTaskRegistryAdvanced",
+        "TestTaxonomyClassifierAdvanced",
+        "TestKnowledgeTypeClassifierAdvanced",
+        "TestAutoTaggerAdvanced",
+        "TestClassificationEngineAdvanced",
+        "TestGlobalFunctionsAdvanced"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestTaskStatus.test_statuses",
+        "TestClassificationResult.test_result_creation",
+        "TestClassificationTask.test_task_creation",
+        "TestTaskRegistry.test_registry_init",
+        "TestTaskRegistry.test_register_and_get",
+        "TestTaxonomyClassifier.test_classifier_init",
+        "TestTaxonomyClassifier.test_classify",
+        "TestKnowledgeTypeClassifier.test_classifier_init",
+        "TestKnowledgeTypeClassifier.test_classify",
+        "TestAutoTagger.test_tagger_init",
+        "TestAutoTagger.test_tag",
+        "TestClassificationEngine.test_engine_init",
+        "TestClassificationEngine.test_classify_dual",
+        "TestClassificationEngine.test_classify_single",
+        "TestGlobalFunctions.test_get_engine",
+        "TestGlobalFunctions.test_classify_function",
+        "TestGlobalFunctions.test_classify_dual_function",
+        "TestGlobalFunctions.test_register_task_function",
+        "TestGlobalFunctions.test_get_task_function",
+        "TestGlobalFunctions.test_get_stats_function",
+        "TestClassificationResultAdvanced.test_result_to_dict",
+        "TestClassificationResultAdvanced.test_result_repr",
+        "TestClassificationTaskAdvanced.test_task_with_mode",
+        "TestClassificationTaskAdvanced.test_task_to_dict",
+        "TestTaskRegistryAdvanced.test_registry_update",
+        "TestTaskRegistryAdvanced.test_registry_list_tasks",
+        "TestTaskRegistryAdvanced.test_registry_list_tasks_by_status",
+        "TestTaskRegistryAdvanced.test_registry_record_history",
+        "TestTaskRegistryAdvanced.test_registry_get_popular_tags",
+        "TestTaskRegistryAdvanced.test_registry_get_stats",
+        "TestTaxonomyClassifierAdvanced.test_classifier_custom_tags",
+        "TestTaxonomyClassifierAdvanced.test_tokenize",
+        "TestTaxonomyClassifierAdvanced.test_score_tag",
+        "TestTaxonomyClassifierAdvanced.test_classify_with_threshold",
+        "TestKnowledgeTypeClassifierAdvanced.test_classifier_with_custom_types",
+        "TestKnowledgeTypeClassifierAdvanced.test_classify_concept",
+        "TestKnowledgeTypeClassifierAdvanced.test_classify_skill",
+        "TestKnowledgeTypeClassifierAdvanced.test_classify_experience",
+        "TestAutoTaggerAdvanced.test_tagger_with_taxonomies",
+        "TestAutoTaggerAdvanced.test_tagger_with_knowledge_types",
+        "TestClassificationEngineAdvanced.test_engine_with_custom_registry",
+        "TestClassificationEngineAdvanced.test_classify_with_task_id",
+        "TestClassificationEngineAdvanced.test_classify_taxonomy_only",
+        "TestClassificationEngineAdvanced.test_classify_knowledge_type_only",
+        "TestGlobalFunctionsAdvanced.test_classify_with_custom_result_type",
+        "TestGlobalFunctionsAdvanced.test_register_task_with_callback"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "classifier.classifier"
+      ],
+      "docstring": "测试 classifier 模块 - 记忆分类器"
+    },
+    "tests/test_permission.py": {
+      "name": "tests.test_permission",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_permission.py",
+      "relative_path": "tests/test_permission.py",
+      "classes": [
+        "TestPermissionLevel",
+        "TestRuleAction",
+        "TestRule",
+        "TestPermissionContext",
+        "TestPermissionResult",
+        "TestPermissionEngine"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestPermissionLevel.test_levels",
+        "TestRuleAction.test_actions",
+        "TestRule.test_rule_creation",
+        "TestPermissionContext.test_context_creation",
+        "TestPermissionResult.test_result_creation",
+        "TestPermissionEngine.test_engine_init",
+        "TestPermissionEngine.test_get_engine",
+        "TestPermissionEngine.test_engine_check",
+        "TestPermissionEngine.test_check_permission_function"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "permission.engine"
+      ],
+      "docstring": "测试 permission 模块 - 权限管理引擎"
+    },
+    "tests/test_audit.py": {
+      "name": "tests.test_audit",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_audit.py",
+      "relative_path": "tests/test_audit.py",
+      "classes": [
+        "TestAuditLevel",
+        "TestAuditCategory",
+        "TestRiskLevel",
+        "TestAuditEntry",
+        "TestInferRisk",
+        "TestTextLogWriter",
+        "TestAuditDB",
+        "TestAuditLogger",
+        "TestGlobalFunctions"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestAuditLevel.test_levels",
+        "TestAuditLevel.test_comparison",
+        "TestAuditCategory.test_categories",
+        "TestRiskLevel.test_levels",
+        "TestAuditEntry.test_entry_creation",
+        "TestAuditEntry.test_entry_failure",
+        "TestAuditEntry.test_entry_to_dict",
+        "TestAuditEntry.test_entry_from_dict",
+        "TestInferRisk.test_high_risk_patterns",
+        "TestInferRisk.test_medium_risk_patterns",
+        "TestInferRisk.test_delete_category_high_risk",
+        "TestInferRisk.test_security_category_high_risk",
+        "TestInferRisk.test_read_category_low_risk",
+        "TestTextLogWriter.test_writer_init",
+        "TestTextLogWriter.test_writer_write",
+        "TestAuditDB.test_db_init",
+        "TestAuditLogger.test_logger_init",
+        "TestAuditLogger.test_logger_log",
+        "TestAuditLogger.test_logger_log_read",
+        "TestAuditLogger.test_logger_log_write",
+        "TestAuditLogger.test_logger_log_delete",
+        "TestAuditLogger.test_logger_log_security",
+        "TestAuditLogger.test_logger_log_error",
+        "TestAuditLogger.test_logger_context_manager",
+        "TestAuditLogger.test_logger_context_manager_exception",
+        "TestGlobalFunctions.test_get_audit_logger",
+        "TestGlobalFunctions.test_log_operation",
+        "TestGlobalFunctions.test_log_high_risk_operation",
+        "TestGlobalFunctions.test_query_logs"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "tempfile",
+        "time",
+        "datetime",
+        "audit.audit"
+      ],
+      "docstring": "测试 audit 模块 - 审计日志系统"
+    },
+    "tests/test_health.py": {
+      "name": "tests.test_health",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_health.py",
+      "relative_path": "tests/test_health.py",
+      "classes": [
+        "TestHealthStatus",
+        "TestCircuitState",
+        "TestSixDimensionData",
+        "TestCircuitBreakerInfo",
+        "TestDiagnosisResult",
+        "TestAdaptiveThresholdCalculator",
+        "TestCircuitBreaker",
+        "TestSixDimensionMetrics",
+        "TestCircuitBreakerPanel",
+        "TestDiagnosticEngine",
+        "TestHealthChecker"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestHealthStatus.test_statuses",
+        "TestCircuitState.test_states",
+        "TestSixDimensionData.test_data_creation",
+        "TestCircuitBreakerInfo.test_info_creation",
+        "TestDiagnosisResult.test_result_creation",
+        "TestAdaptiveThresholdCalculator.test_calculate_iqr",
+        "TestAdaptiveThresholdCalculator.test_calculate_iqr_small",
+        "TestAdaptiveThresholdCalculator.test_calculate_thresholds",
+        "TestCircuitBreaker.test_breaker_init",
+        "TestCircuitBreaker.test_breaker_opens_at_threshold",
+        "TestCircuitBreaker.test_breaker_record_success",
+        "TestCircuitBreaker.test_breaker_reset",
+        "TestCircuitBreaker.test_breaker_get_info",
+        "TestSixDimensionMetrics.test_metrics_init",
+        "TestSixDimensionMetrics.test_record_task",
+        "TestSixDimensionMetrics.test_record_failure",
+        "TestSixDimensionMetrics.test_get_current_metrics",
+        "TestCircuitBreakerPanel.test_panel_init",
+        "TestCircuitBreakerPanel.test_get_panel_status",
+        "TestCircuitBreakerPanel.test_get_breaker",
+        "TestCircuitBreakerPanel.test_reset_breaker",
+        "TestDiagnosticEngine.test_engine_init",
+        "TestDiagnosticEngine.test_diagnose",
+        "TestHealthChecker.test_checker_init",
+        "TestHealthChecker.test_get_full_report",
+        "TestHealthChecker.test_get_quick_status",
+        "TestHealthChecker.test_record_task_completion",
+        "TestHealthChecker.test_record_failure"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "time",
+        "health"
+      ],
+      "docstring": "测试 health 模块 - 健康检查系统"
+    },
+    "tests/test_base_wal.py": {
+      "name": "tests.test_base_wal",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_base_wal.py",
+      "relative_path": "tests/test_base_wal.py",
+      "classes": [
+        "TestWALEntryType",
+        "TestWALPhase",
+        "TestWALEntry",
+        "TestTransaction",
+        "TestWALManager",
+        "TestWALGlobalFunctions",
+        "TestWALCompaction",
+        "TestWALChecksum"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestWALEntryType.test_entry_types",
+        "TestWALPhase.test_phases",
+        "TestWALEntry.test_entry_creation",
+        "TestWALEntry.test_entry_with_tx_id",
+        "TestTransaction.test_transaction_creation",
+        "TestWALManager.test_manager_init",
+        "TestWALManager.test_begin_transaction",
+        "TestWALManager.test_transaction_lifecycle",
+        "TestWALManager.test_transaction_rollback",
+        "TestWALManager.test_get_status",
+        "TestWALManager.test_add_entry",
+        "TestWALGlobalFunctions.test_wal_write",
+        "TestWALGlobalFunctions.test_wal_delete",
+        "TestWALGlobalFunctions.test_begin",
+        "TestWALGlobalFunctions.test_prepare_write",
+        "TestWALGlobalFunctions.test_commit_and_rollback",
+        "TestWALCompaction.test_compact_empty_dir",
+        "TestWALCompaction.test_compact_single_file",
+        "TestWALCompaction.test_compact_with_committed_transaction",
+        "TestWALChecksum.test_checksum_validation",
+        "TestWALChecksum.test_no_checksum_mode"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "uuid",
+        "pytest",
+        "pathlib",
+        "base_wal.wal"
+      ],
+      "docstring": "测试 base_wal 模块 - WAL日志系统"
+    },
+    "tests/conftest.py": {
+      "name": "tests.conftest",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/conftest.py",
+      "relative_path": "tests/conftest.py",
+      "classes": [],
+      "functions": [
+        "temp_dir",
+        "wal_dir",
+        "vault_dir",
+        "metadata_dir",
+        "plugin_dir",
+        "sample_content",
+        "sample_contents"
+      ],
+      "public_api": [
+        "temp_dir",
+        "wal_dir",
+        "vault_dir",
+        "metadata_dir",
+        "plugin_dir",
+        "sample_content",
+        "sample_contents"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "tempfile",
+        "shutil",
+        "pathlib"
+      ],
+      "docstring": "记忆殿堂v2.0 - pytest配置和共享fixtures"
+    },
+    "tests/test_cli_router.py": {
+      "name": "tests.test_cli_router",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_cli_router.py",
+      "relative_path": "tests/test_cli_router.py",
+      "classes": [
+        "TestArgType",
+        "TestArg",
+        "TestParsedArgs",
+        "TestCommand",
+        "TestRouter",
+        "TestGlobalFunctions"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestArgType.test_types",
+        "TestArg.test_arg_creation",
+        "TestArg.test_arg_validate_int",
+        "TestArg.test_arg_validate_float",
+        "TestArg.test_arg_validate_choice",
+        "TestArg.test_arg_validate_required",
+        "TestParsedArgs.test_parsed_args_get_set",
+        "TestParsedArgs.test_parsed_args_get_default",
+        "TestParsedArgs.test_parsed_args_contains",
+        "TestCommand.test_command_creation",
+        "TestCommand.test_command_get_arg",
+        "TestRouter.test_router_init",
+        "TestRouter.test_router_decorator_command",
+        "TestRouter.test_router_add_command",
+        "TestRouter.test_router_parse_simple",
+        "TestRouter.test_router_parse_empty",
+        "TestRouter.test_router_parse_with_options",
+        "TestRouter.test_router_parse_long_option",
+        "TestRouter.test_router_parse_quoted",
+        "TestRouter.test_router_validate",
+        "TestRouter.test_router_execute",
+        "TestRouter.test_router_execute_unknown_command",
+        "TestRouter.test_router_get_help",
+        "TestRouter.test_router_get_help_global",
+        "TestRouter.test_router_get_help_unknown_command",
+        "TestRouter.test_router_run",
+        "TestRouter.test_router_run_with_errors",
+        "TestRouter.test_router_run_help_option",
+        "TestGlobalFunctions.test_get_router",
+        "TestGlobalFunctions.test_parse_and_run"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "cli.router"
+      ],
+      "docstring": "测试 cli/router 模块 - CLI路由系统"
+    },
+    "tests/test_gateway.py": {
+      "name": "tests.test_gateway",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_gateway.py",
+      "relative_path": "tests/test_gateway.py",
+      "classes": [
+        "TestConfig",
+        "TestLRUCache",
+        "TestGateway",
+        "TestFenceCheckpoint",
+        "TestNotifyCoordinator",
+        "TestAuditLog",
+        "TestGetAuditLogs",
+        "TestGetCacheStats",
+        "TestClearCache",
+        "TestSecurityFunctions",
+        "TestReadWriteRecord",
+        "TestSearch",
+        "TestWriteWithMetadata"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestConfig.test_config_defaults",
+        "TestConfig.test_config_get_with_default",
+        "TestConfig.test_config_reload",
+        "TestLRUCache.test_cache_init",
+        "TestLRUCache.test_cache_set_get",
+        "TestLRUCache.test_cache_miss",
+        "TestLRUCache.test_cache_overwrite",
+        "TestLRUCache.test_cache_eviction",
+        "TestLRUCache.test_cache_disabled",
+        "TestLRUCache.test_cache_invalidate_single",
+        "TestLRUCache.test_cache_invalidate_all",
+        "TestLRUCache.test_cache_stats",
+        "TestGateway.test_gateway_init",
+        "TestGateway.test_gateway_put",
+        "TestGateway.test_gateway_write",
+        "TestGateway.test_gateway_read",
+        "TestGateway.test_gateway_read_not_found",
+        "TestGateway.test_gateway_generate_id",
+        "TestGateway.test_gateway_generate_id_identical",
+        "TestGateway.test_gateway_delete",
+        "TestGateway.test_gateway_delete_invalid_id",
+        "TestGateway.test_gateway_get",
+        "TestGateway.test_gateway_find",
+        "TestGateway.test_gateway_remove",
+        "TestGateway.test_gateway_logs",
+        "TestGateway.test_gateway_stats",
+        "TestFenceCheckpoint.test_checkpoint",
+        "TestFenceCheckpoint.test_checkpoint_disabled",
+        "TestNotifyCoordinator.test_notify",
+        "TestNotifyCoordinator.test_notify_disabled",
+        "TestAuditLog.test_audit_log",
+        "TestAuditLog.test_audit_log_no_details",
+        "TestGetAuditLogs.test_get_audit_logs",
+        "TestGetAuditLogs.test_get_audit_logs_zero_limit",
+        "TestGetCacheStats.test_cache_stats",
+        "TestGetCacheStats.test_cache_stats_has_keys",
+        "TestClearCache.test_clear_cache",
+        "TestClearCache.test_clear_cache_success",
+        "TestSecurityFunctions.test_sanitize_string_basic",
+        "TestSecurityFunctions.test_sanitize_string_null_bytes",
+        "TestSecurityFunctions.test_sanitize_string_truncation",
+        "TestSecurityFunctions.test_validate_path_valid",
+        "TestSecurityFunctions.test_validate_path_empty",
+        "TestSecurityFunctions.test_validate_path_traversal",
+        "TestSecurityFunctions.test_validate_path_too_long",
+        "TestSecurityFunctions.test_validate_record_type_valid",
+        "TestSecurityFunctions.test_validate_record_type_invalid",
+        "TestReadWriteRecord.test_write_record",
+        "TestReadWriteRecord.test_read_record",
+        "TestReadWriteRecord.test_read_record_not_found",
+        "TestSearch.test_search_empty_query",
+        "TestSearch.test_search_with_limit",
+        "TestSearch.test_search_with_record_type",
+        "TestSearch.test_search_large_limit",
+        "TestWriteWithMetadata.test_write_with_metadata",
+        "TestWriteWithMetadata.test_write_empty_content",
+        "TestWriteWithMetadata.test_write_disabled_notify"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "pytest",
+        "tempfile",
+        "gateway.gateway"
+      ],
+      "docstring": "测试 gateway 模块"
+    },
+    "tests/__init__.py": {
+      "name": "tests",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/__init__.py",
+      "relative_path": "tests/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [],
+      "docstring": "记忆殿堂v2.0 测试套件"
+    },
+    "pipeline/cross_reference.py": {
+      "name": "pipeline.cross_reference",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/pipeline/cross_reference.py",
+      "relative_path": "pipeline/cross_reference.py",
+      "classes": [
+        "SimilarityMethod",
+        "Capsule",
+        "CrossReferenceResult",
+        "CrossReferenceEngine"
+      ],
+      "functions": [
+        "get_engine",
+        "compute_cross_references"
+      ],
+      "public_api": [
+        "Capsule.from_dict",
+        "Capsule.to_dict",
+        "CrossReferenceEngine.compute_cross_references",
+        "CrossReferenceEngine.add_cross_reference",
+        "CrossReferenceEngine.get_stats",
+        "get_engine",
+        "compute_cross_references"
+      ],
+      "imports": [
+        "hashlib",
+        "re",
+        "time",
+        "typing",
+        "dataclasses",
+        "enum"
+      ],
+      "docstring": "记忆殿堂v2.0 胶囊交叉引用模块 V1.0\n\n功能：\n1. 基于语义相似度建立胶囊间关联\n2. 自动添加related_capsules字段\n3. 支持增量更新和批量处理\n\n作者: agentic_identity_trust\n版本: 1.0.0"
+    },
+    "pipeline/__init__.py": {
+      "name": "pipeline",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/pipeline/__init__.py",
+      "relative_path": "pipeline/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "cross_reference"
+      ],
+      "docstring": "记忆殿堂v2.0 Pipeline模块\n\n功能：\n- 胶囊交叉引用（cross_reference）\n- 基于语义相似度建立胶囊间关联\n\n作者: agentic_identity_trust\n版本: 1.0.0"
+    },
+    "interfaces/adapters/file_system_adapter.py": {
+      "name": "interfaces.adapters.file_system_adapter",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/interfaces/adapters/file_system_adapter.py",
+      "relative_path": "interfaces/adapters/file_system_adapter.py",
+      "classes": [
+        "FileSystemAdapter"
+      ],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "os",
+        "json",
+        "hashlib",
+        "pathlib",
+        "typing",
+        "imemory_vault"
+      ],
+      "docstring": "文件系统适配器 (FileSystemAdapter)\n\n实现IMemoryVault接口，基于文件系统存储记忆。\n\n配置来源：\n- 通过Config读取paths.vault_dir，不硬编码路径\n- 兼容旧版VAULT_DIR环境变量\n\n与旧版区别：\n- 实现IMemoryVault接口，支持接口替换\n- 从Config读取vault_dir，而非硬编码\n- 提供异步接口（async/awai"
+    },
+    "interfaces/adapters/__init__.py": {
+      "name": "interfaces.adapters",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/interfaces/adapters/__init__.py",
+      "relative_path": "interfaces/adapters/__init__.py",
+      "classes": [],
+      "functions": [],
+      "public_api": [],
+      "imports": [
+        "file_system_adapter"
+      ],
+      "docstring": "记忆殿堂适配器模块\n\n提供IMemoryVault接口的不同实现：\n- FileSystemAdapter: 基于文件系统的实现"
+    },
+    "plugin/test_plugins/test_dummy.py": {
+      "name": "plugin.test_plugins.test_dummy",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/plugin/test_plugins/test_dummy.py",
+      "relative_path": "plugin/test_plugins/test_dummy.py",
+      "classes": [
+        "DummyPlugin"
+      ],
+      "functions": [],
+      "public_api": [
+        "DummyPlugin.activate",
+        "DummyPlugin.deactivate",
+        "DummyPlugin.get_metadata",
+        "DummyPlugin.execute"
+      ],
+      "imports": [
+        "plugin.plugin"
+      ],
+      "docstring": "测试插件模块"
+    },
+    "tests/integration/integration_test_gateway_wal.py": {
+      "name": "tests.integration.integration_test_gateway_wal",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/integration_test_gateway_wal.py",
+      "relative_path": "tests/integration/integration_test_gateway_wal.py",
+      "classes": [
+        "TestGatewayWALCollaboration",
+        "TestWALWithGatewayCache"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestGatewayWALCollaboration.setUp",
+        "TestGatewayWALCollaboration.tearDown",
+        "TestGatewayWALCollaboration.test_gateway_wal_transaction_flow",
+        "TestGatewayWALCollaboration.test_gateway_cache_invalidation_on_wal_write",
+        "TestGatewayWALCollaboration.test_wal_recovery_rebuilds_gateway_cache",
+        "TestGatewayWALCollaboration.test_gateway_audit_log_with_wal_transaction",
+        "TestGatewayWALCollaboration.test_wal_compaction_does_not_affect_gateway_active_cache",
+        "TestGatewayWALCollaboration.test_gateway_wal_concurrent_transactions",
+        "TestGatewayWALCollaboration.test_gateway_wal_lifecycle_integration",
+        "TestWALWithGatewayCache.setUp",
+        "TestWALWithGatewayCache.tearDown",
+        "TestWALWithGatewayCache.test_wal_entry_integrity_with_checksum",
+        "TestWALWithGatewayCache.test_gateway_cache_ttl_with_wal_entries"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "json",
+        "tempfile",
+        "shutil",
+        "time",
+        "pathlib",
+        "typing",
+        "base_wal.wal",
+        "gateway.gateway"
+      ],
+      "docstring": "集成测试: Gateway + WAL 协作\n\n验证场景:\n1. Gateway写入时触发WAL记录\n2. WAL三段式提交与Gateway缓存失效联动\n3. WAL恢复时Gateway缓存重建\n4. Gateway审计日志与WAL事务关联\n\n依赖模块:\n- gateway/gateway.py\n- base_wal/wal.py"
+    },
+    "tests/integration/integration_test_gateway_permission.py": {
+      "name": "tests.integration.integration_test_gateway_permission",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/integration_test_gateway_permission.py",
+      "relative_path": "tests/integration/integration_test_gateway_permission.py",
+      "classes": [
+        "TestGatewayPermissionCollaboration",
+        "TestPermissionEngineStandalone"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestGatewayPermissionCollaboration.setUp",
+        "TestGatewayPermissionCollaboration.test_gateway_read_permission_check",
+        "TestGatewayPermissionCollaboration.test_gateway_write_permission_check",
+        "TestGatewayPermissionCollaboration.test_gateway_delete_requires_confirmation",
+        "TestGatewayPermissionCollaboration.test_gateway_external_network_permission",
+        "TestGatewayPermissionCollaboration.test_permission_deny_ssh_config_access",
+        "TestGatewayPermissionCollaboration.test_gateway_audit_on_permission_denied",
+        "TestGatewayPermissionCollaboration.test_permission_hook_integration",
+        "TestGatewayPermissionCollaboration.test_gateway_fence_with_permission_level",
+        "TestGatewayPermissionCollaboration.test_permission_custom_rules_integration",
+        "TestGatewayPermissionCollaboration.test_gateway_permission_context_building",
+        "TestPermissionEngineStandalone.setUp",
+        "TestPermissionEngineStandalone.test_permission_level_hierarchy",
+        "TestPermissionEngineStandalone.test_permission_context_validation",
+        "TestPermissionEngineStandalone.test_engine_set_level"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "json",
+        "tempfile",
+        "shutil",
+        "time",
+        "pathlib",
+        "typing",
+        "permission.engine",
+        "gateway.gateway"
+      ],
+      "docstring": "集成测试: Gateway + Permission 协作\n\n验证场景:\n1. Gateway操作前进行权限检查\n2. Permission规则与Gateway操作类型映射\n3. 权限级别与Gateway缓存交互\n4. 权限拒绝时Gateway审计日志记录\n\n依赖模块:\n- gateway/gateway.py\n- permission/engine.py"
+    },
+    "tests/integration/integration_test_plugin_modules.py": {
+      "name": "tests.integration.integration_test_plugin_modules",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/integration_test_plugin_modules.py",
+      "relative_path": "tests/integration/integration_test_plugin_modules.py",
+      "classes": [
+        "TestPluginA",
+        "TestPluginB",
+        "TestPluginLifecycle",
+        "TestPluginGatewayIntegration",
+        "TestPluginPermissionIntegration",
+        "TestPluginWALIntegration",
+        "TestPluginRegistryAdvanced",
+        "TestPluginLoader"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestPluginA.on_load",
+        "TestPluginA.on_enable",
+        "TestPluginA.on_disable",
+        "TestPluginA.on_unload",
+        "TestPluginA.gateway_operation",
+        "TestPluginB.on_load",
+        "TestPluginB.on_enable",
+        "TestPluginB.process_with_wal",
+        "TestPluginLifecycle.setUp",
+        "TestPluginLifecycle.tearDown",
+        "TestPluginLifecycle.test_plugin_register_and_load",
+        "TestPluginLifecycle.test_plugin_enable_disable",
+        "TestPluginLifecycle.test_plugin_unload",
+        "TestPluginLifecycle.test_plugin_reload",
+        "TestPluginLifecycle.test_plugin_multiple_registration",
+        "TestPluginGatewayIntegration.setUp",
+        "TestPluginGatewayIntegration.tearDown",
+        "TestPluginGatewayIntegration.test_plugin_gateway_operation",
+        "TestPluginGatewayIntegration.test_plugin_gateway_cache_interaction",
+        "TestPluginGatewayIntegration.test_plugin_gateway_audit_integration",
+        "TestPluginPermissionIntegration.setUp",
+        "TestPluginPermissionIntegration.tearDown",
+        "TestPluginPermissionIntegration.test_plugin_permission_check",
+        "TestPluginPermissionIntegration.test_plugin_permission_hook",
+        "TestPluginWALIntegration.setUp",
+        "TestPluginWALIntegration.tearDown",
+        "TestPluginWALIntegration.test_plugin_wal_transaction",
+        "TestPluginWALIntegration.test_plugin_wal_recovery",
+        "TestPluginWALIntegration.test_plugin_wal_compaction",
+        "TestPluginRegistryAdvanced.setUp",
+        "TestPluginRegistryAdvanced.tearDown",
+        "TestPluginRegistryAdvanced.test_plugin_lifecycle_hooks",
+        "TestPluginRegistryAdvanced.test_plugin_query_apis",
+        "TestPluginLoader.test_plugin_loader_discovery"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "json",
+        "tempfile",
+        "shutil",
+        "time",
+        "importlib",
+        "pathlib",
+        "typing",
+        "plugin.plugin",
+        "gateway.gateway",
+        "permission.engine",
+        "base_wal.wal"
+      ],
+      "docstring": "集成测试: Plugin + 各模块 协作\n\n验证场景:\n1. Plugin生命周期管理\n2. Plugin与Gateway协同\n3. Plugin与Permission协同\n4. Plugin与WAL协同\n5. Plugin注册表管理\n\n依赖模块:\n- plugin/plugin.py\n- gateway/gateway.py\n- permission/engine.py\n- base_wal/"
+    },
+    "tests/integration/run_tests.py": {
+      "name": "tests.integration.run_tests",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/run_tests.py",
+      "relative_path": "tests/integration/run_tests.py",
+      "classes": [],
+      "functions": [
+        "run_tests",
+        "main"
+      ],
+      "public_api": [
+        "run_tests",
+        "main"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "argparse",
+        "unittest"
+      ],
+      "docstring": "记忆殿堂v2.0 集成测试运行器\n\n用法:\n    python run_tests.py              # 运行所有测试\n    python run_tests.py --gateway    # 只运行Gateway测试\n    python run_tests.py --wal        # 只运行WAL测试\n    python run_tests.py --permis"
+    },
+    "tests/integration/integration_test_cli_modules.py": {
+      "name": "tests.integration.integration_test_cli_modules",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/integration_test_cli_modules.py",
+      "relative_path": "tests/integration/integration_test_cli_modules.py",
+      "classes": [
+        "TestCLICommands",
+        "TestCLIWithGateway",
+        "TestCLIWithPermission",
+        "TestCLIRunner"
+      ],
+      "functions": [],
+      "public_api": [
+        "TestCLICommands.setUp",
+        "TestCLICommands.tearDown",
+        "TestCLICommands.test_cli_write_command_with_wal",
+        "TestCLICommands.test_cli_read_command",
+        "TestCLICommands.test_cli_search_command",
+        "TestCLICommands.test_cli_stats_command",
+        "TestCLICommands.test_cli_health_command",
+        "TestCLICommands.test_cli_write_read_consistency",
+        "TestCLICommands.test_cli_wal_transaction_rollback",
+        "TestCLICommands.test_cli_multiple_operations_sequence",
+        "TestCLIWithGateway.setUp",
+        "TestCLIWithGateway.tearDown",
+        "TestCLIWithGateway.test_cli_gateway_cache_integration",
+        "TestCLIWithGateway.test_cli_gateway_audit_integration",
+        "TestCLIWithPermission.setUp",
+        "TestCLIWithPermission.test_cli_permission_check_before_operation",
+        "TestCLIWithPermission.test_cli_delete_requires_permission",
+        "TestCLIRunner.test_cli_main_entry_point",
+        "TestCLIRunner.test_memory_store_independence"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "json",
+        "tempfile",
+        "shutil",
+        "time",
+        "subprocess",
+        "pathlib",
+        "typing",
+        "cli.commands",
+        "base_wal.wal",
+        "gateway.gateway",
+        "permission.engine",
+        "health.health_check"
+      ],
+      "docstring": "集成测试: CLI + 各模块 协作\n\n验证场景:\n1. CLI命令触发WAL事务\n2. CLI命令触发Gateway缓存操作\n3. CLI命令触发Permission检查\n4. CLI健康检查与各模块状态\n\n依赖模块:\n- cli/commands.py\n- base_wal/wal.py\n- gateway/gateway.py\n- permission/engine.py\n- health/"
+    },
+    "tests/integration/conftest.py": {
+      "name": "tests.integration.conftest",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/conftest.py",
+      "relative_path": "tests/integration/conftest.py",
+      "classes": [],
+      "functions": [
+        "project_root",
+        "test_vault_dir",
+        "test_wal_dir",
+        "clean_registry",
+        "pytest_configure",
+        "pytest_collection_modifyitems"
+      ],
+      "public_api": [
+        "project_root",
+        "test_vault_dir",
+        "test_wal_dir",
+        "clean_registry",
+        "pytest_configure",
+        "pytest_collection_modifyitems"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "tempfile",
+        "shutil",
+        "pytest",
+        "pathlib"
+      ],
+      "docstring": "记忆殿堂v2.0 集成测试配置\n\npytest配置和fixtures"
+    },
+    "tests/integration/__init__.py": {
+      "name": "tests.integration",
+      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/__init__.py",
+      "relative_path": "tests/integration/__init__.py",
+      "classes": [
+        "BaseIntegrationTest"
+      ],
+      "functions": [
+        "setup_test_vault",
+        "cleanup_test_vault"
+      ],
+      "public_api": [
+        "setup_test_vault",
+        "cleanup_test_vault",
+        "BaseIntegrationTest.setUpClass",
+        "BaseIntegrationTest.tearDownClass",
+        "BaseIntegrationTest.setUp",
+        "BaseIntegrationTest.tearDown",
+        "BaseIntegrationTest.assert_wal_entry",
+        "BaseIntegrationTest.assert_record_structure"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "json",
+        "tempfile",
+        "shutil",
+        "time",
+        "pathlib",
+        "typing",
+        "unittest"
+      ],
+      "docstring": "记忆殿堂v2.0 集成测试套件\n\n测试模块间协作:\n1. Gateway + WAL 协作\n2. Gateway + Permission 协作\n3. CLI + 各模块 协作\n4. Plugin + 各模块 协作\n\n运行方式:\n    cd ~/.openclaw/projects/记忆殿堂v2.0/tests/integration\n    python -m pytest -v\n    py"
+    }
+  },
+  "summary": {
+    "total_classes": 348,
+    "total_functions": 181,
+    "total_public_api": 1071
+  }
+}
