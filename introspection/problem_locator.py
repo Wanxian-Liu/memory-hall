@@ -43,11 +43,12 @@ from typing import Any, Callable, Dict, List, Optional, Set, Union
 from .alert_manager import Alert, AlertChannel, AlertManager, AlertSeverity
 from .log_analyzer import LogAnalyzer, LogEntry, LogLevel, ModuleErrorStats
 from .problem_classifier import (
+    ClassifiedProblem,
+    ClassificationReport,
+    ImpactScope,
     ProblemClassifier,
-    ProblemRecord,
     ProblemType,
-    Scope,
-    Severity as ProblemSeverity,
+    Severity,
 )
 from .root_cause_analyzer import (
     CauseNode,
@@ -56,6 +57,11 @@ from .root_cause_analyzer import (
     RootCauseResult,
 )
 from .status_probes import ModuleProbe, ProbeState
+
+# 兼容性别名（旧接口）
+ProblemRecord = ClassifiedProblem
+Scope = ImpactScope
+ProblemSeverity = Severity
 
 
 # ============================================================================
@@ -128,12 +134,26 @@ class ProblemReport:
     recommendations: List[str] = field(default_factory=list)
     execution_time_ms: float = 0.0
 
+    def _serialize_config(self) -> Dict[str, Any]:
+        """序列化配置，处理枚举类型"""
+        result = {}
+        if hasattr(self.config, '__dataclass_fields__'):
+            config_dict = asdict(self.config)
+        else:
+            config_dict = self.config
+        for key, value in config_dict.items():
+            if isinstance(value, Enum):
+                result[key] = value.value
+            else:
+                result[key] = value
+        return result
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "report_id": self.report_id,
             "created_at": self.created_at,
             "created_at_iso": datetime.fromtimestamp(self.created_at).isoformat(),
-            "config": self.config,
+            "config": self._serialize_config(),
             "located_problems": [p.to_dict() for p in self.located_problems],
             "summary": self.summary,
             "recommendations": self.recommendations,
@@ -178,7 +198,7 @@ class ProblemReport:
                 pr = problem.problem_record
                 lines.append(f"- **问题类型**: {pr.problem_type.name}")
                 lines.append(f"- **严重程度**: {pr.severity.name}")
-                lines.append(f"- **消息**: {pr.message}")
+                lines.append(f"- **消息**: {pr.original_message}")
 
             if problem.root_cause_result:
                 rcr = problem.root_cause_result
@@ -302,9 +322,8 @@ class ProblemLocator:
         # 更新告警状态
         if self.alert_manager and alerts:
             for problem in report.located_problems:
-                if problem.alert:
-                    problem.alert.resolved = problem.status == "resolved"
-                    self.alert_manager.update_alert(problem.alert)
+                if problem.alert and problem.status == "resolved":
+                    self.alert_manager.resolve_alert(problem.alert.id)
 
         report.execution_time_ms = (time.time() - start_time) * 1000
         self._reports[report_id] = report
@@ -323,7 +342,7 @@ class ProblemLocator:
             root_cause_result = None
             if self.root_cause_analyzer:
                 root_cause_result = self.root_cause_analyzer.trace_cause(
-                    problem_record.message,
+                    problem_record.original_message,
                     asdict(problem_record),
                 )
 
@@ -377,26 +396,27 @@ class ProblemLocator:
             representative = entries[0]
 
             # 创建问题记录
-            problem_record = self.problem_classifier.classify(
-                representative.message,
-                {
-                    "source": representative.module or representative.source_file,
-                    "error_category": category,
-                    "error_severity": representative.error_severity,
-                },
+            problem_record = self.problem_classifier.classify_problem(
+                message=representative.message,
+                module_id=representative.module or representative.source_file,
+                category_tag=category,
+                stack_trace=representative.stack_trace,
             )
-            problem_record.stack_trace = representative.stack_trace
 
             # 根因分析
             root_cause_result = None
+            source_module = representative.module or representative.source_file or "unknown"
             if self.root_cause_analyzer:
-                root_cause_result = self.root_cause_analyzer.trace_cause(
-                    representative.message,
-                    {
-                        "source": representative.module,
-                        "category": category,
-                    },
-                )
+                try:
+                    root_cause_result = self.root_cause_analyzer.trace_cause(
+                        representative.message,
+                        {
+                            "source": source_module,
+                            "category": category,
+                        },
+                    )
+                except Exception:
+                    root_cause_result = None
 
             # 创建告警
             alert = None
@@ -432,17 +452,17 @@ class ProblemLocator:
         for module_id, state in probe_states.items():
             if state in (ProbeState.FAILED, ProbeState.DEGRADED, ProbeState.UNAVAILABLE):
                 # 创建问题记录
-                problem_record = self.problem_classifier.classify(
-                    f"Module {module_id} in {state.value} state",
-                    {"source": module_id, "probe_state": state.value},
+                problem_record = self.problem_classifier.classify_problem(
+                    message=f"Module {module_id} in {state.value} state",
+                    module_id=module_id,
+                    category_tag=state.value,
                 )
-                problem_record.module_name = module_id
 
                 # 根因分析
                 root_cause_result = None
                 if self.root_cause_analyzer:
                     root_cause_result = self.root_cause_analyzer.trace_cause(
-                        problem_record.message,
+                        problem_record.original_message,
                         asdict(problem_record),
                     )
 
@@ -452,7 +472,7 @@ class ProblemLocator:
                     alert = Alert(
                         severity=self._severity_from_problem(problem_record.severity),
                         module=module_id,
-                        message=problem_record.message,
+                        message=problem_record.original_message,
                         tags={"probe_state": state.value},
                     )
 
@@ -642,34 +662,39 @@ class ProblemLocator:
     def _alert_to_problem_record(self, alert: Alert) -> ProblemRecord:
         """将告警转换为问题记录"""
         problem_type_map = {
-            AlertSeverity.CRITICAL: ProblemType.CRASH,
-            AlertSeverity.ERROR: ProblemType.ERROR,
-            AlertSeverity.WARNING: ProblemType.TIMEOUT,
-            AlertSeverity.INFO: ProblemType.UNKNOWN,
+            AlertSeverity.CRITICAL: ProblemType.Crash,
+            AlertSeverity.ERROR: ProblemType.ExecutionFailure,
+            AlertSeverity.WARNING: ProblemType.Timeout,
+            AlertSeverity.INFO: ProblemType.Unknown,
         }
 
         severity_map = {
-            AlertSeverity.CRITICAL: ProblemSeverity.CRITICAL,
-            AlertSeverity.ERROR: ProblemSeverity.ERROR,
-            AlertSeverity.WARNING: ProblemSeverity.WARNING,
-            AlertSeverity.INFO: ProblemSeverity.INFO,
+            AlertSeverity.CRITICAL: Severity.CRITICAL,
+            AlertSeverity.ERROR: Severity.ERROR,
+            AlertSeverity.WARNING: Severity.WARNING,
+            AlertSeverity.INFO: Severity.INFO,
         }
 
         # 从标签提取问题类型
         tags = alert.tags or {}
-        problem_type = ProblemType(str(tags.get("problem_type", "UNKNOWN")).upper())
-        if not isinstance(problem_type, ProblemType):
-            problem_type = problem_type_map.get(alert.severity, ProblemType.UNKNOWN)
+        problem_type_str = tags.get("problem_type", "unknown")
+        # 尝试通过 value 匹配
+        try:
+            problem_type = ProblemType(problem_type_str.lower())
+        except ValueError:
+            problem_type = problem_type_map.get(alert.severity, ProblemType.Unknown)
 
         return ProblemRecord(
+            problem_id=f"problem_{alert.id}",
+            original_message=alert.message,
             problem_type=problem_type,
-            severity=severity_map.get(alert.severity, ProblemSeverity.INFO),
-            scope=Scope.SINGLE_MODULE,
-            message=alert.message,
-            timestamp=alert.timestamp,
-            module_name=alert.module,
-            error_code=tags.get("error_code"),
-            raw_data=tags,
+            severity=severity_map.get(alert.severity, Severity.INFO),
+            impact_scope=ImpactScope.SINGLE_MODULE,
+            module_id=alert.module,
+            timestamp=datetime.fromtimestamp(alert.timestamp).isoformat() if alert.timestamp else None,
+            category_tag=tags.get("problem_type"),
+            matched_patterns=[],
+            related_modules=[],
         )
 
     def _severity_from_problem(self, severity: ProblemSeverity) -> AlertSeverity:

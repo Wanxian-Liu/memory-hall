@@ -1,0 +1,74 @@
+[
+  {
+    "capsule": "00-ai-agent-self-introspection-debugging.md",
+    "gene_type": "repair",
+    "confidence": 1.0,
+    "reasoning": "检测到问题信号: 问题"
+  },
+  {
+    "capsule": "00-cache-invalidation-optimization.md",
+    "gene_type": "repair",
+    "confidence": 1.05,
+    "reasoning": "检测到问题信号: 问题, 失效"
+  },
+  {
+    "capsule": "00-context-optimization-adaptive-compression.md",
+    "gene_type": "optimize",
+    "confidence": 0.75,
+    "reasoning": "检测到优化信号: 效率, 压缩"
+  },
+  {
+    "capsule": "00-cross-session-memory-continuity.md",
+    "gene_type": "innovate",
+    "confidence": 0.5,
+    "reasoning": "无明显信号，使用默认基因类型"
+  },
+  {
+    "capsule": "00-dual-model-memory-compression.md",
+    "gene_type": "optimize",
+    "confidence": 1.05,
+    "reasoning": "检测到优化信号: 优化, 压缩"
+  },
+  {
+    "capsule": "00-rag-hallucination-fix.md",
+    "gene_type": "repair",
+    "confidence": 1.0,
+    "reasoning": "检测到问题信号: 问题"
+  },
+  {
+    "capsule": "00-rl-memory-access-optimization.md",
+    "gene_type": "repair",
+    "confidence": 1.5,
+    "reasoning": "检测到问题信号: 问题, 无法"
+  },
+  {
+    "capsule": "00-websocket-reconnect-jitter-backoff.md",
+    "gene_type": "optimize",
+    "confidence": 0.7,
+    "reasoning": "检测到优化信号: 延迟"
+  },
+  {
+    "capsule": "00-zero-trust-spiffe-spire.md",
+    "gene_type": "innovate",
+    "confidence": 0.9500000000000001,
+    "reasoning": "新功能或创新方案需求"
+  },
+  {
+    "capsule": "01-innovate-memory-palace-v2.md",
+    "gene_type": "optimize",
+    "confidence": 1.1,
+    "reasoning": "检测到优化信号: 增强, 效率, 压缩"
+  },
+  {
+    "capsule": "01-optimize-memory-palace-v2.md",
+    "gene_type": "optimize",
+    "confidence": 1.1,
+    "reasoning": "检测到优化信号: 优化, 性能, 压缩"
+  },
+  {
+    "capsule": "01-repair-memory-palace-v2.md",
+    "gene_type": "repair",
+    "confidence": 1.5750000000000002,
+    "reasoning": "检测到问题信号: 问题, 缺失"
+  }
+]

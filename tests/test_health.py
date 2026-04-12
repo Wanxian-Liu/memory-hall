@@ -10,7 +10,7 @@ import time
 PROJECT_ROOT = os.path.expanduser("~/.openclaw/projects/记忆殿堂v2.0")
 sys.path.insert(0, PROJECT_ROOT)
 
-from health.health_check import (
+from health import (
     HealthStatus, CircuitState, SixDimensionData,
     CircuitBreakerInfo, DiagnosisResult,
     AdaptiveThresholdCalculator, CircuitBreaker,

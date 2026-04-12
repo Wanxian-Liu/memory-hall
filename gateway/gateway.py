@@ -8,6 +8,7 @@
 - TTL过期 (默认7天)
 - 写时失效机制
 - 审计日志
+- IMemoryVault接口统一访问
 
 配置：通过 config.yaml 管理
 """
@@ -18,11 +19,26 @@ import json
 import re
 import hashlib
 import time
+import asyncio
 import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, Optional, List
 from collections import OrderedDict
+
+# ============ IMemoryVault接口 ============
+# 注意：gateway需要完整逻辑，不能简单替换
+# 这里添加组合而非继承，保持gateway所有逻辑
+
+def _get_vault_adapter():
+    """获取IMemoryVault适配器（延迟加载）"""
+    if not hasattr(_get_vault_adapter, '_adapter'):
+        # 延迟导入，避免循环依赖
+        PROJECT_ROOT = Path(__file__).parent.parent
+        sys.path.insert(0, str(PROJECT_ROOT))
+        from interfaces.adapters import FileSystemAdapter
+        _get_vault_adapter._adapter = FileSystemAdapter()
+    return _get_vault_adapter._adapter
 
 # ============ 配置管理 ============
 

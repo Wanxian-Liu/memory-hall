@@ -19,6 +19,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 from gdi_scorer import GDIScorer, GDIResult, CapsuleType as GDI_CapsuleType
+from evomap_validator import EvoMapValidator, EvoMapValidationResult, validate_for_evomap
 
 # 本地胶囊类型别名（供外部导入）
 CapsuleType = GDI_CapsuleType
@@ -50,6 +51,9 @@ class Capsule:
     gene_type: str = "innovate"
     gene_signals: List[str] = field(default_factory=list)
     
+    # EvoMap兼容性字段
+    evomap_validation: Optional[EvoMapValidationResult] = None
+    
     def to_dict(self) -> Dict[str, Any]:
         return {
             "id": self.id,
@@ -62,7 +66,8 @@ class Capsule:
             "metadata": self.metadata,
             "gdi_score": self.gdi_score.to_dict() if self.gdi_score else None,
             "gene_type": self.gene_type,
-            "gene_signals": self.gene_signals
+            "gene_signals": self.gene_signals,
+            "evomap_validation": self.evomap_validation.to_dict() if self.evomap_validation else None
         }
     
     @classmethod
@@ -412,6 +417,9 @@ class CapsuleGenerator:
         capsule_dict = capsule.to_dict()
         capsule.gdi_score = self.gdi_scorer.score(capsule_dict)
         
+        # 5. EvoMap兼容性验证
+        capsule.evomap_validation = validate_for_evomap(capsule_dict)
+        
         return capsule
     
     def generate_and_evaluate(
@@ -451,6 +459,7 @@ class CapsuleGenerator:
         return {
             "capsule": capsule,
             "gdi_score": gdi_score,
+            "evomap_validation": capsule.evomap_validation,
             "should_publish": should_publish,
             "reason": reason
         }

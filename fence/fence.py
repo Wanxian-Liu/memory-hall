@@ -331,3 +331,46 @@ def check_boundary(path: str, action: str = "access") -> tuple[bool, Optional[Vi
 def validate_access(path: str, action: str = "read") -> bool:
     """便捷函数：验证访问权限"""
     return get_fence().validate_access(path, action)
+
+
+# ── CLI Interface ──────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    import sys
+
+    args = sys.argv[1:]
+    if not args:
+        print(json.dumps({"error": "Usage: fence.py <check|status|violations> [path] [action]"}, ensure_ascii=False))
+        sys.exit(1)
+
+    cmd = args[0]
+    fence = get_fence()
+
+    if cmd == "check":
+        path = args[1] if len(args) > 1 else ""
+        action = args[2] if len(args) > 2 else "access"
+        allowed, violation = fence.check_boundary(path, action)
+        result = {"allowed": allowed}
+        if violation:
+            result["violation"] = {
+                "source": violation.source_space.value,
+                "target": violation.target_space.value,
+                "action": violation.action,
+                "details": violation.details,
+                "severity": violation.severity,
+                "timestamp": violation.timestamp
+            }
+        print(json.dumps(result, ensure_ascii=False))
+
+    elif cmd == "status":
+        print(json.dumps(fence.get_fence_status(), ensure_ascii=False))
+
+    elif cmd == "violations":
+        limit = int(args[1]) if len(args) > 1 else 50
+        print(json.dumps(fence.alert.get_recent_violations(limit), ensure_ascii=False))
+
+    elif cmd == "enforce":
+        print(json.dumps(fence.enforce_isolation(), ensure_ascii=False))
+
+    else:
+        print(json.dumps({"error": f"Unknown command: {cmd}"}, ensure_ascii=False))
+        sys.exit(1)

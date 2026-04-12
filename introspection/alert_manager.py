@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Callable, Optional
 
-from .problem_classifier import ProblemClassifier, ProblemRecord, Severity as ProblemSeverity, Scope as ProblemScope
+from .problem_classifier import ProblemClassifier, ClassifiedProblem as ProblemRecord, Severity as ProblemSeverity, ImpactScope as ProblemScope
 
 # Note: thresholds import is lazy to avoid module-load assertion bug in thresholds.py
 # See: thresholds.py line 33 - HealthThreshold(warning=70, critical=50) violates invariant
@@ -217,7 +217,7 @@ class AlertManager:
         if self._classifier is None:
             self._classifier = ProblemClassifier()
 
-        problem = self._classifier.classify(raw_message, module, raw_data or {})
+        problem = self._classifier.classify(raw_message, raw_data or {})
 
         # 仅对 WARNING 及以上级别告警
         if problem.severity in (ProblemSeverity.WARNING, ProblemSeverity.ERROR, ProblemSeverity.CRITICAL):

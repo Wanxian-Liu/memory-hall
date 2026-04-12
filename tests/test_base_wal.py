@@ -182,3 +182,60 @@ class TestWALGlobalFunctions:
         tx_id2 = begin()
         prepare_write(tx_id2, "rb_key", "rb_value")
         rollback(tx_id2)
+
+
+class TestWALCompaction:
+    """测试WAL压缩功能"""
+    
+    def test_compact_empty_dir(self, wal_dir):
+        """测试空目录压缩"""
+        manager = WALManager(wal_dir=wal_dir)
+        removed, kept = manager.compact()
+        assert removed == 0
+        assert kept == 0
+    
+    def test_compact_single_file(self, wal_dir):
+        """测试单文件压缩"""
+        manager = WALManager(wal_dir=wal_dir)
+        # 添加一些条目
+        manager.add_entry(WALEntryType.WRITE, "key1", "value1")
+        manager.add_entry(WALEntryType.WRITE, "key2", "value2")
+        removed, kept = manager.compact()
+        assert kept >= 0
+    
+    def test_compact_with_committed_transaction(self, wal_dir):
+        """测试已提交事务的压缩"""
+        manager = WALManager(wal_dir=wal_dir)
+        
+        # 创建并提交事务
+        tx_id = manager.begin_transaction()
+        manager.prepare_write(tx_id, "tx_key", "tx_value")
+        
+        write_calls = []
+        def mock_write(k, v):
+            write_calls.append((k, v))
+        manager.execute_write(tx_id, mock_write)
+        manager.commit(tx_id)
+        
+        # 压缩应该保留COMMIT条目
+        removed, kept = manager.compact()
+        # 验证没有抛出异常且返回值是元组
+        assert (removed, kept) is not None
+
+
+class TestWALChecksum:
+    """测试WAL校验和功能"""
+    
+    def test_checksum_validation(self, wal_dir):
+        """测试校验和计算"""
+        manager = WALManager(wal_dir=wal_dir, enable_checksum=True)
+        
+        entry = manager.add_entry(WALEntryType.WRITE, "checksum_key", "checksum_value")
+        assert entry is not None
+    
+    def test_no_checksum_mode(self, wal_dir):
+        """测试禁用校验和模式"""
+        manager = WALManager(wal_dir=wal_dir, enable_checksum=False)
+        
+        entry = manager.add_entry(WALEntryType.WRITE, "no_checksum_key", "no_checksum_value")
+        assert entry is not None

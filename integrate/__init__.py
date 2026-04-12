@@ -34,6 +34,10 @@ from dataclasses import dataclass, field
 
 logger = logging.getLogger(__name__)
 
+# 从config和stats模块导入
+from .config import IntegrationConfig
+from .stats import MemoryStats
+
 # 导入各子模块
 from evolve.self_evolution import (
     ProactiveKnowledgeCorrector,
@@ -110,50 +114,9 @@ from memory_layer.rl_access import (
 )
 
 
-@dataclass
-class IntegrationConfig:
-    """集成配置"""
-    # 压缩配置
-    base_compression_interval: float = 300.0
-    min_compression_interval: float = 60.0
-    max_compression_interval: float = 600.0
-    compression_target_ratio: float = 0.2
-    
-    # 备份配置
-    backup_dir: str = "~/.openclaw/workspace/memory_backups"
-    max_backups_per_session: int = 5
-    backup_retention_hours: int = 24
-    
-    # 纠错配置
-    confidence_threshold: float = 0.85
-    correction_window: int = 50
-    
-    # 意图预测配置
-    n_predictions: int = 3
-    preload_limit: int = 5
-    
-    # RAG验证配置
-    rag_similarity_threshold: float = 0.85
-    
-    # 增量索引配置
-    delta_threshold: int = 100
-    delta_merge_interval: float = 300.0
-    
-    # 预测压缩配置
-    benefit_threshold: float = 0.7
-
-
-@dataclass
-class MemoryStats:
-    """统一统计信息"""
-    sessions_tracked: int = 0
-    total_memories: int = 0
-    total_compressions: int = 0
-    total_corrections: int = 0
-    total_backups: int = 0
-    total_restores: int = 0
-    compression_ratio_avg: float = 0.0
-    correction_success_rate: float = 0.0
+# IntegrationConfig 和 MemoryStats 已移至 config.py 和 stats.py
+# from .config import IntegrationConfig
+# from .stats import MemoryStats
 
 
 class MemoryPalaceIntegration:

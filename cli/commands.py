@@ -32,10 +32,13 @@ sys.path.insert(0, PROJECT_ROOT)
 from base_wal.wal import WALManager, WALEntryType
 from health.health_check import HealthChecker
 from sensory.semantic_search import SemanticSearchEngine, create_engine
+from interfaces.adapters import FileSystemAdapter
 
 # ============ 配置 ============
 
-VAULT_DIR = os.path.expanduser("~/.openclaw/memory-vault/data")
+# 使用FileSystemAdapter的配置，统一从Config读取
+_adapter = FileSystemAdapter()
+VAULT_DIR = str(_adapter.vault_dir)
 METADATA_DIR = os.path.expanduser("~/.openclaw/memory-vault/metadata")
 
 # 确保目录存在
@@ -46,11 +49,17 @@ os.makedirs(METADATA_DIR, exist_ok=True)
 # ============ 记忆存储 ============
 
 class MemoryStore:
-    """简单的记忆存储，基于文件系统"""
+    """
+    记忆存储，基于IMemoryVault接口
+    
+    统一通过FileSystemAdapter访问文件系统，
+    不再直接操作文件系统。
+    """
     
     def __init__(self, vault_dir: str = VAULT_DIR):
-        self.vault_dir = vault_dir
-        os.makedirs(self.vault_dir, exist_ok=True)
+        # 统一使用FileSystemAdapter，从Config读取路径
+        self.adapter = FileSystemAdapter()
+        self.vault_dir = str(self.adapter.vault_dir)
     
     def _get_file_path(self, key: str) -> str:
         """获取键对应的文件路径"""

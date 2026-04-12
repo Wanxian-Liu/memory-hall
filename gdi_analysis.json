@@ -1,0 +1,98 @@
+[
+  {
+    "capsule": "00-ai-agent-self-introspection-debugging.md",
+    "gdi": 0.56,
+    "intrinsic": 0.9,
+    "usage": 0.0,
+    "social": 0.85,
+    "freshness": 0.5
+  },
+  {
+    "capsule": "00-cache-invalidation-optimization.md",
+    "gdi": 0.58,
+    "intrinsic": 0.95,
+    "usage": 0.0,
+    "social": 0.85,
+    "freshness": 0.5
+  },
+  {
+    "capsule": "00-context-optimization-adaptive-compression.md",
+    "gdi": 0.55,
+    "intrinsic": 0.9,
+    "usage": 0.0,
+    "social": 0.8,
+    "freshness": 0.5
+  },
+  {
+    "capsule": "00-cross-session-memory-continuity.md",
+    "gdi": 0.55,
+    "intrinsic": 0.9,
+    "usage": 0.0,
+    "social": 0.8,
+    "freshness": 0.5
+  },
+  {
+    "capsule": "00-dual-model-memory-compression.md",
+    "gdi": 0.55,
+    "intrinsic": 0.9,
+    "usage": 0.0,
+    "social": 0.8,
+    "freshness": 0.5
+  },
+  {
+    "capsule": "00-rag-hallucination-fix.md",
+    "gdi": 0.56,
+    "intrinsic": 0.9,
+    "usage": 0.0,
+    "social": 0.85,
+    "freshness": 0.5
+  },
+  {
+    "capsule": "00-rl-memory-access-optimization.md",
+    "gdi": 0.58,
+    "intrinsic": 0.95,
+    "usage": 0.0,
+    "social": 0.85,
+    "freshness": 0.5
+  },
+  {
+    "capsule": "00-websocket-reconnect-jitter-backoff.md",
+    "gdi": 0.58,
+    "intrinsic": 0.95,
+    "usage": 0.0,
+    "social": 0.85,
+    "freshness": 0.5
+  },
+  {
+    "capsule": "00-zero-trust-spiffe-spire.md",
+    "gdi": 0.58,
+    "intrinsic": 0.95,
+    "usage": 0.0,
+    "social": 0.85,
+    "freshness": 0.5
+  },
+  {
+    "capsule": "01-innovate-memory-palace-v2.md",
+    "gdi": 0.58,
+    "intrinsic": 0.95,
+    "usage": 0.0,
+    "social": 0.85,
+    "freshness": 0.5
+  },
+  {
+    "capsule": "01-optimize-memory-palace-v2.md",
+    "gdi": 0.59,
+    "intrinsic": 1.0,
+    "usage": 0.0,
+    "social": 0.85,
+    "freshness": 0.5
+  },
+  {
+    "capsule": "01-repair-memory-palace-v2.md",
+    "gdi": 0.59,
+    "intrinsic": 1.0,
+    "usage": 0.0,
+    "social": 0.85,
+    "freshness": 0.5
+  }
+]

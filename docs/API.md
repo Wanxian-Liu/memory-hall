@@ -587,3 +587,109 @@ from exceptions import ValidationError
 - [README](README.md) - 项目概述
 - [安装指南](INSTALL.md) - 详细安装步骤
 - [使用指南](USAGE.md) - 功能使用示例
+
+---
+
+## pipeline
+
+胶囊交叉引用模块，提供基于语义相似度的胶囊间关联建立功能。
+
+### Capsule
+
+记忆胶囊数据结构。
+
+```python
+from pipeline import Capsule
+
+capsule = Capsule(
+    id="capsule_001",
+    content="记忆内容",
+    memory_type="episodic",
+    taxonomy_tags=["重要", "长期"]
+)
+```
+
+### SimilarityMethod
+
+相似度计算方法枚举。
+
+```python
+from pipeline import SimilarityMethod
+
+# 可用方法: JACCARD, COSINE, BM25, SEMANTIC
+method = SimilarityMethod.COSINE
+```
+
+### CrossReferenceEngine
+
+交叉引用引擎。
+
+```python
+from pipeline import CrossReferenceEngine, Capsule, SimilarityMethod
+
+engine = CrossReferenceEngine(method=SimilarityMethod.COSINE)
+engine.add_capsule(capsule)
+references = engine.find_similar("capsule_001", top_k=5)
+```
+
+---
+
+## integrate.config
+
+集成配置模块（从integrate/__init__.py拆分）。
+
+### IntegrationConfig
+
+MemoryPalaceIntegration配置类。
+
+```python
+from integrate.config import IntegrationConfig
+
+config = IntegrationConfig(
+    base_compression_interval=300.0,
+    compression_target_ratio=0.2,
+    confidence_threshold=0.85,
+    backup_dir="~/.openclaw/workspace/memory_backups"
+)
+```
+
+---
+
+## integrate.stats
+
+统计模块（从integrate/__init__.py拆分）。
+
+### MemoryStats
+
+统一统计信息类。
+
+```python
+from integrate.stats import MemoryStats
+
+stats = MemoryStats()
+stats.sessions_tracked += 1
+stats.total_compressions += 1
+print(stats.to_dict())
+```
+
+---
+
+## interfaces
+
+接口抽象层。
+
+### IMemoryVault
+
+记忆存储抽象接口。
+
+```python
+from interfaces.imemory_vault import IMemoryVault, SearchResult
+
+# FileSystemAdapter 实现示例
+from interfaces.adapters import FileSystemAdapter
+
+adapter = FileSystemAdapter()
+await adapter.write("key", {"data": "value"})
+result = await adapter.read("key")
+```
+

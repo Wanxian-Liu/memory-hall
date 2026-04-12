@@ -16,9 +16,9 @@ from pathlib import Path
 from typing import Any, Optional
 
 try:
-    from .problem_classifier import ProblemClassifier, ProblemRecord, ProblemType, Severity, Scope
+    from .problem_classifier import ProblemClassifier, ClassifiedProblem as ProblemRecord, ProblemType, Severity, ImpactScope as Scope
 except ImportError:
-    from problem_classifier import ProblemClassifier, ProblemRecord, ProblemType, Severity, Scope
+    from problem_classifier import ProblemClassifier, ClassifiedProblem as ProblemRecord, ProblemType, Severity, ImpactScope as Scope
 
 
 class RootCauseCategory(Enum):
@@ -145,10 +145,14 @@ class RootCauseAnalyzer:
         raw_data = raw_data or {}
 
         # Step 1: 使用 ProblemClassifier 分类问题
-        problem_record = self.classifier.classify(problem_message, raw_data)
+        problem_record = self.classifier.classify_problem(
+            message=problem_message,
+            module_id=raw_data.get("source"),
+            category_tag=raw_data.get("category"),
+        )
 
         # Step 2: 构建依赖链
-        module_name = problem_record.module_name or raw_data.get("source", "unknown")
+        module_name = problem_record.module_id or raw_data.get("source", "unknown")
         dep_chain = self.build_dependency_chain(module_name, problem_record)
 
         # Step 3: 分析根本原因
@@ -317,11 +321,8 @@ class RootCauseAnalyzer:
                 "4. 如有必要，重启相关服务",
             ])
 
-        # 如果有 ProblemRecord，添加基于问题类型的建议
+        # 如果有 problem_record，添加基于问题类型的建议
         if problem_record:
-            if problem_record.recovery_hint:
-                suggestions.insert(0, f"📌 优先检查: {problem_record.recovery_hint}")
-
             if problem_record.severity == Severity.CRITICAL:
                 suggestions.insert(0, "🚨 严重问题: 建议立即处理")
 
@@ -398,7 +399,7 @@ class RootCauseAnalyzer:
         # 检查是否有已知的问题模式
         problem_type = problem_record.problem_type if problem_record else None
 
-        if problem_type == ProblemType.CRASH:
+        if problem_type == ProblemType.Crash:
             # 崩溃通常从依赖模块传导
             primary_dep = dependencies[0]
             return CauseNode(
@@ -409,7 +410,7 @@ class RootCauseAnalyzer:
                 evidence=[f"依赖链: {module} -> {primary_dep}", "检测到崩溃信号"],
             )
 
-        elif problem_type == ProblemType.TIMEOUT:
+        elif problem_type == ProblemType.Timeout:
             return CauseNode(
                 module=module,
                 cause_type="upstream_timeout",
@@ -418,7 +419,7 @@ class RootCauseAnalyzer:
                 evidence=[f"依赖: {', '.join(dependencies)}", "检测到超时"],
             )
 
-        elif problem_type == ProblemType.MEMORY:
+        elif problem_type == ProblemType.MemoryLeak:
             return CauseNode(
                 module=module,
                 cause_type="resource_pressure",
@@ -442,11 +443,11 @@ class RootCauseAnalyzer:
         cause_chain: list[CauseNode]
     ) -> CauseNode:
         """分析根本原因"""
-        module = problem_record.module_name or "unknown"
+        module = problem_record.module_id or "unknown"
 
         # 基于问题类型和严重程度确定根因
         if problem_record.severity == Severity.CRITICAL:
-            if problem_record.problem_type == ProblemType.CRASH:
+            if problem_record.problem_type == ProblemType.Crash:
                 # 崩溃通常有明确的根因
                 if cause_chain:
                     return cause_chain[-1]
@@ -479,7 +480,7 @@ class RootCauseAnalyzer:
             cause_type="undetermined",
             description="无法自动确定根本原因，需要人工调查",
             confidence=0.2,
-            evidence=[f"问题: {problem_record.message}"],
+            evidence=[f"问题: {problem_record.original_message}"],
         )
 
     def _categorize_root_cause(
@@ -495,16 +496,16 @@ class RootCauseAnalyzer:
         if "config" in cause_type or "config" in description:
             return RootCauseCategory.CONFIGURATION
 
-        if problem_type == ProblemType.CRASH and len(root_cause.evidence) > 2:
+        if problem_type == ProblemType.Crash and len(root_cause.evidence) > 2:
             return RootCauseCategory.CASCADE_FAILURE
 
         if "cascade" in cause_type:
             return RootCauseCategory.CASCADE_FAILURE
 
-        if problem_type == ProblemType.TIMEOUT:
+        if problem_type == ProblemType.Timeout:
             return RootCauseCategory.EXTERNAL_SERVICE
 
-        if problem_type == ProblemType.MEMORY:
+        if problem_type == ProblemType.MemoryLeak:
             return RootCauseCategory.RESOURCE_EXHAUSTION
 
         if "init" in cause_type:
@@ -528,8 +529,8 @@ class RootCauseAnalyzer:
             modules.add(node.module)
 
         # 从问题记录中提取
-        if problem_record.scope == Scope.MULTI_MODULE:
-            modules.add(problem_record.module_name or "")
+        if problem_record.impact_scope == Scope.MULTI_MODULE:
+            modules.add(problem_record.module_id or "")
 
         return sorted(modules)
 
