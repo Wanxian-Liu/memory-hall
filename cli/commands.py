@@ -33,6 +33,7 @@ from base_wal.wal import WALManager, WALEntryType
 from health.health_check import HealthChecker
 from sensory.semantic_search import SemanticSearchEngine, create_engine
 from interfaces.adapters import FileSystemAdapter
+from task import TaskManager, TaskStatus
 
 # ============ 配置 ============
 
@@ -56,10 +57,11 @@ class MemoryStore:
     不再直接操作文件系统。
     """
     
-    def __init__(self, vault_dir: str = VAULT_DIR):
+    def __init__(self, vault_dir: str = None):
         # 统一使用FileSystemAdapter，从Config读取路径
         self.adapter = FileSystemAdapter()
-        self.vault_dir = str(self.adapter.vault_dir)
+        # 如果传入了vault_dir，则使用传入的路径；否则使用adapter的路径
+        self.vault_dir = vault_dir if vault_dir is not None else str(self.adapter.vault_dir)
     
     def _get_file_path(self, key: str) -> str:
         """获取键对应的文件路径"""
@@ -298,6 +300,14 @@ class MemoryCommands:
         
         return result
     
+    def search(self, query: str, limit: int = 10) -> Dict[str, Any]:
+        """
+        /memory search <query>
+        
+        Alias for search_memories for backward compatibility.
+        """
+        return self.search_memories(query, limit)
+    
     def stats(self) -> Dict[str, Any]:
         """
         /memory stats
@@ -354,6 +364,161 @@ class MemoryCommands:
             }
 
 
+class TaskCommands:
+    """任务管理CLI命令类"""
+    
+    def __init__(self):
+        self.manager = TaskManager()
+    
+    def create(self, name: str, description: str = "") -> Dict[str, Any]:
+        """
+        task create <name> <description>
+        
+        创建新任务
+        """
+        result = {
+            "command": "task_create",
+            "name": name,
+            "description": description,
+            "success": False,
+            "task_id": None
+        }
+        try:
+            task_id = self.manager.register_task(name=name, description=description)
+            result["success"] = True
+            result["task_id"] = task_id
+            result["status"] = TaskStatus.PENDING.value
+        except Exception as e:
+            result["error"] = str(e)
+        return result
+    
+    def list(self, status: Optional[str] = None) -> Dict[str, Any]:
+        """
+        task list [--status STATUS]
+        
+        列出任务
+        """
+        result = {
+            "command": "task_list",
+            "status_filter": status,
+            "total": 0,
+            "tasks": []
+        }
+        try:
+            status_filter = None
+            if status:
+                status_filter = TaskStatus(status)
+            
+            tasks = self.manager.list_tasks(status=status_filter)
+            result["total"] = len(tasks)
+            result["tasks"] = [
+                {
+                    "task_id": t.task_id,
+                    "name": t.name,
+                    "description": t.description,
+                    "status": t.status.value,
+                    "phase": t.current_phase.value,
+                    "created_at": t.created_at,
+                    "updated_at": t.updated_at
+                }
+                for t in tasks
+            ]
+        except Exception as e:
+            result["error"] = str(e)
+        return result
+    
+    def get(self, task_id: str) -> Dict[str, Any]:
+        """
+        task get <task_id>
+        
+        获取任务详情
+        """
+        result = {
+            "command": "task_get",
+            "task_id": task_id,
+            "found": False,
+            "task": None
+        }
+        try:
+            task = self.manager.get_task(task_id)
+            if task:
+                result["found"] = True
+                result["task"] = {
+                    "task_id": task.task_id,
+                    "name": task.name,
+                    "description": task.description,
+                    "status": task.status.value,
+                    "phase": task.current_phase.value,
+                    "created_at": task.created_at,
+                    "updated_at": task.updated_at,
+                    "retry_count": task.retry_count,
+                    "max_retries": task.max_retries,
+                    "timeout": task.timeout,
+                    "metadata": task.metadata,
+                    "circuit_state": self.manager.get_circuit_state(task_id).value
+                }
+            else:
+                result["error"] = "Task not found"
+        except Exception as e:
+            result["error"] = str(e)
+        return result
+    
+    def complete(self, task_id: str) -> Dict[str, Any]:
+        """
+        task complete <task_id>
+        
+        完成任务
+        """
+        result = {
+            "command": "task_complete",
+            "task_id": task_id,
+            "success": False
+        }
+        try:
+            task = self.manager.get_task(task_id)
+            if not task:
+                result["error"] = "Task not found"
+                return result
+            if task.status not in [TaskStatus.PENDING, TaskStatus.RUNNING]:
+                result["error"] = f"Cannot complete task in status: {task.status.value}"
+                return result
+            success = self.manager.transition_to(task_id, TaskStatus.COMPLETED)
+            result["success"] = success
+            if success:
+                result["new_status"] = TaskStatus.COMPLETED.value
+            else:
+                result["error"] = "Transition failed"
+        except Exception as e:
+            result["error"] = str(e)
+        return result
+    
+    def cancel(self, task_id: str) -> Dict[str, Any]:
+        """
+        task cancel <task_id>
+        
+        取消任务
+        """
+        result = {
+            "command": "task_cancel",
+            "task_id": task_id,
+            "success": False
+        }
+        try:
+            success = self.manager.cancel_task(task_id)
+            result["success"] = success
+            if success:
+                result["new_status"] = TaskStatus.CANCELLED.value
+            else:
+                task = self.manager.get_task(task_id)
+                if not task:
+                    result["error"] = "Task not found"
+                else:
+                    result["error"] = f"Cannot cancel task in status: {task.status.value}"
+        except Exception as e:
+            result["error"] = str(e)
+        return result
+
+
 # ============ CLI入口 ============
 
 def main():
@@ -393,6 +558,33 @@ def main():
     # health命令
     subparsers.add_parser("health", help="健康检查")
     
+    # task命令
+    task_parser = subparsers.add_parser("task", help="任务管理")
+    task_subparsers = task_parser.add_subparsers(dest="task_command", help="任务命令")
+    
+    # task create
+    task_create_parser = task_subparsers.add_parser("create", help="创建任务")
+    task_create_parser.add_argument("name", help="任务名称")
+    task_create_parser.add_argument("description", nargs="?", default="", help="任务描述")
+    
+    # task list
+    task_list_parser = task_subparsers.add_parser("list", help="列出任务")
+    task_list_parser.add_argument("--status", "-s", dest="status", 
+                                  choices=["pending", "running", "completed", "failed", "cancelled", "timeout", "circuit_open"],
+                                  help="按状态过滤")
+    
+    # task get
+    task_get_parser = task_subparsers.add_parser("get", help="获取任务详情")
+    task_get_parser.add_argument("task_id", help="任务ID")
+    
+    # task complete
+    task_complete_parser = task_subparsers.add_parser("complete", help="完成任务")
+    task_complete_parser.add_argument("task_id", help="任务ID")
+    
+    # task cancel
+    task_cancel_parser = task_subparsers.add_parser("cancel", help="取消任务")
+    task_cancel_parser.add_argument("task_id", help="任务ID")
+    
     args = parser.parse_args()
     
     if not args.command:
@@ -400,21 +592,38 @@ def main():
         return 1
     
     # 执行命令
-    commands = MemoryCommands()
-    
-    if args.command == "write":
-        result = commands.write(args.key, args.value)
-    elif args.command == "read":
-        result = commands.read(args.key)
-    elif args.command == "search":
-        result = commands.search_memories(args.query, args.limit)
-    elif args.command == "stats":
-        result = commands.stats()
-    elif args.command == "health":
-        result = commands.health_check()
+    if args.command == "task":
+        # Task commands
+        task_commands = TaskCommands()
+        if args.task_command == "create":
+            result = task_commands.create(args.name, args.description)
+        elif args.task_command == "list":
+            result = task_commands.list(args.status)
+        elif args.task_command == "get":
+            result = task_commands.get(args.task_id)
+        elif args.task_command == "complete":
+            result = task_commands.complete(args.task_id)
+        elif args.task_command == "cancel":
+            result = task_commands.cancel(args.task_id)
+        else:
+            task_parser.print_help()
+            return 1
     else:
-        parser.print_help()
-        return 1
+        # Memory commands
+        commands = MemoryCommands()
+        if args.command == "write":
+            result = commands.write(args.key, args.value)
+        elif args.command == "read":
+            result = commands.read(args.key)
+        elif args.command == "search":
+            result = commands.search_memories(args.query, args.limit)
+        elif args.command == "stats":
+            result = commands.stats()
+        elif args.command == "health":
+            result = commands.health_check()
+        else:
+            parser.print_help()
+            return 1
     
     # 输出结果
     print(json.dumps(result, indent=2, ensure_ascii=False, default=str))

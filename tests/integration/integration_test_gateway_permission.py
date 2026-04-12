@@ -254,6 +254,8 @@ class TestGatewayPermissionCollaboration(BaseIntegrationTest):
         
         验证用户可以添加自定义规则
         """
+        initial_count = len(self.permission_engine.rules)
+        
         # 添加自定义规则
         custom_rule = Rule(
             pattern=r"^delete:.*\.conf$",
@@ -263,9 +265,8 @@ class TestGatewayPermissionCollaboration(BaseIntegrationTest):
         )
         self.permission_engine.add_rule(custom_rule)
         
-        # 验证规则已添加
-        self.assertEqual(len(self.permission_engine.rules), 
-                        len([r for r in self.permission_engine.rules if r.description]) + 1)
+        # 验证规则已添加 (规则数量增加1)
+        self.assertEqual(len(self.permission_engine.rules), initial_count + 1)
         
         # 测试规则匹配
         context = PermissionContext(

@@ -33,7 +33,7 @@ sys.path.insert(0, PROJECT_ROOT)
 from cli.commands import MemoryCommands, MemoryStore
 from base_wal.wal import WALManager, WALEntryType
 from gateway.gateway import Gateway
-from permission.engine import PermissionEngine, PermissionContext, PermissionLevel
+from permission.engine import PermissionEngine, PermissionContext, PermissionLevel, RuleAction
 from health.health_check import HealthChecker
 
 try:
@@ -343,7 +343,7 @@ class TestCLIWithPermission(BaseIntegrationTest):
         result = self.permission_engine.check(context, PermissionLevel.WORKSPACE_WRITE)
         
         # 删除操作需要确认
-        self.assertEqual(result.action.value, "ASK")
+        self.assertEqual(result.action, RuleAction.ASK)
         self.assertTrue(result.requires_confirmation)
         
         print("  ✓ CLI删除权限要求通过")

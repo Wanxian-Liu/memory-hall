@@ -522,6 +522,96 @@ def input_with_default(prompt: str, default: str) -> str:
     return response or default
 
 
+# ============== 任务列表视图 ==============
+
+class TaskListView:
+    """任务列表视图 - 用于TUI显示任务列表"""
+    
+    STATUS_COLORS = {
+        "pending": Colors.YELLOW,
+        "running": Colors.CYAN,
+        "completed": Colors.GREEN,
+        "failed": Colors.RED,
+        "cancelled": Colors.BRIGHT_BLACK,
+        "timeout": Colors.MAGENTA,
+        "circuit_open": Colors.BRIGHT_RED,
+    }
+    
+    def __init__(self, tasks: List[Dict[str, Any]], title: str = "任务列表"):
+        self.tasks = tasks
+        self.title = title
+    
+    def render(self, color: bool = True) -> str:
+        """渲染任务列表"""
+        if not self.tasks:
+            return colorize("没有任务", fg=Colors.DIM) if color else "没有任务"
+        
+        lines = []
+        
+        # 标题
+        if color:
+            lines.append(colorize(f"\n {self.title} ", fg=Colors.BG_BLUE, bold=True))
+        else:
+            lines.append(f"\n{self.title}")
+        
+        # 表头
+        header = f"  {'ID':<8} {'名称':<20} {'状态':<12} {'阶段':<12} {'更新时间':<20}"
+        lines.append(colorize(header, fg=Colors.CYAN, bold=True) if color else header)
+        lines.append(colorize("─" * 76, fg=Colors.DIM) if color else "─" * 76)
+        
+        # 任务行
+        for i, task in enumerate(self.tasks):
+            task_id = task.get("task_id", "")[:8]
+            name = task.get("name", "")[:18]
+            status = task.get("status", "unknown")
+            phase = task.get("phase", "unknown")
+            
+            # 格式化时间
+            import time
+            updated = task.get("updated_at", 0)
+            if updated:
+                time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(updated))
+            else:
+                time_str = "-"
+            
+            # 状态颜色
+            status_color = self.STATUS_COLORS.get(status, Colors.WHITE)
+            
+            row = f"  {task_id:<8} {name:<20} "
+            if color:
+                row += colorize(f"{status:<12}", fg=status_color, bold=True)
+                row += f" {phase:<12} {time_str}"
+                if i % 2 == 0:
+                    row = colorize(row, fg=Colors.WHITE)
+                else:
+                    row = colorize(row, fg=Colors.BRIGHT_BLACK)
+            else:
+                row += f"{status:<12} {phase:<12} {time_str}"
+            
+            lines.append(row)
+        
+        # 底部统计
+        total = len(self.tasks)
+        by_status = {}
+        for t in self.tasks:
+            s = t.get("status", "unknown")
+            by_status[s] = by_status.get(s, 0) + 1
+        
+        stats_parts = [f"总计: {total}"]
+        for s, count in by_status.items():
+            stats_parts.append(f"{s}: {count}")
+        
+        stats_line = " | ".join(stats_parts)
+        lines.append(colorize("─" * 76, fg=Colors.DIM) if color else "─" * 76)
+        lines.append(colorize(stats_line, fg=Colors.DIM) if color else stats_line)
+        
+        return "\n".join(lines)
+    
+    def print(self):
+        """直接打印任务列表"""
+        print(self.render())
+
+
 # ============== 导出 ==============
 
 __all__ = [
@@ -530,5 +620,6 @@ __all__ = [
     'ProgressBar', 'Spinner',
     'Pager',
     'print_header', 'print_success', 'print_error', 'print_warning', 'print_info',
-    'confirm', 'input_with_default'
+    'confirm', 'input_with_default',
+    'TaskListView'
 ]

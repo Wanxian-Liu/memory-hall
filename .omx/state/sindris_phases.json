@@ -3,56 +3,56 @@
     "round": 1,
     "phase": "planning",
     "status": "complete",
-    "task_description": "对MIMIR-Core的Feature_003（安全与监控：围栏/观自在/权限/审计）进行完整检测和执行",
+    "task_description": "单元测试 集成测试 性能测试 文档 检测MIMIR-Core质量",
     "output": {
-      "task_id": "task_212de846e41a",
+      "task_id": "task_8d650afb544d",
       "matched_roles": [
         {
-          "id": "scenario_enterprise_feature",
-          "name": "Scenario Enterprise Feature",
-          "category": "runbooks",
-          "description": "",
-          "vibe": "",
-          "match_score": 0.0397
+          "id": "testing_performance_benchmarker",
+          "name": "Performance Benchmarker",
+          "category": "testing",
+          "description": "Expert performance testing and optimization specialist focused on measuring, analyzing, and improving system performance across all applications and infrastructure",
+          "vibe": "Measures everything, optimizes what matters, and proves the improvement.",
+          "match_score": 0.1089
         },
         {
-          "id": "product_sprint_prioritizer",
-          "name": "Sprint Prioritizer",
-          "category": "product",
-          "description": "Expert product manager specializing in agile sprint planning, feature prioritization, and resource allocation. Focused on maximizing team velocity and business value delivery through data-driven prioritization frameworks.",
-          "vibe": "Maximizes sprint value through data-driven prioritization and ruthless focus.",
-          "match_score": 0.0238
+          "id": "testing_test_results_analyzer",
+          "name": "Test Results Analyzer",
+          "category": "testing",
+          "description": "Expert test analysis specialist focused on comprehensive test result evaluation, quality metrics analysis, and actionable insight generation from testing activities",
+          "vibe": "Reads test results like a detective reads evidence — nothing gets past.",
+          "match_score": 0.104
         },
         {
-          "id": "marketing_tiktok_strategist",
-          "name": "TikTok Strategist",
-          "category": "marketing",
-          "description": "Expert TikTok marketing specialist focused on viral content creation, algorithm optimization, and community building. Masters TikTok's unique culture and features for brand growth.",
-          "vibe": "Rides the algorithm and builds community through authentic TikTok culture.",
-          "match_score": 0.0238
-        },
-        {
-          "id": "engineering_ai_engineer",
-          "name": "AI Engineer",
+          "id": "engineering_feishu_integration_developer",
+          "name": "Feishu Integration Developer",
           "category": "engineering",
-          "description": "Expert AI/ML engineer specializing in machine learning model development, deployment, and integration into production systems. Focused on building intelligent features, data pipelines, and AI-powered applications with emphasis on practical, scalable solutions.",
-          "vibe": "Turns ML models into production features that actually scale.",
-          "match_score": 0.0238
+          "description": "Full-stack integration expert specializing in the Feishu (Lark) Open Platform — proficient in Feishu bots, mini programs, approval workflows, Bitable (multidimensional spreadsheets), interactive message cards, Webhooks, SSO authentication, and workflow automation, building enterprise-grade collaboration and automation solutions within the Feishu ecosystem.",
+          "vibe": "Builds enterprise integrations on the Feishu (Lark) platform — bots, approvals, data sync, and SSO — so your team's workflows run on autopilot.",
+          "match_score": 0.0714
         },
         {
-          "id": "project_management_experiment_tracker",
-          "name": "Experiment Tracker",
-          "category": "project-management",
-          "description": "Expert project manager specializing in experiment design, execution tracking, and data-driven decision making. Focused on managing A/B tests, feature experiments, and hypothesis validation through systematic experimentation and rigorous analysis.",
-          "vibe": "Designs experiments, tracks results, and lets the data decide.",
-          "match_score": 0.0238
+          "id": "terminal_integration_specialist",
+          "name": "Terminal Integration Specialist",
+          "category": "spatial-computing",
+          "description": "Terminal emulation, text rendering optimization, and SwiftTerm integration for modern Swift applications",
+          "vibe": "Masters terminal emulation and text rendering in modern Swift applications.",
+          "match_score": 0.0602
+        },
+        {
+          "id": "testing_accessibility_auditor",
+          "name": "Accessibility Auditor",
+          "category": "testing",
+          "description": "Expert accessibility specialist who audits interfaces against WCAG standards, tests with assistive technologies, and ensures inclusive design. Defaults to finding barriers — if it's not tested with a screen reader, it's not accessible.",
+          "vibe": "If it's not tested with a screen reader, it's not accessible.",
+          "match_score": 0.0556
         }
       ],
       "plan_summary": "分解为5个子任务",
       "verified": true
     },
     "error": null,
-    "started_at": "2026-04-12T18:19:05.705613",
-    "completed_at": "2026-04-12T18:19:05.709387"
+    "started_at": "2026-04-12T19:31:44.511192",
+    "completed_at": "2026-04-12T19:31:44.515744"
   }
 ]

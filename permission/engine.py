@@ -41,7 +41,7 @@ except ImportError:
 # ============================================================================
 
 # 允许的协议白名单
-ALLOWED_PROTOCOLS = frozenset({"http", "https"})
+ALLOWED_PROTOCOLS = frozenset({"http", "https", "memory"})
 
 # 禁止的协议黑名单
 BLOCKED_PROTOCOLS = frozenset({"file", "ftp", "sftp", "smb", "nfs", "ssh", "scp"})
@@ -480,30 +480,61 @@ class PermissionEngine:
     
     def _init_default_rules(self):
         """初始化默认规则"""
-        # 默认只读规则
+        # 默认规则 - 按优先级排序，最具体的规则放前面
         self.rules.extend([
-            # 系统关键路径 - 只读 (匹配 operation:/etc/xxx 格式)
+            # ===== 高优先级: 记忆殿堂memory协议 =====
+            Rule(
+                pattern=r"^read:memory://",
+                action=RuleAction.ALLOW,
+                min_level=PermissionLevel.READONLY,
+                description="记忆殿堂memory协议读操作允许"
+            ),
+            Rule(
+                pattern=r"^write:memory://",
+                action=RuleAction.ALLOW,
+                min_level=PermissionLevel.WORKSPACE_WRITE,
+                description="记忆殿堂memory协议写操作允许"
+            ),
+            Rule(
+                pattern=r"^delete:memory://",
+                action=RuleAction.ASK,
+                min_level=PermissionLevel.WORKSPACE_WRITE,
+                description="记忆殿堂memory协议删除需要确认"
+            ),
+            # ===== 记忆殿堂文件路径 =====
+            Rule(
+                pattern=r"^write:~/.openclaw/memory-vault/",
+                action=RuleAction.ALLOW,
+                min_level=PermissionLevel.WORKSPACE_WRITE,
+                description="记忆殿堂文件写操作允许"
+            ),
+            Rule(
+                pattern=r"^read:~/.openclaw/memory-vault/",
+                action=RuleAction.ALLOW,
+                min_level=PermissionLevel.READONLY,
+                description="记忆殿堂文件读操作允许"
+            ),
+            # ===== 系统安全规则 =====
             Rule(
                 pattern=r"^[a-z]+:/etc/(passwd|shadow|group)$",
                 action=RuleAction.DENY,
                 min_level=PermissionLevel.DANGER_FULL_ACCESS,
                 description="系统密码文件禁止访问"
             ),
-            # SSH配置 - 危险
+            # ===== 需要确认的操作 =====
             Rule(
                 pattern=r":~/.ssh/",
                 action=RuleAction.ASK,
                 min_level=PermissionLevel.WORKSPACE_WRITE,
                 description="SSH配置需要确认"
             ),
-            # 外部网络操作 - 询问 (只允许http/https)
             Rule(
                 pattern=r":https?://",
                 action=RuleAction.ASK,
                 min_level=PermissionLevel.WORKSPACE_WRITE,
                 description="外部网络请求需要确认"
             ),
-            # 文件删除 - 询问
+            # ===== 默认删除规则 - 放最后，因为最不具体 =====
             Rule(
                 pattern=r"^delete:",
                 action=RuleAction.ASK,
@@ -577,24 +608,31 @@ class PermissionEngine:
         Returns:
             PermissionResult: 权限检查结果
         """
+        result = None
+        
         # ============================================================================
         # L1: 身份认证 (Authentication)
         # ============================================================================
         if user_id and auth_token:
             auth_result = self.authenticator.authenticate(user_id, auth_token)
             if not auth_result.success:
-                return PermissionResult(
+                result = PermissionResult(
                     allowed=False,
                     action=RuleAction.DENY,
                     required_level=PermissionLevel.READONLY,
                     message=f"L1认证失败: {auth_result.error}"
                 )
+                if "after_permission_check" in self.hooks:
+                    self.hooks["after_permission_check"](result)
+                return result
         
         # 触发 before_permission_check hook
         if "before_permission_check" in self.hooks:
-            result = self.hooks["before_permission_check"](context, user_level)
-            if result is not None:
-                return result
+            hook_result = self.hooks["before_permission_check"](context, user_level)
+            if hook_result is not None:
+                if "after_permission_check" in self.hooks:
+                    self.hooks["after_permission_check"](hook_result)
+                return hook_result
         
         # ============================================================================
         # 安全检查层
@@ -602,22 +640,28 @@ class PermissionEngine:
         
         # 检查路径遍历攻击 (fix_002)
         if self._check_path_traversal(context.target):
-            return PermissionResult(
+            result = PermissionResult(
                 allowed=False,
                 action=RuleAction.DENY,
                 required_level=PermissionLevel.DANGER_FULL_ACCESS,
                 message="路径遍历攻击被阻止: 操作拒绝"
             )
+            if "after_permission_check" in self.hooks:
+                self.hooks["after_permission_check"](result)
+            return result
         
         # 检查协议安全性 (fix_003)
         is_safe, error_msg = self._validate_protocol(context.target)
         if not is_safe:
-            return PermissionResult(
+            result = PermissionResult(
                 allowed=False,
                 action=RuleAction.DENY,
                 required_level=PermissionLevel.DANGER_FULL_ACCESS,
                 message=f"协议验证失败: {error_msg}"
             )
+            if "after_permission_check" in self.hooks:
+                self.hooks["after_permission_check"](result)
+            return result
         
         # ============================================================================
         # L5: 频率限制 (Rate Limiting)
@@ -636,13 +680,16 @@ class PermissionEngine:
             
             rate_result = self.rate_limiter.check(user_id, rate_op)
             if not rate_result.allowed:
-                return PermissionResult(
+                result = PermissionResult(
                     allowed=False,
                     action=RuleAction.DENY,
                     required_level=PermissionLevel.READONLY,
                     message=f"L5频率限制: {rate_result.current_count}/{rate_result.limit} "
                             f"(重试等待{rate_result.retry_after}秒)"
                 )
+                if "after_permission_check" in self.hooks:
+                    self.hooks["after_permission_check"](result)
+                return result
         
         # ============================================================================
         # 规则匹配
@@ -651,8 +698,9 @@ class PermissionEngine:
         # 组合目标字符串用于匹配
         target_str = f"{context.operation}:{context.target}"
         
-        # 按优先级检查规则
-        for rule in self.rules:
+        # 按优先级检查规则 (按pattern长度降序，确保更具体的规则先匹配)
+        sorted_rules = sorted(self.rules, key=lambda r: len(r.pattern), reverse=True)
+        for rule in sorted_rules:
                 # 规则模式匹配检查
                 pattern_matches = False
                 try:
@@ -666,52 +714,71 @@ class PermissionEngine:
                 
                 # 权限级别检查
                 if user_level < rule.min_level:
-                    return PermissionResult(
+                    # 即使权限不足，如果是 ASK 动作仍需确认
+                    requires_conf = (rule.action == RuleAction.ASK)
+                    result = PermissionResult(
                         allowed=False,
                         action=rule.action,
                         required_level=rule.min_level,
-                        message=f"权限不足，需要级别 {rule.min_level.name}"
+                        message=f"权限不足，需要级别 {rule.min_level.name}",
+                        requires_confirmation=requires_conf
                     )
+                    if "after_permission_check" in self.hooks:
+                        self.hooks["after_permission_check"](result)
+                    return result
                 
                 # 动作处理
                 if rule.action == RuleAction.ALLOW:
-                    return PermissionResult(
+                    result = PermissionResult(
                         allowed=True,
                         action=RuleAction.ALLOW,
                         required_level=rule.min_level,
                         message="操作已允许"
                     )
+                    if "after_permission_check" in self.hooks:
+                        self.hooks["after_permission_check"](result)
+                    return result
                 elif rule.action == RuleAction.DENY:
-                    return PermissionResult(
+                    result = PermissionResult(
                         allowed=False,
                         action=rule.action,
                         required_level=rule.min_level,
                         message=f"操作被拒绝: {rule.description}"
                     )
+                    if "after_permission_check" in self.hooks:
+                        self.hooks["after_permission_check"](result)
+                    return result
                 elif rule.action == RuleAction.ASK:
-                    return PermissionResult(
+                    result = PermissionResult(
                         allowed=False,
                         action=RuleAction.ASK,
                         required_level=rule.min_level,
                         message=f"需要确认: {rule.description}",
                         requires_confirmation=True
                     )
+                    if "after_permission_check" in self.hooks:
+                        self.hooks["after_permission_check"](result)
+                    return result
         
         # 无匹配规则
         # 读操作默认允许，其他默认拒绝
         if context.operation in ("read", "list", "search"):
-            return PermissionResult(
+            result = PermissionResult(
                 allowed=True,
                 action=RuleAction.ALLOW,
                 required_level=PermissionLevel.READONLY,
                 message="操作已允许 (默认规则)"
             )
-        return PermissionResult(
-            allowed=False,
-            action=RuleAction.DENY,
-            required_level=PermissionLevel.READONLY,
-            message="无匹配规则，默认拒绝"
-        )
+        else:
+            result = PermissionResult(
+                allowed=False,
+                action=RuleAction.DENY,
+                required_level=PermissionLevel.READONLY,
+                message="无匹配规则，默认拒绝"
+            )
+        if "after_permission_check" in self.hooks:
+            self.hooks["after_permission_check"](result)
+        return result
     
     def _match_rule(self, pattern: str, context: PermissionContext, user_level: PermissionLevel) -> bool:
         """检查规则是否匹配"""
@@ -724,8 +791,8 @@ class PermissionEngine:
             return pattern in target
     
     def add_rule(self, rule: Rule) -> None:
-        """添加规则"""
-        self.rules.append(rule)
+        """添加规则（插入到列表开头，以便优先于默认规则匹配）"""
+        self.rules.insert(0, rule)
     
     def remove_rule(self, pattern: str) -> None:
         """移除规则"""
