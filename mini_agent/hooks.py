@@ -220,12 +220,44 @@ class DefaultBeforeToolCallHook(BeforeToolCallHook):
         return HookResult(denied=False, messages=["Tool allowed"])
     
     def _is_dangerous_command(self, cmd: str) -> bool:
-        """检查命令是否危险"""
-        dangerous_patterns = [
-            "rm -rf", "dd if=", ":(){:|:&};:", 
-            "mkfs", "fdisk", "shutdown", "reboot"
+        """检查命令是否危险 - 增强版P0-3"""
+        # 危险命令模式（不区分大小写）
+        dangerous_commands = [
+            "rm -rf", "dd if=", ":(){:|:&};:",
+            "mkfs", "fdisk", "shutdown", "reboot",
+            "> /dev/sd", "cat /dev/sd", "dd of=",
+            "chmod -R 777", "chown -R", "eval ",
+            "curl |sh", "wget |sh", "bash -c", "sh -c",
+            "pkill -9", "kill -9", "reboot", "init 6",
+            "rm --no-preserve-root", "mv /dev/null",
+            "chattr -i", "wget -O-", "curl -sS"
         ]
-        return any(p in cmd.lower() for p in dangerous_patterns)
+        
+        # shell连接符检测（命令链接/管道/后台执行）
+        shell_connectors = [
+            "; ", " && ", " || ", "| ", "> ", "< ",
+            "`", "$( ", ")& ", " & ", "\n"
+        ]
+        
+        cmd_lower = cmd.lower()
+        
+        # 检查危险命令
+        if any(p in cmd_lower for p in dangerous_commands):
+            return True
+        
+        # 检查shell连接符（但排除无害的grep/cut使用）
+        if any(c in cmd for c in shell_connectors):
+            # 进一步检查是否有管道到shell
+            if any(p in cmd for p in ["| sh", "| bash", "| zsh", "| python", "| perl"]):
+                return True
+            # 检查反引号命令替换
+            if "`" in cmd and cmd.count("`") >= 2:
+                return True
+            # 检查$()命令替换
+            if "$(" in cmd:
+                return True
+        
+        return False
 
 
 class DefaultToolResultPersistHook(ToolResultPersistHook):

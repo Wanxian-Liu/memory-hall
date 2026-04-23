@@ -1,0 +1,46 @@
+{
+  "gateway": {
+    "write_ms": {
+      "mean": 0.6188323900278192,
+      "median": 0.38596600097662304,
+      "p95": 0.4802330004167743
+    },
+    "read_ms": {
+      "mean": 0.0010672999633243307,
+      "median": 0.0003710010787472129,
+      "p95": 0.0004709982022177428
+    }
+  },
+  "search": {
+    "mean": 4.902480079908855,
+    "median": 4.736499999125954,
+    "p95": 5.72616499994183
+  },
+  "extractor": [
+    {
+      "size_kb": 1,
+      "compression_ratio": 1.2841796875,
+      "extraction_time_ms": 2.9172150025260635
+    },
+    {
+      "size_kb": 5,
+      "compression_ratio": 1.0572265625,
+      "extraction_time_ms": 1.082735998352291
+    },
+    {
+      "size_kb": 10,
+      "compression_ratio": 1.0287109375,
+      "extraction_time_ms": 2.0301670010667294
+    },
+    {
+      "size_kb": 50,
+      "compression_ratio": 1.0057421875,
+      "extraction_time_ms": 10.196590999839827
+    }
+  ],
+  "wal": {
+    "status": "log_files_only",
+    "log_count": 15,
+    "meta_exists": true
+  }
+}

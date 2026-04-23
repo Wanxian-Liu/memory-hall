@@ -44,7 +44,7 @@ class GDIResult:
     }
     
     # 发布阈值
-    PUBLISH_THRESHOLD = 0.5
+    PUBLISH_THRESHOLD = 0.35
     
     def __post_init__(self):
         """计算总分"""
@@ -205,6 +205,12 @@ class GDIScorer:
         task_count = metadata.get("task_usage_count", 0)
         score += min(0.3, task_count / 20)
         
+        # 新胶囊基础分：如果有内容但没有任何使用记录，给0.3基础分
+        if score == 0.0 and capsule.get("content"):
+            content_len = len(capsule.get("content", ""))
+            if content_len > 100:  # 有实质内容的新胶囊
+                score = 0.3
+        
         return min(1.0, max(0.0, score))
     
     # ============ GDI_social: 社交信号 (20%) ============
@@ -302,6 +308,16 @@ class GDIScorer:
             capsule.get("content", "").encode()
         ).hexdigest()[:12])
         
+        # 确保knowledge_type被填充（如果为空则从taxonomy_tags派生）
+        knowledge_type = capsule.get("knowledge_type", {})
+        if not knowledge_type:
+            taxonomy_tags = capsule.get("taxonomy_tags", [])
+            content = capsule.get("content", "")
+            # 根据标签和内容派生knowledge_type
+            derived_knowledge_type = self._derive_knowledge_type(taxonomy_tags, content)
+            capsule["knowledge_type"] = derived_knowledge_type
+            knowledge_type = derived_knowledge_type
+        
         intrinsic = self._score_intrinsic(capsule)
         usage = self._score_usage(capsule)
         social = self._score_social(capsule)
@@ -316,6 +332,55 @@ class GDIScorer:
         )
         
         return result
+    
+    def _derive_knowledge_type(self, taxonomy_tags: List[str], content: str) -> Dict[str, Any]:
+        """
+        从taxonomy_tags和content派生knowledge_type
+        
+        Args:
+            taxonomy_tags: 标签列表
+            content: 内容文本
+            
+        Returns:
+            派生的knowledge_type字典
+        """
+        # 技术领域关键词映射
+        domain_keywords = {
+            "backend": ["api", "server", "database", "sql", "cache", "redis", "postgresql"],
+            "frontend": ["react", "vue", "angular", "javascript", "css", "html", "ui"],
+            "devops": ["docker", "kubernetes", "k8s", "ci/cd", "deploy", "container"],
+            "security": ["auth", "oauth", "jwt", "encryption", "ssl", "security"],
+            "performance": ["optimization", "cache", "benchmark", "profiling", "latency"],
+            "data": ["etl", "pipeline", "dataflow", "analytics", "warehouse"],
+            "network": ["tcp", "udp", "http", "websocket", "grpc", "rest"],
+            "storage": ["storage", "filesystem", "s3", "bucket", "disk"],
+        }
+        
+        # 从taxonomy_tags推断领域
+        detected_domains = []
+        for tag in taxonomy_tags:
+            tag_lower = tag.lower()
+            for domain, keywords in domain_keywords.items():
+                if any(kw in tag_lower for kw in keywords):
+                    if domain not in detected_domains:
+                        detected_domains.append(domain)
+        
+        # 从content推断领域
+        content_lower = content.lower()
+        for domain, keywords in domain_keywords.items():
+            if any(kw in content_lower for kw in keywords):
+                if domain not in detected_domains:
+                    detected_domains.append(domain)
+        
+        # 如果没有检测到领域，标记为general
+        if not detected_domains:
+            detected_domains = ["general"]
+        
+        return {
+            "domains": detected_domains,
+            "confidence": 0.5,  # 派生的knowledge_type使用0.5置信度
+            "source": "derived"
+        }
     
     def score_batch(self, capsules: List[Dict[str, Any]]) -> List[GDIResult]:
         """批量评分"""

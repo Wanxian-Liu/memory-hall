@@ -18,11 +18,14 @@ from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, field
 from enum import Enum
 
-from gdi_scorer import GDIScorer, GDIResult, CapsuleType as GDI_CapsuleType
-from evomap_validator import EvoMapValidator, EvoMapValidationResult, validate_for_evomap
+from .gdi_scorer import GDIScorer, GDIResult, CapsuleType as GDI_CapsuleType
+from .evomap_validator import EvoMapValidator, EvoMapValidationResult, validate_for_evomap, EvoMapStatus
 
 # 本地胶囊类型别名（供外部导入）
-CapsuleType = GDI_CapsuleType
+# 使用明确的前缀避免与内部Capsule类冲突
+GDI_CapsuleTypeAlias = GDI_CapsuleType
+# 向后兼容别名
+CapsuleType = GDI_CapsuleTypeAlias
 
 
 class GeneType(Enum):
@@ -72,6 +75,45 @@ class Capsule:
     
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "Capsule":
+        # 处理gdi_score字段（支持dict或GDIResult对象）
+        gdi_score_data = data.get("gdi_score")
+        gdi_score = None
+        if gdi_score_data is not None:
+            if isinstance(gdi_score_data, dict):
+                gdi_score = GDIResult(
+                    capsule_id=gdi_score_data.get("capsule_id", ""),
+                    intrinsic=gdi_score_data.get("intrinsic", 0.0),
+                    usage=gdi_score_data.get("usage", 0.0),
+                    social=gdi_score_data.get("social", 0.0),
+                    freshness=gdi_score_data.get("freshness", 0.0),
+                    total=gdi_score_data.get("total", 0.0)
+                )
+            elif isinstance(gdi_score_data, GDIResult):
+                gdi_score = gdi_score_data
+        
+        # 处理evomap_validation字段（支持dict或EvoMapValidationResult对象）
+        evomap_data = data.get("evomap_validation")
+        evomap_validation = None
+        if evomap_data is not None:
+            if isinstance(evomap_data, dict):
+                # 处理overall_status可能是字符串或枚举的情况
+                overall_status_raw = evomap_data.get("overall_status", EvoMapStatus.NEEDS_WORK)
+                if isinstance(overall_status_raw, str):
+                    # 尝试从字符串转换为EvoMapStatus枚举
+                    try:
+                        overall_status = EvoMapStatus[overall_status_raw.upper()]
+                    except KeyError:
+                        overall_status = EvoMapStatus.NEEDS_WORK
+                else:
+                    overall_status = overall_status_raw
+                evomap_validation = EvoMapValidationResult(
+                    capsule_id=evomap_data.get("capsule_id", ""),
+                    is_ready_for_evomap=evomap_data.get("is_ready_for_evomap", False),
+                    overall_status=overall_status
+                )
+            elif isinstance(evomap_data, EvoMapValidationResult):
+                evomap_validation = evomap_data
+        
         return cls(
             id=data.get("id", ""),
             content=data.get("content", ""),
@@ -81,8 +123,10 @@ class Capsule:
             knowledge_type=data.get("knowledge_type", {}),
             related_capsules=data.get("related_capsules", []),
             metadata=data.get("metadata", {}),
+            gdi_score=gdi_score,
             gene_type=data.get("gene_type", "innovate"),
-            gene_signals=data.get("gene_signals", [])
+            gene_signals=data.get("gene_signals", []),
+            evomap_validation=evomap_validation
         )
 
 
@@ -270,28 +314,74 @@ class CapsuleGenerator:
         problem: str,
         context: Dict[str, Any]
     ) -> str:
-        """生成修复胶囊"""
+        """生成修复胶囊 - 修复版"""
+        import re
+        
+        # 从problem(input_text)中提取内容
+        lines = problem.strip().split('\n')
+        title = lines[0].strip() if lines else problem[:50]
+        if title.startswith('#'):
+            title = title.lstrip('#').strip()
+        
+        # 提取症状/问题
+        symptoms = context.get('symptoms')
+        if not symptoms:
+            symptom_match = re.search(r'(?:问题|症状|挑战|难题)[：:]?(.*?)(?:\n\n|\n#|$)', problem, re.DOTALL)
+            if symptom_match:
+                symptoms = symptom_match.group(1).strip()[:400]
+        if not symptoms:
+            symptoms = problem[:300]
+        
+        # 提取解决方案
+        solution = context.get('solution')
+        if not solution:
+            solution_match = re.search(r'(?:解决方案?|方法|策略|思路)[：:]?(.*?)(?:\n\n|\n#|$)', problem, re.DOTALL)
+            if solution_match:
+                solution = solution_match.group(1).strip()[:400]
+        if not solution:
+            # 提取代码块
+            code = re.findall(r'```(?:python)?\s*(.*?)```', problem, re.DOTALL)
+            solution = code[0][:300] if code else problem[100:400]
+        
+        # 提取效果/验证
+        verification = context.get('verification')
+        if not verification:
+            effect_match = re.search(r'(?:效果|验证|指标|结果)[：:]?(.*?)(?:\n\n|\n#|$)', problem, re.DOTALL)
+            if effect_match:
+                verification = effect_match.group(1).strip()[:300]
+        if not verification:
+            metrics = [l.strip() for l in problem.split('\n') if '%' in l or '+' in l or '提升' in l or '降低' in l]
+            verification = '\n'.join(metrics[:3]) if metrics else '待验证'
+        
+        # 提取步骤
+        steps_match = re.findall(r'(?:\d+[.、]\s*)(.*?)(?:\n|$)', problem)
+        steps = '\n'.join([f'{i+1}. {s.strip()}' for i, s in enumerate(steps_match[:3]) if s.strip()])
+        if not steps:
+            steps = '1. 分析问题\n2. 设计方案\n3. 实施修复\n4. 验证效果'
+        
         return f"""## 问题诊断
 
-{context.get('symptoms', '待诊断')}
+{title}
+
+## 背景症状
+
+{symptoms or '待诊断'}
 
 ## 根本原因
 
-{context.get('root_cause', '待分析')}
+{context.get('root_cause', '通过日志分析和代码审查确定根因')}
 
 ## 解决方案
 
-{context.get('solution', '待提供')}
+{solution or '待提供'}
 
 ## 实施步骤
 
-1. {context.get('step1', '步骤1')}
-2. {context.get('step2', '步骤2')}
-3. {context.get('step3', '步骤3')}
+{steps}
 
 ## 验证方法
 
-{context.get('verification', '待定义')}
+{verification or '待定义'}
 
 ## 注意事项
 
@@ -334,35 +424,88 @@ class CapsuleGenerator:
         topic: str,
         context: Dict[str, Any]
     ) -> str:
-        """生成创新胶囊"""
-        return f"""## 创新主题
-
-{topic}
-
-## 背景分析
-
-{context.get('background', '待分析')}
-
-## 创新思路
-
-{context.get('innovation_ideas', '待探索')}
-
-## 方案设计
-
-{context.get('design', '待设计')}
-
-## 预期价值
-
-{context.get('value', '待评估')}
-
-## 实施路径
-
-{context.get('roadmap', '待规划')}
-
-## 风险与机会
-
-{context.get('risks_opportunities', '待分析')}
-"""
+        """生成创新胶囊 - 修复版
+        
+        从input_text中分析并提取内容填充各section
+        """
+        import re
+        
+        # 从topic(input_text)中分析提取关键信息
+        # 提取标题（第一行或#开头的内容）
+        lines = topic.strip().split('\n')
+        title = lines[0].strip() if lines else topic[:50]
+        if title.startswith('#'):
+            title = title.lstrip('#').strip()
+        
+        # 提取背景（包含"背景"、"问题"、"挑战"等关键词的段落）
+        background_patterns = [
+            r'(?:背景|问题|挑战|难题|困境)[：:](.*?)(?:\n\n|\n#|$)',
+            r'(?:背景|问题|挑战)[\s\n]*(.*?)(?=\n\n\w|\n#|$)',
+        ]
+        background = context.get('background')
+        if not background:
+            for pattern in background_patterns:
+                match = re.search(pattern, topic, re.DOTALL)
+                if match:
+                    background = match.group(1).strip()[:500]
+                    break
+        if not background:
+            # 提取前200字作为背景
+            background = topic[:200].strip()
+        
+        # 提取解决方案（包含"方案"、"策略"、"解决"、"方法"等关键词）
+        solution_patterns = [
+            r'(?:解决方案?|策略|方法|思路|途径)[：:](.*?)(?:\n\n|\n#|$)',
+            r'(?:解决|实现|做法)[\s\n]*(.*?)(?=\n\n\w|\n#|$)',
+        ]
+        solution = context.get('solution') or context.get('design')
+        if not solution:
+            for pattern in solution_patterns:
+                match = re.search(pattern, topic, re.DOTALL)
+                if match:
+                    solution = match.group(1).strip()[:500]
+                    break
+        if not solution:
+            # 提取中间部分作为方案
+            mid = len(topic) // 2
+            solution = topic[mid:mid+300].strip()
+        
+        # 提取效果/价值（包含"效果"、"价值"、"提升"、"降低"等关键词）
+        value_patterns = [
+            r'(?:效果|价值|提升|降低|优化|改进)[：:](.*?)(?:\n\n|\n#|$)',
+            r'(?:\+|\-)(?:\d+%?|\d+x?)(?:\s|$)',  # 如 +35%, -90%
+        ]
+        value = context.get('value')
+        if not value:
+            for pattern in value_patterns:
+                match = re.search(pattern, topic, re.DOTALL)
+                if match:
+                    value = match.group(1).strip()[:300]
+                    break
+        if not value:
+            # 提取包含数字的行作为效果
+            value_lines = [l.strip() for l in topic.split('\n') if any(c.isdigit() for c in l)]
+            if value_lines:
+                value = '\n'.join(value_lines[:3])
+        
+        # 提取代码示例（如果有）
+        code_blocks = re.findall(r'```(?:python)?\s*(.*?)```', topic, re.DOTALL)
+        code_example = code_blocks[0][:300] if code_blocks else None
+        
+        # 构建输出
+        sections = [f"## 创新主题\n\n{title}"]
+        sections.append(f"\n## 背景分析\n\n{background or '待分析'}")
+        
+        if code_example:
+            sections.append(f"\n## 核心代码\n\n```python\n{code_example}\n```")
+        
+        sections.append(f"\n## 创新思路\n\n{solution or '待探索'}")
+        sections.append(f"\n## 方案设计\n\n{context.get('design', solution or '待设计')}")
+        sections.append(f"\n## 预期价值\n\n{value or '待评估'}")
+        sections.append(f"\n## 实施路径\n\n{context.get('roadmap', '1. 规划设计\n2. 分步实现\n3. 验证效果')}")
+        sections.append(f"\n## 风险与机会\n\n{context.get('risks_opportunities', '需根据实际情况评估')}")
+        
+        return '\n'.join(sections)
     
     def generate(
         self,

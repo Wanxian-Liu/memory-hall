@@ -167,8 +167,8 @@ class MemoryCommands:
             wal_dir=os.path.join(PROJECT_ROOT, "wal"),
             enable_checksum=True
         )
-        self.health = HealthChecker()
-        self.search = create_engine()
+        self.health_checker = HealthChecker()
+        self.search_engine = create_engine()
         
         # 初始化搜索引擎索引
         self._init_search_index()
@@ -181,7 +181,7 @@ class MemoryCommands:
             if value is not None:
                 # 将值转为字符串以便搜索
                 content = f"{key}: {json.dumps(value, ensure_ascii=False)}"
-                self.search.add_document(
+                self.search_engine.add_document(
                     id=key,
                     content=content,
                     metadata={"key": key, "type": "memory"}
@@ -217,7 +217,7 @@ class MemoryCommands:
             
             # 添加到搜索引擎
             content = f"{key}: {json.dumps(value, ensure_ascii=False)}"
-            self.search.add_document(
+            self.search_engine.add_document(
                 id=key,
                 content=content,
                 metadata={"key": key, "type": "memory"}
@@ -277,7 +277,7 @@ class MemoryCommands:
         }
         
         try:
-            results, total_hits, next_token = self.search.search(
+            results, total_hits, next_token = self.search_engine.search(
                 query=query,
                 limit=limit,
                 include_vectors=False
@@ -293,7 +293,7 @@ class MemoryCommands:
                 }
                 for r in results
             ]
-            result["stats"] = self.search.get_stats()
+            result["stats"] = self.search_engine.get_stats()
             
         except Exception as e:
             result["error"] = str(e)
@@ -341,7 +341,7 @@ class MemoryCommands:
             }
             
             # 搜索引擎统计
-            result["search"] = self.search.get_stats()
+            result["search"] = self.search_engine.get_stats()
             
         except Exception as e:
             result["error"] = str(e)
@@ -355,7 +355,7 @@ class MemoryCommands:
         健康检查
         """
         try:
-            return self.health.get_full_report()
+            return self.health_checker.get_full_report()
         except Exception as e:
             return {
                 "command": "health",

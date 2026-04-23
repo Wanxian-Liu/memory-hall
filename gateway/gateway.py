@@ -369,9 +369,15 @@ def fence_checkpoint(filepath: str, operation: str, user: str = "system") -> Dic
     if not script.exists():
         return {"allowed": True, "reason": "Fence script not found"}
     
+    # P0-2: 验证filepath不包含特殊字符，防止命令注入
+    filepath_resolved = Path(filepath).resolve()
+    special_chars = set('\x00\n\r\'";|&$<>`')
+    if any(c in str(filepath_resolved) for c in special_chars):
+        return {"allowed": False, "reason": "Filepath contains invalid characters"}
+    
     try:
         result = subprocess.run(
-            [sys.executable, str(script), "check", operation, filepath],
+            [sys.executable, str(script), "check", operation, str(filepath_resolved)],
             capture_output=True,
             text=True,
             timeout=5

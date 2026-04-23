@@ -25,8 +25,8 @@ class LLMConfig:
     """LLM配置数据类"""
     provider: str = "deepseek"
     api_key_env: str = "DEEPSEEK_API_KEY"
-    model: str = "deepseek-chat"
-    base_url: str = "https://api.deepseek.com/v1"
+    model: str = "kimi-k2.5"  # Moonshot Kimi K2.5
+    base_url: str = "https://api.moonshot.cn/v1"  # Moonshot Kimi K2.5
     timeout: int = 30
     max_retries: int = 3
     retry_backoff: float = 1.5
@@ -256,8 +256,10 @@ if __name__ == "__main__":
     print("🧪 记忆殿堂v2.0 - DeepSeek LLM 客户端测试")
     print("=" * 50)
     
-    # 设置API Key到环境变量（测试用）
-    os.environ["DEEPSEEK_API_KEY"] = "sk-478c1dd983e44adb974876e438776898"
+    # 从环境变量读取API Key
+    api_key = os.environ.get("DEEPSEEK_API_KEY")
+    if not api_key:
+        raise ValueError("DEEPSEEK_API_KEY environment variable is not set")
     
     client = get_client()
     print(f"配置: {client.config}")

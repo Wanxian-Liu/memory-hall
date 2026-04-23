@@ -57,22 +57,20 @@ class DiagnosticEngine:
         """诊断任务成功率"""
         value = current.task_success_rate
         
-        # 固定阈值（自适应阈值计算结果不佳时使用）
+        # 固定阈值（success_rate范围是0-1，IQR方法不适用）
+        # >95% 为优秀，>85% 为正常，<75% 为危急
         warning = 0.85
         critical = 0.75
         
-        # 尝试使用自适应阈值
-        adaptive = self.calculator.calculate_adaptive_thresholds(
-            history, 'success', 'lower_is_worse'
-        )
-        if adaptive:
-            warning = adaptive['warning']
-            critical = adaptive['critical']
-        
-        status = self._get_status(value, warning, critical, inverted=True)
-        trend = self._get_trend(history, 'success', 'higher_is_better')
-        
-        root_cause, suggestions = self._analyze_low_success(trend, value)
+        # 特殊处理：success_rate >= 95% 视为优秀
+        if value >= 0.95:
+            status = HealthStatus.OK
+            root_cause = "任务成功率优秀，保持良好状态"
+            suggestions = ["继续保持"]
+        else:
+            status = self._get_status(value, warning, critical, inverted=True)
+            trend = self._get_trend(history, 'success', 'higher_is_better')
+            root_cause, suggestions = self._analyze_low_success(trend, value)
         
         return DiagnosisResult(
             dimension="task_success_rate",
@@ -80,7 +78,7 @@ class DiagnosticEngine:
             current_value=value,
             threshold_warning=warning,
             threshold_critical=critical,
-            trend=trend,
+            trend="stable" if value >= 0.95 else self._get_trend(history, 'success', 'higher_is_better'),
             root_cause=root_cause,
             suggestions=suggestions,
             timestamp=datetime.now().isoformat()
@@ -250,6 +248,14 @@ class DiagnosticEngine:
         self, value: float, warning: float, critical: float, inverted: bool
     ) -> HealthStatus:
         """判断健康状态"""
+        # 特殊处理：0值对于"lower_is_worse"指标是完美状态
+        if inverted and value == 0.0:
+            return HealthStatus.OK
+        
+        # 特殊处理：success_rate=1.0是完美状态
+        if inverted and value >= 0.99:
+            return HealthStatus.OK
+            
         if inverted:
             if value <= critical:
                 return HealthStatus.CRITICAL

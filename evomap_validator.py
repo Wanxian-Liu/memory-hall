@@ -119,13 +119,15 @@ class EvoMapValidationResult:
     
     def __post_init__(self):
         """计算整体状态 - 在checks填充后调用"""
+        # checks未填充时设置为NEEDS_WORK状态（明确标记为未检查）
         if not self.checks:
-            # checks尚未填充，使用默认值
+            self.overall_status = EvoMapStatus.NEEDS_WORK
+            self.is_ready_for_evomap = False
             return
         
-        self._recalculate_status()
+        self._compute_overall_status()
     
-    def _recalculate_status(self):
+    def _compute_overall_status(self):
         """重新计算整体状态（在checks填充后调用）"""
         critical_failures = sum(1 for c in self.checks 
                                 if c.status == EvoMapStatus.CRITICAL)
@@ -268,14 +270,24 @@ class EvoMapValidator:
     def _extract_core_metrics(self, capsule: Dict[str, Any], result: EvoMapValidationResult):
         """提取核心指标"""
         # outcome.score
-        outcome = capsule.get("outcome", {})
-        if isinstance(outcome, dict):
-            result.outcome_score = outcome.get("score", 0.0)
+        outcome = capsule.get("outcome")
+        if outcome is None:
+            result.outcome_score = 0.0
+        elif isinstance(outcome, dict):
+            result.outcome_score = outcome.get("score", 0.0) if outcome.get("score") is not None else 0.0
+        elif isinstance(outcome, (int, float)):
+            result.outcome_score = float(outcome)
         else:
             result.outcome_score = 0.0
         
         # confidence
-        result.confidence = capsule.get("confidence", 0.0)
+        confidence = capsule.get("confidence")
+        if confidence is None:
+            result.confidence = 0.0
+        elif isinstance(confidence, (int, float)):
+            result.confidence = float(confidence)
+        else:
+            result.confidence = 0.0
         
         # success_streak
         result.success_streak = capsule.get("success_streak", 0)
@@ -360,7 +372,7 @@ class EvoMapValidator:
         ]
         
         # 重新计算整体状态
-        result._recalculate_status()
+        result._compute_overall_status()
     
     def _check_outcome_score(self, result: EvoMapValidationResult) -> EvoMapCheck:
         """检查outcome.score"""
