@@ -213,7 +213,7 @@ class ProbeRegistry:
                 return
 
             # 延迟导入避免循环依赖
-            from introspection.modules import get_registry
+            from interfaces.modules import get_registry
 
             reg = get_registry()
             all_modules = reg.all_modules()
@@ -289,7 +289,7 @@ class ProbeRegistry:
         """
         try:
             # 获取模块的类信息
-            from introspection.modules import get_registry
+            from interfaces.modules import get_registry
             reg = get_registry()
             module_data = reg.get(module_id)
             if not module_data:

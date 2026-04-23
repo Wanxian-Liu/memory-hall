@@ -415,7 +415,7 @@ class StatusAggregator:
                 return {}
 
             # 获取模块注册表来获取top_type
-            from introspection.modules import get_registry
+            from interfaces.modules import get_registry
             reg = get_registry()
 
             # 按模块类型分组

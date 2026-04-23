@@ -10,14 +10,27 @@
 - SimHash: SimHash指纹算法
 """
 
-from .deduplicator import (
-    Deduplicator,
-    TaskRegistry,
-    TaskRecord,
-    TaskStatus,
-    SimHash,
-    LLMSemanticDeduplicator,
-)
+# Re-export from deduplication/ for backward compatibility.
+# The canonical location is now deduplication.deduplicator.
+try:
+    from deduplication.deduplicator import (
+        Deduplicator,
+        TaskRegistry,
+        TaskRecord,
+        TaskStatus,
+        SimHash,
+        LLMSemanticDeduplicator,
+    )
+except ImportError:
+    # Fallback for direct normalizer/ usage before full migration completes
+    from .deduplicator import (
+        Deduplicator,
+        TaskRegistry,
+        TaskRecord,
+        TaskStatus,
+        SimHash,
+        LLMSemanticDeduplicator,
+    )
 
 __version__ = "2.5.0"
 __all__ = [
