@@ -400,30 +400,100 @@ class CapsuleGenerator:
         goal: str,
         context: Dict[str, Any]
     ) -> str:
-        """生成优化胶囊"""
+        """生成优化胶囊 - 修复版
+        
+        从goal(input_text)中分析并提取内容填充各section。
+        """
+        import re
+        
+        # 从goal(input_text)中分析提取关键信息
+        # 提取标题（第一行或#开头的内容）
+        lines = goal.strip().split('\n')
+        title = lines[0].strip() if lines else goal[:50]
+        if title.startswith('#'):
+            title = title.lstrip('#').strip()
+        
+        # 提取当前状态/背景
+        current_state = context.get('current_state')
+        if not current_state:
+            # 尝试匹配 "当前状态：" 或 "## 当前状态" 格式
+            state_match = re.search(r'(?:当前状态|现状|背景)[：:]?(.*?)(?=^##|优化|改进|\n\n|$)', goal, re.MULTILINE | re.DOTALL)
+            if state_match:
+                current_state = state_match.group(1).strip()[:400]
+        if not current_state:
+            # 提取前200字作为当前状态
+            current_state = goal[:200].strip()
+        
+        # 提取优化点/问题
+        optimization_points = context.get('optimization_points')
+        if not optimization_points:
+            # 尝试匹配包含"优化"、"改进"、"问题"等关键词的内容
+            opt_match = re.search(r'(?:优化点|改进点|问题|挑战)[：:]?(.*?)(?=^##|优化|方案|\n\n|$)', goal, re.MULTILINE | re.DOTALL)
+            if opt_match:
+                optimization_points = opt_match.group(1).strip()[:400]
+        if not optimization_points:
+            # 提取包含数字列表的内容
+            opt_lines = [l.strip() for l in goal.split('\n') if re.match(r'^\d+[.、]', l.strip())]
+            optimization_points = '\n'.join(opt_lines[:5]) if opt_lines else goal[100:400]
+        
+        # 提取优化方案
+        optimization_plan = context.get('optimization_plan')
+        if not optimization_plan:
+            # 尝试匹配 "方案" 或 "## 优化方案" 格式
+            plan_match = re.search(r'(?:优化方案|方案设计|解决方案?)[：:]?(.*?)(?=^##|预期|风险|\n\n|$)', goal, re.MULTILINE | re.DOTALL)
+            if plan_match:
+                optimization_plan = plan_match.group(1).strip()[:500]
+        if not optimization_plan:
+            # 提取包含"通过"、"实现"、"使用"的实践性内容
+            plan_lines = [l.strip() for l in goal.split('\n') 
+                          if ('通过' in l or '实现' in l or '使用' in l) and l.strip().startswith(('-', '*'))]
+            optimization_plan = '\n'.join(plan_lines[:5]) if plan_lines else goal[len(goal)//2:len(goal)//2+400].strip()
+        
+        # 提取预期效果
+        expected_effect = context.get('expected_effect')
+        if not expected_effect:
+            # 尝试匹配 "效果" 或 "## 预期效果" 格式
+            effect_match = re.search(r'(?:预期效果|效果|价值|收益)[：:]?(.*?)(?=^##|风险|实施|\n\n|$)', goal, re.MULTILINE | re.DOTALL)
+            if effect_match:
+                expected_effect = effect_match.group(1).strip()[:400]
+        if not expected_effect:
+            # 提取包含百分号或提升/降低关键词的内容
+            effect_lines = [l.strip() for l in goal.split('\n') if ('%' in l or '提升' in l or '降低' in l or '改善' in l)]
+            expected_effect = '\n'.join(effect_lines[:3]) if effect_lines else '待评估'
+        
+        # 提取实施风险
+        risks = context.get('risks')
+        if not risks:
+            # 尝试匹配 "风险" 格式
+            risk_match = re.search(r'(?:风险|注意事项)[：:]?(.*?)(?=^##|\n\n|$)', goal, re.MULTILINE | re.DOTALL)
+            if risk_match:
+                risks = risk_match.group(1).strip()[:300]
+        if not risks:
+            risks = '无明显风险'
+        
         return f"""## 当前状态
 
-{context.get('current_state', '待描述')}
+{current_state}
 
 ## 优化目标
 
-{goal}
+{title}
 
 ## 优化点
 
-{context.get('optimization_points', '待分析')}
+{optimization_points}
 
 ## 优化方案
 
-{context.get('optimization_plan', '待设计')}
+{optimization_plan}
 
 ## 预期效果
 
-{context.get('expected_effect', '待评估')}
+{expected_effect}
 
 ## 实施风险
 
-{context.get('risks', '无明显风险')}
+{risks}
 """
     
     def _generate_innovate_capsule(
