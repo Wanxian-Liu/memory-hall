@@ -21,13 +21,13 @@ from plugin.plugin import (
 
 # ---- 测试辅助：创建测试插件 ----
 
-class TestPlugin(PluginInterface):
-    """测试用插件实现"""
+class SamplePlugin(PluginInterface):
+    """测试用示例插件实现 (命名为SamplePlugin避免pytest收集警告)"""
     METADATA = PluginMetadata(
-        id="记忆殿堂.test",
-        name="Test Plugin",
+        id="记忆殿堂.sample",
+        name="Sample Plugin",
         version="1.0.0",
-        description="A test plugin",
+        description="A sample plugin for testing",
         author="Test Author",
         tags=["test"],
         dependencies=[]
@@ -184,18 +184,18 @@ class TestPluginState:
 
 class TestPluginInterface:
     def test_plugin_init(self):
-        plugin = TestPlugin()
+        plugin = SamplePlugin()
         assert plugin.state == PluginState.UNLOADED
-        assert plugin.id == "记忆殿堂.test"
+        assert plugin.id == "记忆殿堂.sample"
 
     def test_plugin_config(self):
-        plugin = TestPlugin()
+        plugin = SamplePlugin()
         plugin.set_config({"key": "value"})
         assert plugin.get_config("key") == "value"
         assert plugin.get_config("nonexistent", "default") == "default"
 
     def test_plugin_lifecycle_hooks(self):
-        plugin = TestPlugin()
+        plugin = SamplePlugin()
         plugin.on_load()
         assert plugin.load_called is True
         plugin.on_enable()
@@ -206,7 +206,7 @@ class TestPluginInterface:
         assert plugin.unload_called is True
 
     def test_plugin_logging(self):
-        plugin = TestPlugin()
+        plugin = SamplePlugin()
         plugin.log_info("Info")
         plugin.log_warning("Warning")
         plugin.log_error("Error")
@@ -384,8 +384,8 @@ class TestPluginMetadataDecorator:
 class Test_PluginEntry:
     def test_entry_creation(self):
         meta = PluginMetadata(id="test.entry", name="Test Entry")
-        entry = _PluginEntry(metadata=meta, cls=TestPlugin)
+        entry = _PluginEntry(metadata=meta, cls=SamplePlugin)
         assert entry.metadata == meta
-        assert entry.cls == TestPlugin
+        assert entry.cls == SamplePlugin
         assert entry.instance is None
         assert entry.state == PluginState.UNLOADED

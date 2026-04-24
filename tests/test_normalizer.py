@@ -83,7 +83,7 @@ class TestLLMSemanticDeduplicator:
         content1 = "这是测试内容"
         content2 = "这是测试内容"  # 相同
 
-        is_dup, score = asyncio.get_event_loop().run_until_complete(
+        is_dup, score = asyncio.run(
             dedup.are_semantically_duplicate(content1, content2)
         )
         # Same content should have high similarity
