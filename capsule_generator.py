@@ -28,6 +28,17 @@ GDI_CapsuleTypeAlias = GDI_CapsuleType
 CapsuleType = GDI_CapsuleTypeAlias
 
 
+class CapsuleValidationError(Exception):
+    """胶囊数据验证失败"""
+    def __init__(self, missing_fields: List[str]):
+        self.missing_fields = missing_fields
+        super().__init__(f"Missing required fields: {', '.join(missing_fields)}")
+
+
+# 胶囊必需字段（strict模式验证）
+REQUIRED_FIELDS = ["id", "content"]
+
+
 class GeneType(Enum):
     """基因类型"""
     REPAIR = "repair"       # 修复基因
@@ -74,7 +85,13 @@ class Capsule:
         }
     
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "Capsule":
+    def from_dict(cls, data: Dict[str, Any], strict: bool = False) -> "Capsule":
+        # strict模式：验证必需字段
+        if strict:
+            missing = [f for f in REQUIRED_FIELDS if not data.get(f)]
+            if missing:
+                raise CapsuleValidationError(missing)
+
         # 处理gdi_score字段（支持dict或GDIResult对象）
         gdi_score_data = data.get("gdi_score")
         gdi_score = None

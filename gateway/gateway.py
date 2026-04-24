@@ -357,6 +357,15 @@ def generate_id(content: str) -> str:
 
 def fence_checkpoint(filepath: str, operation: str, user: str = "system") -> Dict[str, Any]:
     """围栏检查点"""
+    # P0-3: 验证operation和user参数
+    VALID_OPERATIONS = {"read", "write", "delete", "cleanup", "check"}
+    if operation not in VALID_OPERATIONS:
+        return {"allowed": False, "reason": f"Invalid operation: {operation}. Must be one of {VALID_OPERATIONS}"}
+    
+    # user参数只允许字母数字和下划线
+    if not re.match(r'^[\w-]+$', user):
+        return {"allowed": False, "reason": "Invalid user format. Only alphanumeric characters and underscores are allowed"}
+    
     fence_cfg = _config._config.get("fence", {})
     if not fence_cfg.get("enabled", False):
         return {"allowed": True, "reason": "Fence disabled"}

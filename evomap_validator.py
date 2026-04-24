@@ -274,7 +274,8 @@ class EvoMapValidator:
         if outcome is None:
             result.outcome_score = 0.0
         elif isinstance(outcome, dict):
-            result.outcome_score = outcome.get("score", 0.0) if outcome.get("score") is not None else 0.0
+            # or 0.0 handles both missing key (→ None → 0.0) and None value (→ 0.0), but not 0.0 itself
+            result.outcome_score = outcome.get("score") or 0.0
         elif isinstance(outcome, (int, float)):
             result.outcome_score = float(outcome)
         else:

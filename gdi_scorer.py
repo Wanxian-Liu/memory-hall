@@ -13,9 +13,12 @@ GDI四维评分体系:
 
 import time
 import hashlib
+import logging
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, field
 from enum import Enum
+
+logger = logging.getLogger(__name__)
 
 
 class CapsuleType(Enum):
@@ -238,6 +241,11 @@ class GDIScorer:
         if isinstance(knowledge_type, dict):
             confidence = knowledge_type.get("confidence", 0.5)
         else:
+            capsule_id = capsule.get("id", "unknown")
+            logger.warning(
+                f"[GDI] knowledge_type invalid for capsule {capsule_id}: "
+                f"type={type(knowledge_type).__name__}, expected=dict, defaulting confidence to 0.5"
+            )
             confidence = 0.5
         score += 0.3 * confidence
         

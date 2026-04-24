@@ -220,45 +220,56 @@ class DefaultBeforeToolCallHook(BeforeToolCallHook):
         return HookResult(denied=False, messages=["Tool allowed"])
     
     def _is_dangerous_command(self, cmd: str) -> bool:
-        """检查命令是否危险 - 增强版P0-3"""
-        # 危险命令模式（不区分大小写）
-        dangerous_commands = [
-            "rm -rf", "dd if=", ":(){:|:&};:",
-            "mkfs", "fdisk", "shutdown", "reboot",
-            "> /dev/sd", "cat /dev/sd", "dd of=",
-            "chmod -R 777", "chown -R", "eval ",
-            "curl |sh", "wget |sh", "bash -c", "sh -c",
-            "pkill -9", "kill -9", "reboot", "init 6",
-            "rm --no-preserve-root", "mv /dev/null",
-            "chattr -i", "wget -O-", "curl -sS"
-        ]
+        """检查命令是否危险 - P0-3增强版使用shlex解析"""
+        import shlex
+        import os
         
-        # shell连接符检测（命令链接/管道/后台执行）
-        shell_connectors = [
-            "; ", " && ", " || ", "| ", "> ", "< ",
-            "`", "$( ", ")& ", " & ", "\n"
-        ]
+        # 无论有无标志都危险的命令（命令名匹配即拦截）
+        INHERENTLY_DANGEROUS = {'dd', 'shred', 'mkfs', 'fdisk', 'parted'}
         
-        cmd_lower = cmd.lower()
+        # 需要危险标志才危险的命令
+        FLAG_DANGEROUS_COMMANDS = {'rm'}
         
-        # 检查危险命令
-        if any(p in cmd_lower for p in dangerous_commands):
+        # 危险标志集合
+        DANGEROUS_FLAGS = {'-rf', '-r', '-f', '--no-preserve-root'}
+        
+        try:
+            parts = shlex.split(cmd)
+        except ValueError:
+            # 无法解析的命令（包含不平衡的引号等）视为危险
             return True
         
-        # 检查shell连接符（但排除无害的grep/cut使用）
+        if not parts:
+            return False
+        
+        # 获取命令名称（去除路径）
+        cmd_name = os.path.basename(parts[0].lower())
+        
+        # 检查是否是危险命令
+        # 无条件拦截的命令（无论有无标志）
+        if cmd_name in INHERENTLY_DANGEROUS:
+            return True
+        
+        # 检查mkfs.ext4等变体（mkfs开头的命令）
+        if cmd_name.startswith('mkfs'):
+            return True
+        
+        # 需要危险标志才危险的命令
+        if cmd_name in FLAG_DANGEROUS_COMMANDS:
+            if any(flag in parts[1:] for flag in DANGEROUS_FLAGS):
+                return True
+        
+        # 检查shell连接符（命令链接/管道/后台执行）
+        shell_connectors = ['; ', ' && ', ' || ', '| ', '> ', '< ', '`', '$( ', ')& ', ' & ', '\n']
         if any(c in cmd for c in shell_connectors):
-            # 进一步检查是否有管道到shell
-            if any(p in cmd for p in ["| sh", "| bash", "| zsh", "| python", "| perl"]):
+            if any(p in cmd for p in ['| sh', '| bash', '| zsh', '| python', '| perl']):
                 return True
-            # 检查反引号命令替换
-            if "`" in cmd and cmd.count("`") >= 2:
+            if '`' in cmd and cmd.count('`') >= 2:
                 return True
-            # 检查$()命令替换
-            if "$(" in cmd:
+            if '$(' in cmd:
                 return True
         
         return False
-
 
 class DefaultToolResultPersistHook(ToolResultPersistHook):
     """默认的tool_result_persist实现"""
