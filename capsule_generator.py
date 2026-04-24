@@ -426,7 +426,8 @@ class CapsuleGenerator:
     ) -> str:
         """生成创新胶囊 - 修复版
         
-        从input_text中分析并提取内容填充各section
+        从input_text中分析并提取内容填充各section。
+        改进：对于结构化列表内容，直接保留原结构而非破坏性提取。
         """
         import re
         
@@ -438,70 +439,76 @@ class CapsuleGenerator:
             title = title.lstrip('#').strip()
         
         # 提取背景（包含"背景"、"问题"、"挑战"等关键词的段落）
-        background_patterns = [
-            r'(?:背景|问题|挑战|难题|困境)[：:](.*?)(?:\n\n|\n#|$)',
-            r'(?:背景|问题|挑战)[\s\n]*(.*?)(?=\n\n\w|\n#|$)',
-        ]
+        # 使用更严格的匹配：只在行首查找关键词
         background = context.get('background')
         if not background:
-            for pattern in background_patterns:
-                match = re.search(pattern, topic, re.DOTALL)
-                if match:
-                    background = match.group(1).strip()[:500]
-                    break
+            # 尝试匹配 "背景：xxx" 或 "## 背景" 格式
+            bg_match = re.search(r'^##?\s*背景.*?\n(.*?)(?=^##|\n\n|$)', topic, re.MULTILINE | re.DOTALL)
+            if bg_match:
+                background = bg_match.group(1).strip()[:500]
+            else:
+                # 检查是否包含"进化机制"、"核心指标"等开场关键词
+                intro_match = re.search(r'(进化机制|核心指标|概述|简介)[：:]?(.*?)(?=^\d+\.|^##)', topic, re.MULTILINE | re.DOTALL)
+                if intro_match:
+                    background = intro_match.group(0).strip()[:500]
         if not background:
             # 提取前200字作为背景
             background = topic[:200].strip()
         
         # 提取解决方案（包含"方案"、"策略"、"解决"、"方法"等关键词）
-        solution_patterns = [
-            r'(?:解决方案?|策略|方法|思路|途径)[：:](.*?)(?:\n\n|\n#|$)',
-            r'(?:解决|实现|做法)[\s\n]*(.*?)(?=\n\n\w|\n#|$)',
-        ]
         solution = context.get('solution') or context.get('design')
         if not solution:
-            for pattern in solution_patterns:
-                match = re.search(pattern, topic, re.DOTALL)
-                if match:
-                    solution = match.group(1).strip()[:500]
-                    break
+            # 尝试匹配 "方案设计：" 或 "## 方案" 格式
+            sol_match = re.search(r'^##?\s*(?:方案|策略|方法|思路)[：:]?.*?\n(.*?)(?=^##|^\d+\.[^\d]|\n\n|$)', topic, re.MULTILINE | re.DOTALL)
+            if sol_match:
+                solution = sol_match.group(1).strip()[:500]
+            else:
+                # 提取包含"通过"、"实现"、"使用"的实践性内容
+                practice_lines = [l.strip() for l in topic.split('\n') 
+                                if ('通过' in l or '实现' in l or '使用' in l) and l.strip().startswith(('-', '*'))]
+                if practice_lines:
+                    solution = '\n'.join(practice_lines[:5])
         if not solution:
             # 提取中间部分作为方案
             mid = len(topic) // 2
             solution = topic[mid:mid+300].strip()
         
         # 提取效果/价值（包含"效果"、"价值"、"提升"、"降低"等关键词）
-        value_patterns = [
-            r'(?:效果|价值|提升|降低|优化|改进)[：:](.*?)(?:\n\n|\n#|$)',
-            r'(?:\+|\-)(?:\d+%?|\d+x?)(?:\s|$)',  # 如 +35%, -90%
-        ]
         value = context.get('value')
         if not value:
-            for pattern in value_patterns:
-                match = re.search(pattern, topic, re.DOTALL)
-                if match:
-                    value = match.group(1).strip()[:300]
-                    break
-        if not value:
-            # 提取包含数字的行作为效果
-            value_lines = [l.strip() for l in topic.split('\n') if any(c.isdigit() for c in l)]
-            if value_lines:
-                value = '\n'.join(value_lines[:3])
+            # 尝试匹配 "效果：" 或 "## 效果" 格式
+            val_match = re.search(r'^##?\s*(?:效果|价值|提升|降低)[：:]?.*?\n(.*?)(?=^##|^\d+\.[^\d]|\n\n|$)', topic, re.MULTILINE | re.DOTALL)
+            if val_match:
+                value = val_match.group(1).strip()[:300]
+            else:
+                # 提取包含数字的行作为效果
+                value_lines = [l.strip() for l in topic.split('\n') if any(c.isdigit() for c in l) and len(l.strip()) > 10]
+                if value_lines:
+                    value = '\n'.join(value_lines[:3])
         
         # 提取代码示例（如果有）
         code_blocks = re.findall(r'```(?:python)?\s*(.*?)```', topic, re.DOTALL)
         code_example = code_blocks[0][:300] if code_blocks else None
         
+        # 检查输入内容是否已经是结构化的（包含编号列表）
+        has_numbered_list = bool(re.search(r'^\d+\.\s+\S', topic, re.MULTILINE))
+        
         # 构建输出
-        sections = [f"## 创新主题\n\n{title}"]
-        sections.append(f"\n## 背景分析\n\n{background or '待分析'}")
+        if has_numbered_list:
+            # 结构化内容：保留原格式，添加标题后将原始内容作为核心内容
+            sections = [
+                f"## 创新主题\n\n{title}",
+                f"\n## 核心内容\n\n{topic.strip()}",
+            ]
+        else:
+            sections = [f"## 创新主题\n\n{title}"]
+            sections.append(f"\n## 背景分析\n\n{background or '待分析'}")
+            if code_example:
+                sections.append(f"\n## 核心代码\n\n```python\n{code_example}\n```")
+            sections.append(f"\n## 创新思路\n\n{solution or '待探索'}")
+            sections.append(f"\n## 方案设计\n\n{context.get('design', solution or '待设计')}")
+            sections.append(f"\n## 预期价值\n\n{value or '待评估'}")
         
-        if code_example:
-            sections.append(f"\n## 核心代码\n\n```python\n{code_example}\n```")
-        
-        sections.append(f"\n## 创新思路\n\n{solution or '待探索'}")
-        sections.append(f"\n## 方案设计\n\n{context.get('design', solution or '待设计')}")
-        sections.append(f"\n## 预期价值\n\n{value or '待评估'}")
         sections.append(f"\n## 实施路径\n\n{context.get('roadmap', '1. 规划设计\n2. 分步实现\n3. 验证效果')}")
         sections.append(f"\n## 风险与机会\n\n{context.get('risks_opportunities', '需根据实际情况评估')}")
         
@@ -568,6 +575,7 @@ class CapsuleGenerator:
     def generate_and_evaluate(
         self,
         input_text: str,
+        capsule_type: CapsuleType = None,
         auto_publish: bool = True,
         metadata: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
@@ -576,6 +584,7 @@ class CapsuleGenerator:
         
         Args:
             input_text: 输入文本
+            capsule_type: 指定胶囊类型，None则自动判断
             auto_publish: 是否自动发布
             metadata: 额外元数据
             
@@ -587,7 +596,7 @@ class CapsuleGenerator:
                 "reason": str
             }
         """
-        capsule = self.generate(input_text, metadata=metadata)
+        capsule = self.generate(input_text, capsule_type=capsule_type, metadata=metadata)
         gdi_score = capsule.gdi_score
         
         should_publish = gdi_score.should_publish() if gdi_score else False
