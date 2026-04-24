@@ -304,10 +304,17 @@ class CapsuleGenerator:
     def __init__(
         self,
         gene_mapper: Optional[GeneMapper] = None,
-        gdi_scorer: Optional[GDIScorer] = None
+        gdi_scorer: Optional[GDIScorer] = None,
+        taxonomy_classifier = None,
+        knowledge_type_classifier = None
     ):
         self.gene_mapper = gene_mapper or GeneMapper()
         self.gdi_scorer = gdi_scorer or GDIScorer()
+        
+        # 延迟导入避免循环依赖
+        from .classifier.classifier import TaxonomyClassifier, KnowledgeTypeClassifier
+        self.taxonomy_classifier = taxonomy_classifier or TaxonomyClassifier()
+        self.knowledge_type_classifier = knowledge_type_classifier or KnowledgeTypeClassifier()
     
     def _generate_repair_capsule(
         self,
@@ -550,10 +557,17 @@ class CapsuleGenerator:
             content = self._generate_innovate_capsule(input_text, context)
         
         # 3. 创建胶囊
+        # 使用分类器填充taxonomy_tags和knowledge_type
+        taxonomy_tags = [tag for tag, score in self.taxonomy_classifier.classify(input_text, top_k=5)]
+        knowledge_type = self.knowledge_type_classifier.classify(input_text)
+        
         capsule = Capsule(
             id=hashlib.md5(f"{input_text}{time.time()}".encode()).hexdigest()[:12],
             content=content,
             capsule_type=capsule_type.value,
+            memory_type="long_term",
+            taxonomy_tags=taxonomy_tags,
+            knowledge_type=knowledge_type,
             gene_type=gene_match.gene_type.value,
             gene_signals=[s.raw_signal for s in gene_match.matched_signals],
             metadata={
