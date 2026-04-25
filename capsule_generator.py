@@ -550,78 +550,73 @@ class CapsuleGenerator:
         topic: str,
         context: Dict[str, Any]
     ) -> str:
-        """生成创新胶囊 - 修复版
+        """生成创新胶囊 - 修复版 v3
         
-        从input_text中分析并提取内容填充各section。
-        改进：对于结构化列表内容，直接保留原结构而非破坏性提取。
+        改进内容提取逻辑，更好地处理无结构输入（如git commit message）：
+        - 第一行作为标题
+        - 提取- 开头的列表项作为核心内容
+        - 避免重复提取相同内容到不同section
+        - 使用_smart_truncate避免中文截断
         """
         import re
         
-        # 从topic(input_text)中分析提取关键信息
-        # 提取标题（第一行或#开头的内容）
         lines = topic.strip().split('\n')
         title = lines[0].strip() if lines else self._smart_truncate(topic, 50)
         if title.startswith('#'):
             title = title.lstrip('#').strip()
         
-        # 提取背景（包含"背景"、"问题"、"挑战"等关键词的段落）
-        # 使用更严格的匹配：只在行首查找关键词
-        background = context.get('background')
-        if not background:
-            # 尝试匹配 "背景：xxx" 或 "## 背景" 格式
-            bg_match = re.search(r'^##?\s*背景.*?\n(.*?)(?=^##|\n\n|$)', topic, re.MULTILINE | re.DOTALL)
-            if bg_match:
-                background = self._smart_truncate(bg_match.group(1).strip(), 500)
-            else:
-                # 检查是否包含"进化机制"、"核心指标"等开场关键词
-                intro_match = re.search(r'(进化机制|核心指标|概述|简介)[：:]?(.*?)(?=^\d+\.|^##)', topic, re.MULTILINE | re.DOTALL)
-                if intro_match:
-                    background = self._smart_truncate(intro_match.group(0).strip(), 500)
-        if not background:
-            # 提取前200字作为背景
+        # 提取所有非空行（排除标题行）
+        body_lines = [l.strip() for l in lines[1:] if l.strip()]
+        
+        # 提取列表项（- 或 * 开头）
+        list_items = [l.lstrip('-* ').strip() for l in body_lines if l.startswith(('-', '*'))]
+        
+        # 提取非列表项的关键行
+        key_lines = [l for l in body_lines if not l.startswith(('-', '*'))]
+        
+        # 构建背景：第一段非列表内容 + 前3个列表项
+        if context.get('background'):
+            background = self._smart_truncate(context['background'], 500)
+        elif key_lines:
+            background = self._smart_truncate('\n'.join(key_lines[:3]), 500)
+        elif list_items:
+            background = self._smart_truncate('\n'.join(list_items[:3]), 500)
+        else:
             background = self._smart_truncate(topic, 200).strip()
         
-        # 提取解决方案（包含"方案"、"策略"、"解决"、"方法"等关键词）
-        solution = context.get('solution') or context.get('design')
-        if not solution:
-            # 尝试匹配 "方案设计：" 或 "## 方案" 格式
-            sol_match = re.search(r'^##?\s*(?:方案|策略|方法|思路)[：:]?.*?\n(.*?)(?=^##|^\d+\.[^\d]|\n\n|$)', topic, re.MULTILINE | re.DOTALL)
-            if sol_match:
-                solution = self._smart_truncate(sol_match.group(1).strip(), 500)
-            else:
-                # 提取包含"通过"、"实现"、"使用"的实践性内容
-                practice_lines = [l.strip() for l in topic.split('\n') 
-                                if ('通过' in l or '实现' in l or '使用' in l) and l.strip().startswith(('-', '*'))]
-                if practice_lines:
-                    solution = '\n'.join(practice_lines[:5])
-        if not solution:
-            # 提取中间部分作为方案
+        # 构建创新思路/方案：列表项内容
+        if context.get('idea'):
+            solution = self._smart_truncate(context['idea'], 500)
+        elif context.get('solution'):
+            solution = self._smart_truncate(context['solution'], 500)
+        elif list_items:
+            solution = '\n'.join(list_items[:8])
+        elif key_lines:
+            solution = '\n'.join(key_lines[:5])
+        else:
             mid = len(topic) // 2
             solution = self._smart_truncate(topic[mid:], 300).strip()
         
-        # 提取效果/价值（包含"效果"、"价值"、"提升"、"降低"等关键词）
-        value = context.get('value')
-        if not value:
-            # 尝试匹配 "效果：" 或 "## 效果" 格式
-            val_match = re.search(r'^##?\s*(?:效果|价值|提升|降低)[：:]?.*?\n(.*?)(?=^##|^\d+\.[^\d]|\n\n|$)', topic, re.MULTILINE | re.DOTALL)
-            if val_match:
-                value = self._smart_truncate(val_match.group(1).strip(), 300)
-            else:
-                # 提取包含数字的行作为效果
-                value_lines = [l.strip() for l in topic.split('\n') if any(c.isdigit() for c in l) and len(l.strip()) > 10]
-                if value_lines:
-                    value = '\n'.join(value_lines[:3])
+        # 提取效果/价值
+        if context.get('value'):
+            value = self._smart_truncate(context['value'], 300)
+        else:
+            value_lines = [l for l in body_lines 
+                          if any(c.isdigit() for c in l) and len(l) > 10]
+            if not value_lines:
+                value_lines = [l for l in body_lines 
+                              if any(kw in l for kw in ['%', '提升', '降低', '改善', '效果', '完成', '通过'])]
+            value = '\n'.join(value_lines[:3]) if value_lines else '待评估'
         
-        # 提取代码示例（如果有）
+        # 提取代码示例
         code_blocks = re.findall(r'```(?:python)?\s*(.*?)```', topic, re.DOTALL)
         code_example = self._smart_truncate(code_blocks[0], 300) if code_blocks else None
         
-        # 检查输入内容是否已经是结构化的（包含编号列表）
+        # 检查是否包含编号列表
         has_numbered_list = bool(re.search(r'^\d+\.\s+\S', topic, re.MULTILINE))
         
         # 构建输出
         if has_numbered_list:
-            # 结构化内容：保留原格式，添加标题后将原始内容作为核心内容
             sections = [
                 f"## 创新主题\n\n{title}",
                 f"\n## 核心内容\n\n{topic.strip()}",
@@ -640,6 +635,7 @@ class CapsuleGenerator:
         
         return '\n'.join(sections)
     
+
     def generate(
         self,
         input_text: str,
