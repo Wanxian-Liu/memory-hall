@@ -630,7 +630,7 @@ class CapsuleGenerator:
             if code_example:
                 sections.append(f"\n## 核心代码\n\n```python\n{code_example}\n```")
             sections.append(f"\n## 创新思路\n\n{solution or '待探索'}")
-            sections.append(f"\n## 方案设计\n\n{context.get('design', self._smart_truncate(solution, 200) if solution else '待设计')}")
+            sections.append(f"\n## 方案设计\n\n{context.get('design', self._smart_truncate(solution, 100) if solution else '待设计')}")
             sections.append(f"\n## 预期价值\n\n{value or '待评估'}")
         
         sections.append(f"\n## 实施路径\n\n{context.get('roadmap', '1. 规划设计\n2. 分步实现\n3. 验证效果')}")
