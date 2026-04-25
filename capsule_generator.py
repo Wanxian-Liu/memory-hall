@@ -333,6 +333,38 @@ class CapsuleGenerator:
         self.taxonomy_classifier = taxonomy_classifier or TaxonomyClassifier()
         self.knowledge_type_classifier = knowledge_type_classifier or KnowledgeTypeClassifier()
     
+    @staticmethod
+    def _smart_truncate(text: str, max_chars: int) -> str:
+        """智能截断：在段落或句子边界处截断，避免在中文中间截断"""
+        if not text or len(text) <= max_chars:
+            return text
+        
+        truncated = text[:max_chars]
+        
+        # 优先：段落边界
+        paragraph_break = truncated.rfind('\n\n')
+        if paragraph_break > max_chars * 0.7:
+            return text[:paragraph_break]
+        
+        # 句子边界（中文句号、感叹号、问号）
+        for delim in ['。', '！', '？', '.\n']:
+            pos = truncated.rfind(delim)
+            if pos > max_chars * 0.5:
+                return text[:pos + len(delim)]
+        
+        # 中文逗号、顿号作为后备边界
+        for delim in ['，', '、']:
+            pos = truncated.rfind(delim)
+            if pos > max_chars * 0.3:
+                return text[:pos + len(delim)]
+        
+        # 空格作为最后手段
+        space_pos = truncated.rfind(' ')
+        if space_pos > max_chars * 0.3:
+            return text[:space_pos]
+        
+        return text[:max_chars].rstrip()
+    
     def _generate_repair_capsule(
         self,
         problem: str,
@@ -343,7 +375,7 @@ class CapsuleGenerator:
         
         # 从problem(input_text)中提取内容
         lines = problem.strip().split('\n')
-        title = lines[0].strip() if lines else problem[:50]
+        title = lines[0].strip() if lines else self._smart_truncate(problem, 50)
         if title.startswith('#'):
             title = title.lstrip('#').strip()
         
@@ -352,27 +384,27 @@ class CapsuleGenerator:
         if not symptoms:
             symptom_match = re.search(r'(?:问题|症状|挑战|难题)[：:]?(.*?)(?:\n\n|\n#|$)', problem, re.DOTALL)
             if symptom_match:
-                symptoms = symptom_match.group(1).strip()[:400]
+                symptoms = self._smart_truncate(symptom_match.group(1).strip(), 400)
         if not symptoms:
-            symptoms = problem[:300]
+            symptoms = self._smart_truncate(problem, 300)
         
         # 提取解决方案
         solution = context.get('solution')
         if not solution:
             solution_match = re.search(r'(?:解决方案?|方法|策略|思路)[：:]?(.*?)(?:\n\n|\n#|$)', problem, re.DOTALL)
             if solution_match:
-                solution = solution_match.group(1).strip()[:400]
+                solution = self._smart_truncate(solution_match.group(1).strip(), 400)
         if not solution:
             # 提取代码块
             code = re.findall(r'```(?:python)?\s*(.*?)```', problem, re.DOTALL)
-            solution = code[0][:300] if code else problem[100:400]
+            solution = self._smart_truncate(code[0], 300) if code else self._smart_truncate(problem[100:], 300)
         
         # 提取效果/验证
         verification = context.get('verification')
         if not verification:
             effect_match = re.search(r'(?:效果|验证|指标|结果)[：:]?(.*?)(?:\n\n|\n#|$)', problem, re.DOTALL)
             if effect_match:
-                verification = effect_match.group(1).strip()[:300]
+                verification = self._smart_truncate(effect_match.group(1).strip(), 300)
         if not verification:
             metrics = [l.strip() for l in problem.split('\n') if '%' in l or '+' in l or '提升' in l or '降低' in l]
             verification = '\n'.join(metrics[:3]) if metrics else '待验证'
@@ -426,7 +458,7 @@ class CapsuleGenerator:
         # 从goal(input_text)中分析提取关键信息
         # 提取标题（第一行或#开头的内容）
         lines = goal.strip().split('\n')
-        title = lines[0].strip() if lines else goal[:50]
+        title = lines[0].strip() if lines else self._smart_truncate(goal, 50)
         if title.startswith('#'):
             title = title.lstrip('#').strip()
         
@@ -436,10 +468,10 @@ class CapsuleGenerator:
             # 尝试匹配 "当前状态：" 或 "## 当前状态" 格式
             state_match = re.search(r'(?:当前状态|现状|背景)[：:]?(.*?)(?=^##|优化|改进|\n\n|$)', goal, re.MULTILINE | re.DOTALL)
             if state_match:
-                current_state = state_match.group(1).strip()[:400]
+                current_state = self._smart_truncate(state_match.group(1).strip(), 400)
         if not current_state:
             # 提取前200字作为当前状态
-            current_state = goal[:200].strip()
+            current_state = self._smart_truncate(goal, 200).strip()
         
         # 提取优化点/问题
         optimization_points = context.get('optimization_points')
@@ -447,7 +479,7 @@ class CapsuleGenerator:
             # 尝试匹配包含"优化"、"改进"、"问题"等关键词的内容
             opt_match = re.search(r'(?:优化点|改进点|问题|挑战)[：:]?(.*?)(?=^##|优化|方案|\n\n|$)', goal, re.MULTILINE | re.DOTALL)
             if opt_match:
-                optimization_points = opt_match.group(1).strip()[:400]
+                optimization_points = self._smart_truncate(opt_match.group(1).strip(), 400)
         if not optimization_points:
             # 提取包含数字列表的内容
             opt_lines = [l.strip() for l in goal.split('\n') if re.match(r'^\d+[.、]', l.strip())]
@@ -459,12 +491,12 @@ class CapsuleGenerator:
             # 尝试匹配 "方案" 或 "## 优化方案" 格式
             plan_match = re.search(r'(?:优化方案|方案设计|解决方案?)[：:]?(.*?)(?=^##|预期|风险|\n\n|$)', goal, re.MULTILINE | re.DOTALL)
             if plan_match:
-                optimization_plan = plan_match.group(1).strip()[:500]
+                optimization_plan = self._smart_truncate(plan_match.group(1).strip(), 500)
         if not optimization_plan:
             # 提取包含"通过"、"实现"、"使用"的实践性内容
             plan_lines = [l.strip() for l in goal.split('\n') 
                           if ('通过' in l or '实现' in l or '使用' in l) and l.strip().startswith(('-', '*'))]
-            optimization_plan = '\n'.join(plan_lines[:5]) if plan_lines else goal[len(goal)//2:len(goal)//2+400].strip()
+            optimization_plan = '\n'.join(plan_lines[:5]) if plan_lines else self._smart_truncate(goal[len(goal)//2:], 400).strip()
         
         # 提取预期效果
         expected_effect = context.get('expected_effect')
@@ -472,7 +504,7 @@ class CapsuleGenerator:
             # 尝试匹配 "效果" 或 "## 预期效果" 格式
             effect_match = re.search(r'(?:预期效果|效果|价值|收益)[：:]?(.*?)(?=^##|风险|实施|\n\n|$)', goal, re.MULTILINE | re.DOTALL)
             if effect_match:
-                expected_effect = effect_match.group(1).strip()[:400]
+                expected_effect = self._smart_truncate(effect_match.group(1).strip(), 400)
         if not expected_effect:
             # 提取包含百分号或提升/降低关键词的内容
             effect_lines = [l.strip() for l in goal.split('\n') if ('%' in l or '提升' in l or '降低' in l or '改善' in l)]
@@ -484,7 +516,7 @@ class CapsuleGenerator:
             # 尝试匹配 "风险" 格式
             risk_match = re.search(r'(?:风险|注意事项)[：:]?(.*?)(?=^##|\n\n|$)', goal, re.MULTILINE | re.DOTALL)
             if risk_match:
-                risks = risk_match.group(1).strip()[:300]
+                risks = self._smart_truncate(risk_match.group(1).strip(), 300)
         if not risks:
             risks = '无明显风险'
         
@@ -528,7 +560,7 @@ class CapsuleGenerator:
         # 从topic(input_text)中分析提取关键信息
         # 提取标题（第一行或#开头的内容）
         lines = topic.strip().split('\n')
-        title = lines[0].strip() if lines else topic[:50]
+        title = lines[0].strip() if lines else self._smart_truncate(topic, 50)
         if title.startswith('#'):
             title = title.lstrip('#').strip()
         
@@ -539,15 +571,15 @@ class CapsuleGenerator:
             # 尝试匹配 "背景：xxx" 或 "## 背景" 格式
             bg_match = re.search(r'^##?\s*背景.*?\n(.*?)(?=^##|\n\n|$)', topic, re.MULTILINE | re.DOTALL)
             if bg_match:
-                background = bg_match.group(1).strip()[:500]
+                background = self._smart_truncate(bg_match.group(1).strip(), 500)
             else:
                 # 检查是否包含"进化机制"、"核心指标"等开场关键词
                 intro_match = re.search(r'(进化机制|核心指标|概述|简介)[：:]?(.*?)(?=^\d+\.|^##)', topic, re.MULTILINE | re.DOTALL)
                 if intro_match:
-                    background = intro_match.group(0).strip()[:500]
+                    background = self._smart_truncate(intro_match.group(0).strip(), 500)
         if not background:
             # 提取前200字作为背景
-            background = topic[:200].strip()
+            background = self._smart_truncate(topic, 200).strip()
         
         # 提取解决方案（包含"方案"、"策略"、"解决"、"方法"等关键词）
         solution = context.get('solution') or context.get('design')
@@ -555,7 +587,7 @@ class CapsuleGenerator:
             # 尝试匹配 "方案设计：" 或 "## 方案" 格式
             sol_match = re.search(r'^##?\s*(?:方案|策略|方法|思路)[：:]?.*?\n(.*?)(?=^##|^\d+\.[^\d]|\n\n|$)', topic, re.MULTILINE | re.DOTALL)
             if sol_match:
-                solution = sol_match.group(1).strip()[:500]
+                solution = self._smart_truncate(sol_match.group(1).strip(), 500)
             else:
                 # 提取包含"通过"、"实现"、"使用"的实践性内容
                 practice_lines = [l.strip() for l in topic.split('\n') 
@@ -565,7 +597,7 @@ class CapsuleGenerator:
         if not solution:
             # 提取中间部分作为方案
             mid = len(topic) // 2
-            solution = topic[mid:mid+300].strip()
+            solution = self._smart_truncate(topic[mid:], 300).strip()
         
         # 提取效果/价值（包含"效果"、"价值"、"提升"、"降低"等关键词）
         value = context.get('value')
@@ -573,7 +605,7 @@ class CapsuleGenerator:
             # 尝试匹配 "效果：" 或 "## 效果" 格式
             val_match = re.search(r'^##?\s*(?:效果|价值|提升|降低)[：:]?.*?\n(.*?)(?=^##|^\d+\.[^\d]|\n\n|$)', topic, re.MULTILINE | re.DOTALL)
             if val_match:
-                value = val_match.group(1).strip()[:300]
+                value = self._smart_truncate(val_match.group(1).strip(), 300)
             else:
                 # 提取包含数字的行作为效果
                 value_lines = [l.strip() for l in topic.split('\n') if any(c.isdigit() for c in l) and len(l.strip()) > 10]
@@ -582,7 +614,7 @@ class CapsuleGenerator:
         
         # 提取代码示例（如果有）
         code_blocks = re.findall(r'```(?:python)?\s*(.*?)```', topic, re.DOTALL)
-        code_example = code_blocks[0][:300] if code_blocks else None
+        code_example = self._smart_truncate(code_blocks[0], 300) if code_blocks else None
         
         # 检查输入内容是否已经是结构化的（包含编号列表）
         has_numbered_list = bool(re.search(r'^\d+\.\s+\S', topic, re.MULTILINE))
