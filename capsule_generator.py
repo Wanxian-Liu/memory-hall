@@ -601,11 +601,14 @@ class CapsuleGenerator:
         if context.get('value'):
             value = self._smart_truncate(context['value'], 300)
         else:
+            # 优先：包含效果关键词的行
             value_lines = [l for l in body_lines 
-                          if any(c.isdigit() for c in l) and len(l) > 10]
+                          if any(kw in l for kw in ['%', '提升', '降低', '改善', '效果', '完成', '通过', '验证', '率'])]
+            # 后备：包含数字的行（排除日期格式）
             if not value_lines:
                 value_lines = [l for l in body_lines 
-                              if any(kw in l for kw in ['%', '提升', '降低', '改善', '效果', '完成', '通过'])]
+                              if any(c.isdigit() for c in l) and len(l) > 10
+                              and not l.strip().startswith(('20', '19'))]
             value = '\n'.join(value_lines[:3]) if value_lines else '待评估'
         
         # 提取代码示例
@@ -627,7 +630,7 @@ class CapsuleGenerator:
             if code_example:
                 sections.append(f"\n## 核心代码\n\n```python\n{code_example}\n```")
             sections.append(f"\n## 创新思路\n\n{solution or '待探索'}")
-            sections.append(f"\n## 方案设计\n\n{context.get('design', solution or '待设计')}")
+            sections.append(f"\n## 方案设计\n\n{context.get('design', self._smart_truncate(solution, 200) if solution else '待设计')}")
             sections.append(f"\n## 预期价值\n\n{value or '待评估'}")
         
         sections.append(f"\n## 实施路径\n\n{context.get('roadmap', '1. 规划设计\n2. 分步实现\n3. 验证效果')}")
