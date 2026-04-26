@@ -56,7 +56,7 @@
 
 ```bash
 # 进入项目目录
-cd ~/.openclaw/projects/记忆殿堂v2.0
+cd ~/.openclaw/projects/MimirAether/mimicore
 
 # 运行测试
 python -m pytest tests/ -v

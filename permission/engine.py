@@ -20,6 +20,7 @@ from typing import Callable, Optional
 from dataclasses import dataclass, field
 from collections import defaultdict
 from datetime import datetime, timedelta
+from pathlib import Path
 import threading
 import re
 import time
@@ -115,6 +116,9 @@ class JWTAuthenticator:
     
     def __init__(self, secret_key: str = "", public_key: str = "", 
                  algorithm: str = "HS256", issuer: str = ""):
+        # SEC-002 修复: secret_key 不能为空，否则JWT验证形同虚设
+        if not secret_key:
+            raise ValueError("JWTAuthenticator: secret_key 不能为空。请提供有效的密钥，或使用环境变量/配置文件注入。")
         self.secret_key = secret_key
         self.public_key = public_key
         self.algorithm = algorithm
@@ -548,6 +552,7 @@ class PermissionEngine:
         检查路径遍历攻击
         
         阻止包含 .. 的路径，防止 ../../../etc/passwd 等攻击
+        使用 Path.resolve() 归一化路径后再检测，阻止 /path/./to/../../../etc 等绕过
         
         Args:
             target: 目标路径
@@ -555,13 +560,23 @@ class PermissionEngine:
         Returns:
             bool: True表示检测到路径遍历攻击
         """
-        # 检查是否有 .. 路径遍历
-        if ".." in target:
+        # SEC-001 修复: 先归一化路径再检测
+        # 使用 pathlib.Path.resolve() 将路径规范化为绝对路径
+        # resolve() 会解析 . 和 .. 以及多余斜杠
+        try:
+            resolved = Path(target).resolve()
+            resolved_str = str(resolved)
+        except (OSError, ValueError):
+            # 无法解析的路径视为可疑
             return True
         
-        # 检查是否有多余的斜杠变体 (如 ///etc/passwd)
-        normalized = target.replace("//", "/")
-        if "../" in normalized or normalized.endswith(".."):
+        # 检查是否有 .. 路径遍历（归一化后的路径）
+        if ".." in resolved_str:
+            return True
+        
+        # 检查原始路径中是否有未被 resolve() 处理的 .. 模式
+        # （resolve() 已处理所有 .. 和 .，但保留额外检查作为纵深防御）
+        if ".." in target:
             return True
         
         return False
