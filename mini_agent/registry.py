@@ -196,7 +196,6 @@ class TaskRegistry:
         # 允许从 PENDING 或 RUNNING 状态完成（支持直接完成任务）
         if task.status not in (TaskStatus.PENDING, TaskStatus.RUNNING):
             return False
-            return False
         
         task.status = TaskStatus.COMPLETED
         task.completed_at = datetime.now()

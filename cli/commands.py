@@ -19,14 +19,10 @@
 
 import sys
 import os
-import json
-import hashlib
-import argparse
-from typing import Optional, Dict, Any, List
+from pathlib import Path
 
-# 添加项目根目录到路径
+# 路径设置（最早设置，避免导入时路径冲突）
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, PROJECT_ROOT)
 
 # 导入核心模块
 from base_wal.wal import WALManager, WALEntryType

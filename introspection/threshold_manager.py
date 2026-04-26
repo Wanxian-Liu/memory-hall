@@ -76,7 +76,8 @@ class ThresholdManager:
         config_dir: Optional[str] = None,
     ):
         if config_dir is None:
-            self.config_dir = Path.home() / ".openclaw" / "projects" / "Mimir-Core" / "config"
+            # 与 MimirAether 内嵌的 mimicore 包对齐（旧默认曾指向 ~/.openclaw/projects/Mimir-Core/config）
+            self.config_dir = Path(__file__).resolve().parents[1] / "config"
         else:
             self.config_dir = Path(config_dir)
 

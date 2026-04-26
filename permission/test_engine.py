@@ -4,10 +4,11 @@
 """
 import os
 import sys
+from pathlib import Path
 import pytest
 import time
 
-PROJECT_ROOT = os.path.expanduser("~/.openclaw/projects/Mimir-Core")
+PROJECT_ROOT = str(Path(__file__).resolve().parents[1])
 sys.path.insert(0, PROJECT_ROOT)
 
 from permission.engine import (

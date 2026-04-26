@@ -25,4 +25,4 @@ coordinator:
 
 fence:
   enabled: true
-  script_path: "~/.openclaw/projects/Mimir-Core/fence/fence.py"
+  script_path: "~/.openclaw/projects/MimirAether/mimicore/fence/fence.py"

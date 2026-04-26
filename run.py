@@ -24,16 +24,10 @@
 
 import os
 import sys
-import json
-import time
-import argparse
-import subprocess
 from pathlib import Path
-from typing import Dict, Any, Optional
 
-# ============ 路径设置 ============
+# 路径设置（最早设置，避免导入时路径冲突）
 PROJECT_ROOT = Path(__file__).parent
-sys.path.insert(0, str(PROJECT_ROOT))
 
 # ============ Agent 模块导入 (DAME) ============
 from agent import (
@@ -712,8 +706,9 @@ def test_plugin(verbose: bool = False) -> bool:
         try:
             registry1.unregister("记忆殿堂.test.builtin")
             unreg_ok = True
-        except:
+        except Exception as e:
             # 如果已经卸载，强制清理后注销
+            log(f"unregister() 失败（可能已卸载）: {e}", verbose)
             if "记忆殿堂.test.builtin" in registry1._plugins:
                 del registry1._plugins["记忆殿堂.test.builtin"]
             unreg_ok = "记忆殿堂.test.builtin" not in registry1._plugins

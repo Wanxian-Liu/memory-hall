@@ -55,6 +55,7 @@ class FenceAlert:
     
     def __init__(self):
         self._handlers: List[Callable[[ViolationEvent], None]] = []
+        self._handler_failures: int = 0
         self._log_path = Path.home() / ".openclaw" / "projects" / "记忆殿堂v2.0" / "fence" / "violations.log"
         self._log_path.parent.mkdir(parents=True, exist_ok=True)
     
@@ -80,6 +81,7 @@ class FenceAlert:
             try:
                 handler(event)
             except Exception as e:
+                self._handler_failures += 1
                 print(f"[FenceAlert] Handler error: {e}")
     
     def get_recent_violations(self, limit: int = 50) -> List[Dict]:
