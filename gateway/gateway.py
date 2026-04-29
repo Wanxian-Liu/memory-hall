@@ -319,6 +319,27 @@ def _validate_path(path_str: str) -> bool:
     return True
 
 
+def _resolve_under_vault(filepath: str) -> Optional[Path]:
+    """
+    将 filepath 解析为 vault 目录下的绝对路径。
+    绝对路径必须落在 vault 内；相对路径仅允许相对于 vault 根解析（禁止用 cwd 逃逸）。
+    越界或无效则返回 None。
+    """
+    if not filepath or not _validate_path(filepath):
+        return None
+    vault = _get_vault_dir().resolve()
+    p = Path(filepath)
+    if p.is_absolute():
+        resolved = p.resolve()
+    else:
+        resolved = (vault / p).resolve()
+    try:
+        resolved.relative_to(vault)
+    except ValueError:
+        return None
+    return resolved
+
+
 def _validate_record_type(record_type: str) -> bool:
     """验证记录类型"""
     sec = _config._config.get("security", {})
@@ -374,7 +395,7 @@ def fence_checkpoint(filepath: str, operation: str, user: str = "system") -> Dic
     if not script_path:
         return {"allowed": True, "reason": "Fence script not configured"}
     
-    script = Path(script_path)
+    script = _expand_path(str(script_path))
     if not script.exists():
         return {"allowed": True, "reason": "Fence script not found"}
     
@@ -415,7 +436,8 @@ def notify_coordinator(filepath: str, source: str = "gateway") -> bool:
             data=data,
             headers={"Content-Type": "application/json"}
         )
-        urllib.request.urlopen(req, timeout=timeout)
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            resp.read(65536)
         return True
     except Exception:
         return False
@@ -539,7 +561,12 @@ def read(record_id: str = None, filepath: str = None) -> Optional[Dict]:
     if cached is not None:
         return cached
     
-    target = filepath
+    target: Optional[str] = None
+    if filepath:
+        under = _resolve_under_vault(filepath)
+        if under is None:
+            return None
+        target = str(under)
     
     if not target and record_id:
         # 搜索vault
@@ -588,7 +615,12 @@ def delete(record_id: str = None, filepath: str = None) -> bool:
     if filepath and not _validate_path(filepath):
         return False
     
-    target = filepath
+    target: Optional[str] = None
+    if filepath:
+        under = _resolve_under_vault(filepath)
+        if under is None:
+            return False
+        target = str(under)
     
     if not target and record_id:
         for type_dir in _get_vault_dir().iterdir():
@@ -629,8 +661,16 @@ def get_audit_logs(limit: int = 100) -> List[Dict]:
         if not audit_file.exists():
             return []
         
+        logs = []
         with open(audit_file, 'r', encoding='utf-8') as f:
-            logs = [json.loads(line) for line in f if line.strip()]
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    logs.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
         return logs[-limit:] if limit > 0 else logs
     except Exception:
         return []

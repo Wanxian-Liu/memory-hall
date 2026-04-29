@@ -11,9 +11,10 @@ Capsule: 01-innovate-memory-palace-v2 + 02-innovate-proactive-evolution-engine
 - MonitorRing: 监控环
 - DecisionRing: 决策环
 - ExecutionRing: 执行环
+- MonitorCollector: 指标采集器 (Phase 0新增)
 """
 
-from evolve.self_evolution import (
+from .self_evolution import (
     ProactiveKnowledgeCorrector,
     IntentPredictor,
     AutomatedRootCauseFixer,
@@ -27,7 +28,7 @@ from evolve.self_evolution import (
     ConfidenceLevel,
 )
 
-from evolve.three_ring_architecture import (
+from .three_ring_architecture import (
     ThreeRingClosedLoop,
     MonitorRing,
     DecisionRing,
@@ -37,6 +38,15 @@ from evolve.three_ring_architecture import (
     MonitorEvent,
     DecisionOutput,
     ExecutionOutput,
+)
+
+from .monitor_collector import (
+    MonitorCollector,
+    MetricType,
+    MetricSample,
+    MetricsSnapshot,
+    create_default_collector,
+    create_lightweight_collector,
 )
 
 __all__ = [
@@ -63,4 +73,12 @@ __all__ = [
     "MonitorEvent",
     "DecisionOutput",
     "ExecutionOutput",
+    
+    # 指标采集器 (Phase 0)
+    "MonitorCollector",
+    "MetricType",
+    "MetricSample",
+    "MetricsSnapshot",
+    "create_default_collector",
+    "create_lightweight_collector",
 ]

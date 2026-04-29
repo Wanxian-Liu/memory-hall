@@ -995,6 +995,56 @@ class ThreeRingClosedLoop:
             "executions_completed": len(self.execution._execution_history)
         }
     
+
+    async def run(
+        self,
+        context: Optional[Dict[str, Any]] = None,
+        max_iterations: int = 1
+    ) -> Dict[str, Any]:
+        """
+        三环闭环最小入口 (M1)
+        
+        执行指定次数的闭环迭代周期。
+        这是 ThreeRingClosedLoop 的主要入口方法。
+        
+        Args:
+            context: 执行上下文
+            max_iterations: 最大迭代次数 (默认1)
+            
+        Returns:
+            Dict containing all cycle results
+            
+        Usage:
+            # 单次运行
+            result = await loop.run()
+            
+            # 多次迭代
+            result = await loop.run(max_iterations=3)
+            
+            # 带上下文
+            result = await loop.run(context={"task": "analysis"})
+        """
+        results = []
+        
+        for i in range(max_iterations):
+            cycle_result = await self.run_cycle(context)
+            results.append(cycle_result)
+            
+            # 如果周期失败，可选择提前终止
+            if cycle_result.get("status") == "failed":
+                logger.warning(f"[ThreeRing] Cycle {i+1} failed, stopping")
+                break
+        
+        # 返回汇总结果
+        summary = {
+            "iterations": len(results),
+            "cycles": results,
+            "final_status": results[-1].get("status") if results else "idle",
+            "total_duration_ms": sum(c.get("duration_ms", 0) for c in results)
+        }
+        
+        return summary
+
     async def run_continuous(
         self,
         interval: float = 60.0,
