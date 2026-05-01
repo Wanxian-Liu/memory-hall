@@ -205,5 +205,5 @@ Week 15-16:
 
 _文档版本: 2.0_  
 _锤炼轮次: Round 1 + Round 2_  
-_设计: 琬弦 (织界者)_  
+_设计: 织界者_  
 _灵感: Hermes + 记忆殿堂 + Claw-code + OpenClaw_

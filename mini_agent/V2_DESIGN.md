@@ -621,5 +621,5 @@ mini_agent/
 ---
 
 _文档版本: 1.0_  
-_设计: 琬弦 (织界者)_  
+_设计: 织界者_  
 _灵感: Hermes Agent by NousResearch_

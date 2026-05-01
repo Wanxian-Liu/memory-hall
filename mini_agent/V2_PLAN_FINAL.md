@@ -230,5 +230,5 @@ Week 13-16:
 
 _文档版本: 1.0_  
 _锤炼轮次: Round 1 + Round 2_  
-_设计: 琬弦 (织界者)_  
+_设计: 织界者_  
 _灵感: Hermes Agent by NousResearch + 辩证验证_

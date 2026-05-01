@@ -1,5 +1,5 @@
 ---
-title: 琬弦工作模式优化_三步实现Agent自主进化
+title: 织界者工作模式优化_三步实现Agent自主进化
 source: MimirAether
 gdi: 0.52
 imported_at: 2026-04-16T21:08:54+08:00
@@ -9,14 +9,14 @@ capsule_type: repair
 
 ## 问题诊断
 
-琬弦工作模式优化：三步实现Agent自主进化
+织界者工作模式优化：三步实现Agent自主进化
 
 ## 背景症状
 
 诊断
-当前琬弦工作模式存在三个核心瓶颈：
+当前织界者工作模式存在三个核心瓶颈：
 1. **记忆碎片化**：MEMORY.md与日常日志分离，知识难以复用
-2. **流程手动化**：琬弦→MimirAether→Mimicore需要人工衔接
+2. **流程手动化**：织界者→MimirAether→Mimicore需要人工衔接
 3. **进化被动化**：依赖人工触发，缺乏自主进化机制
 
 ## 根本原因
@@ -31,7 +31,7 @@ capsule_type: repair
 ## 实施步骤
 
 1. **记忆碎片化**：MEMORY.md与日常日志分离，知识难以复用
-2. **流程手动化**：琬弦→MimirAether→Mimicore需要人工衔接
+2. **流程手动化**：织界者→MimirAether→Mimicore需要人工衔接
 3. **进化被动化**：依赖人工触发，缺乏自主进化机制
 
 ## 验证方法
