@@ -3,3 +3,11 @@ public/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+
+# Feedback loop: regenerated inputs/outputs (bridges / orchestrator)
+evolve/feedback/aggregator_outputs/
+evolve/feedback/decisions/
+
+# Capsule edit scratch files
+capsule_generator.py.bak*
+capsule_generator_fixed.py*
