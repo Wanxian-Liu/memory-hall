@@ -22,8 +22,10 @@ from typing import List, Dict, Any
 import tracemalloc
 import statistics
 
+from mimir_paths import get_mimicore_root
+
 # ============ 配置路径 ============
-PROJECT_DIR = Path.home() / ".openclaw/projects/记忆殿堂v2.0"
+PROJECT_DIR = get_mimicore_root()
 sys.path.insert(0, str(PROJECT_DIR))
 
 # ============ 测试辅助 ============

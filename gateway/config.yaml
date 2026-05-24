@@ -9,8 +9,8 @@ cache:
   persist_file: "gateway_cache.json"
 
 paths:
-  vault_dir: "~/.openclaw/memory-vault/data"
-  log_dir: "~/.openclaw/memory-vault/logs"
+  vault_dir: "~/.mimiraether/memory-vault/data"
+  log_dir: "~/.mimiraether/memory-vault/logs"
   audit_file: "audit.jsonl"
 
 security:
@@ -25,4 +25,4 @@ coordinator:
 
 fence:
   enabled: true
-  script_path: "~/.openclaw/projects/MimirAether/mimicore/fence/fence.py"
+  script_path: "mimicore/fence/fence.py"

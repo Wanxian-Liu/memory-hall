@@ -26,6 +26,8 @@ from pathlib import Path
 from typing import Dict, Any, Optional, List
 from collections import OrderedDict
 
+from mimir_paths import default_log_dir_str, default_vault_dir_str
+
 # ============ IMemoryVault接口 ============
 # 注意：gateway需要完整逻辑，不能简单替换
 # 这里添加组合而非继承，保持gateway所有逻辑
@@ -74,8 +76,8 @@ class Config:
                 "persist_file": "gateway_cache.json"
             },
             "paths": {
-                "vault_dir": "~/.openclaw/memory-vault/data",
-                "log_dir": "~/.openclaw/memory-vault/logs",
+                "vault_dir": default_vault_dir_str(),
+                "log_dir": default_log_dir_str(),
                 "audit_file": "audit.jsonl"
             },
             "security": {
@@ -122,11 +124,11 @@ def _expand_path(path_str: str) -> Path:
 
 
 def _get_vault_dir() -> Path:
-    return _expand_path(_config.get("paths.vault_dir", "~/.openclaw/memory-vault/data"))
+    return _expand_path(_config.get("paths.vault_dir", default_vault_dir_str()))
 
 
 def _get_log_dir() -> Path:
-    return _expand_path(_config.get("paths.log_dir", "~/.openclaw/memory-vault/logs"))
+    return _expand_path(_config.get("paths.log_dir", default_log_dir_str()))
 
 
 def _get_audit_file() -> Path:

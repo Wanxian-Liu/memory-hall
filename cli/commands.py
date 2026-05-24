@@ -36,7 +36,9 @@ from task import TaskManager, TaskStatus
 # 使用FileSystemAdapter的配置，统一从Config读取
 _adapter = FileSystemAdapter()
 VAULT_DIR = str(_adapter.vault_dir)
-METADATA_DIR = os.path.expanduser("~/.openclaw/memory-vault/metadata")
+from mimir_paths import memory_vault_metadata_dir
+
+METADATA_DIR = str(memory_vault_metadata_dir())
 
 # 确保目录存在
 os.makedirs(VAULT_DIR, exist_ok=True)

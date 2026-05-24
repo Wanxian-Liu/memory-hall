@@ -448,6 +448,9 @@ def check_rate_limit(user_id: str, operation: str, count: int = 1) -> RateLimitR
 # PermissionEngine (集成L1和L5)
 # ============================================================================
 
+from mimir_paths import memory_vault_permission_pattern
+
+
 class PermissionEngine:
     """
     记忆殿堂权限引擎
@@ -507,13 +510,13 @@ class PermissionEngine:
             ),
             # ===== 记忆殿堂文件路径 =====
             Rule(
-                pattern=r"^write:~/.openclaw/memory-vault/",
+                pattern=memory_vault_permission_pattern("write"),
                 action=RuleAction.ALLOW,
                 min_level=PermissionLevel.WORKSPACE_WRITE,
                 description="记忆殿堂文件写操作允许"
             ),
             Rule(
-                pattern=r"^read:~/.openclaw/memory-vault/",
+                pattern=memory_vault_permission_pattern("read"),
                 action=RuleAction.ALLOW,
                 min_level=PermissionLevel.READONLY,
                 description="记忆殿堂文件读操作允许"

@@ -23,6 +23,8 @@ from enum import Enum, auto
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Type
 
+from mimir_paths import default_plugins_dir
+
 logger = logging.getLogger("记忆殿堂.plugin")
 
 
@@ -372,7 +374,7 @@ class PluginLoader:
     - module_mode: 直接 importlib 导入指定模块路径
     """
 
-    DEFAULT_PLUGIN_DIR = Path("~/.openclaw/projects/记忆殿堂v2.0/plugins").expanduser()
+    DEFAULT_PLUGIN_DIR = default_plugins_dir()
 
     def __init__(self, plugin_dirs: Optional[List[Path]] = None):
         self.plugin_dirs: List[Path] = plugin_dirs or [self.DEFAULT_PLUGIN_DIR]

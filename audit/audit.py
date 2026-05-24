@@ -13,11 +13,13 @@ from enum import IntEnum
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
+from mimir_paths import audit_project_dir
+
 # ==============================================================================
 # 配置与路径
 # ==============================================================================
 
-PROJECT_DIR = Path.home() / ".openclaw" / "projects" / "记忆殿堂v2.0"
+PROJECT_DIR = audit_project_dir()
 AUDIT_DIR = PROJECT_DIR / "audit"
 AUDIT_DIR.mkdir(parents=True, exist_ok=True)
 

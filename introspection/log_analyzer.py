@@ -39,6 +39,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Set, Tuple
 
+from mimir_paths import introspection_log_dirs
+
 # ---------------------------------------------------------------------------
 # 日志级别枚举
 # ---------------------------------------------------------------------------
@@ -333,11 +335,7 @@ class LogAnalyzer:
     """
 
     # 默认日志目录
-    DEFAULT_LOG_DIRS = [
-        Path.home() / ".openclaw" / "logs",
-        Path.home() / ".openclaw" / "workspace" / "logs",
-        Path.home() / ".openclaw" / "logs" / "gateway",
-    ]
+    DEFAULT_LOG_DIRS = introspection_log_dirs()
 
     def __init__(
         self,

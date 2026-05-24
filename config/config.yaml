@@ -6,7 +6,7 @@ version: "2.0.0"
 # === 存储配置 ===
 storage:
   # 主数据目录
-  base_dir: "~/.openclaw/projects/记忆殿堂v2.0/data"
+  base_dir: "~/.mimiraether/data"
   
   # 记忆文件配置
   memory:

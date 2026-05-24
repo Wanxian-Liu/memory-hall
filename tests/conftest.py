@@ -9,8 +9,10 @@ import tempfile
 import shutil
 from pathlib import Path
 
+from mimir_paths import get_mimicore_root, introspection_log_dirs
+
 # 项目根目录
-PROJECT_ROOT = Path.home() / ".openclaw" / "projects" / "记忆殿堂v2.0"
+PROJECT_ROOT = get_mimicore_root()
 sys.path.insert(0, str(PROJECT_ROOT))
 
 

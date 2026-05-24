@@ -12,7 +12,9 @@ from .threshold import AdaptiveThresholdCalculator
 
 
 # 路径配置
-METADATA_DIR = os.path.expanduser("~/.openclaw/memory-vault/metadata")
+from mimir_paths import memory_vault_metadata_dir
+
+METADATA_DIR = str(memory_vault_metadata_dir())
 DIAGNOSIS_FILE = os.path.join(METADATA_DIR, "diagnosis_history.json")
 
 

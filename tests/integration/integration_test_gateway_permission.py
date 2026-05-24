@@ -22,6 +22,8 @@ import time
 from pathlib import Path
 from typing import Dict, Any, List
 
+from mimir_paths import default_vault_dir_str
+
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, PROJECT_ROOT)
 
@@ -56,7 +58,7 @@ class TestGatewayPermissionCollaboration(BaseIntegrationTest):
         # 模拟读取操作
         context = PermissionContext(
             operation="read",
-            target="~/.openclaw/memory-vault/data/test.json",
+            target=f"{default_vault_dir_str()}/test.json",
             requested_by="test_user"
         )
         
@@ -77,7 +79,7 @@ class TestGatewayPermissionCollaboration(BaseIntegrationTest):
         """
         context = PermissionContext(
             operation="write",
-            target="~/.openclaw/memory-vault/data/test.json",
+            target=f"{default_vault_dir_str()}/test.json",
             requested_by="test_user"
         )
         
@@ -99,7 +101,7 @@ class TestGatewayPermissionCollaboration(BaseIntegrationTest):
         """
         context = PermissionContext(
             operation="delete",
-            target="~/.openclaw/memory-vault/data/test.json",
+            target=f"{default_vault_dir_str()}/test.json",
             requested_by="test_user"
         )
         

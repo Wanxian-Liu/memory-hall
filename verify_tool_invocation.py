@@ -16,6 +16,8 @@ import time
 import hashlib
 from pathlib import Path
 
+from mimir_paths import memory_vault_data_dir
+
 PROJECT_ROOT = Path(__file__).parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -62,7 +64,7 @@ def test_gateway_file_io():
     print(f"✅ 内容匹配! hash={expected_hash}")
     
     # 验证文件确实存在于文件系统
-    vault_dir = Path.home() / ".openclaw" / "memory-vault" / "data"
+    vault_dir = memory_vault_data_dir()
     potential_files = list(vault_dir.glob(f"{record_id[:16]}*.json"))
     
     if not potential_files:
