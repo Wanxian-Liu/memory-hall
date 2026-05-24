@@ -7,6 +7,8 @@
 from dataclasses import dataclass, field
 from typing import Dict, Any, Optional
 
+from mimir_paths import default_backup_dir_str
+
 
 @dataclass
 class IntegrationConfig:
@@ -18,7 +20,7 @@ class IntegrationConfig:
     compression_target_ratio: float = 0.2
     
     # 备份配置
-    backup_dir: str = "~/.openclaw/workspace/memory_backups"
+    backup_dir: str = field(default_factory=default_backup_dir_str)
     max_backups_per_session: int = 5
     backup_retention_hours: int = 24
     

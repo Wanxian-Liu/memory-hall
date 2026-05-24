@@ -20,6 +20,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from collections import defaultdict
 
+from mimir_paths import default_backup_dir_str
+
 logger = logging.getLogger(__name__)
 
 
@@ -234,7 +236,7 @@ class MemoryBackupManager:
     
     def __init__(
         self,
-        backup_dir: str = "~/.openclaw/workspace/memory_backups",
+        backup_dir: str = default_backup_dir_str(),
         max_backups_per_session: int = 5,
         max_total_size_mb: int = 100,
         retention_hours: int = 24

@@ -14,6 +14,8 @@ import json
 import signal
 import threading
 
+from mimir_paths import default_mini_agent_results_dir
+
 
 # ============================================================================
 # 安全常量
@@ -274,8 +276,8 @@ class DefaultBeforeToolCallHook(BeforeToolCallHook):
 class DefaultToolResultPersistHook(ToolResultPersistHook):
     """默认的tool_result_persist实现"""
     
-    def __init__(self, storage_path: str = "~/.openclaw/projects/记忆殿堂v2.0/mini_agent/results"):
-        self.storage_path = storage_path
+    def __init__(self, storage_path: str | None = None):
+        self.storage_path = storage_path or str(default_mini_agent_results_dir())
         self._results = []  # 内存缓存
     
     def handle(

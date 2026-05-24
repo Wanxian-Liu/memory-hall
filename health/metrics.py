@@ -8,10 +8,10 @@ import time
 from datetime import datetime
 from typing import List
 from .data_classes import SixDimensionData
-
+from mimir_paths import memory_vault_metadata_dir
 
 # 路径配置
-METADATA_DIR = os.path.expanduser("~/.openclaw/memory-vault/metadata")
+METADATA_DIR = str(memory_vault_metadata_dir())
 METRICS_FILE = os.path.join(METADATA_DIR, "health_metrics.json")
 
 

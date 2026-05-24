@@ -15,6 +15,8 @@ from enum import Enum
 from datetime import datetime, timedelta
 from collections import defaultdict
 
+from mimir_paths import introspection_log_dirs
+
 
 class ProblemSeverity(Enum):
     """问题严重级别"""
@@ -122,10 +124,7 @@ class ProblemDetector:
     ]
     
     # 日志目录
-    LOG_DIRS = [
-        Path.home() / ".openclaw" / "logs",
-        Path.home() / ".openclaw" / "workspace" / "logs",
-    ]
+    LOG_DIRS = introspection_log_dirs()
     
     def __init__(self, project_root: str = None):
         if project_root is None:

@@ -12,6 +12,8 @@ from enum import Enum
 import time
 import hashlib
 
+from mimir_paths import fence_violations_log, get_mimicore_root
+
 
 class SpaceType(Enum):
     """空间类型枚举"""
@@ -56,7 +58,7 @@ class FenceAlert:
     def __init__(self):
         self._handlers: List[Callable[[ViolationEvent], None]] = []
         self._handler_failures: int = 0
-        self._log_path = Path.home() / ".openclaw" / "projects" / "记忆殿堂v2.0" / "fence" / "violations.log"
+        self._log_path = fence_violations_log()
         self._log_path.parent.mkdir(parents=True, exist_ok=True)
     
     def register_handler(self, handler: Callable[[ViolationEvent], None]):
@@ -106,7 +108,7 @@ class MemoryPalaceFence:
     VERSION = "1.3.0"
     
     def __init__(self, base_path: Optional[str] = None):
-        self.base_path = Path(base_path) if base_path else Path.home() / ".openclaw" / "projects" / "记忆殿堂v2.0"
+        self.base_path = Path(base_path) if base_path else get_mimicore_root()
         self.alert = FenceAlert()
         self._current_user = "default"
         self._current_space = SpaceType.PRIVATE

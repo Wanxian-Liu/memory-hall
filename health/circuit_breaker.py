@@ -12,7 +12,9 @@ from .data_classes import CircuitBreakerInfo
 
 
 # 路径配置
-METADATA_DIR = os.path.expanduser("~/.openclaw/memory-vault/metadata")
+from mimir_paths import memory_vault_metadata_dir
+
+METADATA_DIR = str(memory_vault_metadata_dir())
 CIRCUIT_FILE = os.path.join(METADATA_DIR, "circuit_breaker.json")
 
 

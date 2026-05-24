@@ -42,7 +42,8 @@ class FileSystemAdapter(IMemoryVault):
         else:
             # 从Config读取vault_dir
             from config import get_config
-            vault_dir_cfg = get_config('paths', 'vault_dir', default='~/.openclaw/memory-vault/data')
+            from mimir_paths import default_vault_dir_str
+            vault_dir_cfg = get_config('paths', 'vault_dir', default=default_vault_dir_str())
             self.vault_dir = Path(os.path.expanduser(vault_dir_cfg))
         
         # 确保目录存在

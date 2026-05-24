@@ -6,7 +6,9 @@ import os
 import sys
 import pytest
 
-PROJECT_ROOT = os.path.expanduser("~/.openclaw/projects/记忆殿堂v2.0")
+from mimir_paths import get_mimicore_root
+
+PROJECT_ROOT = str(get_mimicore_root())
 sys.path.insert(0, PROJECT_ROOT)
 
 from extractor.extractor import (

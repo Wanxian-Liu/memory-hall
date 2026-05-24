@@ -17,6 +17,8 @@ from dataclasses import dataclass, field, asdict
 from typing import Any, Callable, Optional, List, Dict, Tuple
 from pathlib import Path
 
+from mimir_paths import default_wal_dir_str
+
 
 class WALPhase(Enum):
     """WAL 三段式提交阶段"""
@@ -98,7 +100,7 @@ class WALManager:
     
     def __init__(
         self,
-        wal_dir: str = "~/.openclaw/projects/记忆殿堂v2.0/wal",
+        wal_dir: str = default_wal_dir_str(),
         max_file_size: int = 64 * 1024 * 1024,  # 64MB
         max_entries_before_compact: int = 10000,
         enable_checksum: bool = True

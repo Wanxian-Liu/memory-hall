@@ -41,13 +41,15 @@
         print(f"{meta.id} ({meta.version})")
 
     # 动态发现加载
-    loader = PluginLoader([Path("~/.openclaw/projects/记忆殿堂v2.0/plugins")])
+    loader = PluginLoader([default_plugins_dir()])
     loader.discover()
     loader.load_discovered()
 
 """
 
 from __future__ import annotations
+
+from mimir_paths import default_plugins_dir
 
 from plugin.plugin import (
     # 核心类
