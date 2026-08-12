@@ -794,9 +794,7 @@ class SemanticSearchEngine:
         
         适用于需要并发处理的场景
         """
-        loop = asyncio.get_event_loop()
-        
-        return await loop.run_in_executor(
+        return await asyncio.get_running_loop().run_in_executor(
             None,
             self.search,
             query, limit, offset,
