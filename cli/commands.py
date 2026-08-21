@@ -17,6 +17,7 @@
     python -m cli.commands health
 """
 
+from typing import Any, Dict, List, Optional  # 2026-08-21 Mimir 修复：typing 引用（Any/Optional/List/Dict）补齐
 import sys
 import os
 from pathlib import Path

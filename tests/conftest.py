@@ -13,7 +13,7 @@ from mimir_paths import get_mimicore_root, introspection_log_dirs
 
 # 项目根目录
 PROJECT_ROOT = get_mimicore_root()
-sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.append(str(PROJECT_ROOT))  # append: avoid shadowing root gateway/ during full collect (2026-08-21 Mimir fix)
 
 
 @pytest.fixture
