@@ -19,7 +19,7 @@ from pathlib import Path
 from mimir_paths import memory_vault_data_dir
 
 PROJECT_ROOT = Path(__file__).parent
-sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.append( str(PROJECT_ROOT))
 
 def test_gateway_file_io():
     """测试1: Gateway文件系统真实I/O"""

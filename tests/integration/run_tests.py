@@ -18,7 +18,7 @@ import argparse
 
 # 项目根目录
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, PROJECT_ROOT)
+sys.path.append( PROJECT_ROOT)
 
 # 测试目录
 TEST_DIR = os.path.join(PROJECT_ROOT, "tests", "integration")

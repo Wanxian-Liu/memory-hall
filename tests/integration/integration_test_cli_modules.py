@@ -28,7 +28,7 @@ from pathlib import Path
 from typing import Dict, Any, List
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, PROJECT_ROOT)
+sys.path.append( PROJECT_ROOT)
 
 from cli.commands import MemoryCommands, MemoryStore
 from base_wal.wal import WALManager, WALEntryType

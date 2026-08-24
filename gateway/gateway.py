@@ -37,7 +37,7 @@ def _get_vault_adapter():
     if not hasattr(_get_vault_adapter, '_adapter'):
         # 延迟导入，避免循环依赖
         PROJECT_ROOT = Path(__file__).parent.parent
-        sys.path.insert(0, str(PROJECT_ROOT))
+        sys.path.append( str(PROJECT_ROOT))
         from interfaces.adapters import FileSystemAdapter
         _get_vault_adapter._adapter = FileSystemAdapter()
     return _get_vault_adapter._adapter

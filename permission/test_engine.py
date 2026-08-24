@@ -9,7 +9,7 @@ import pytest
 import time
 
 PROJECT_ROOT = str(Path(__file__).resolve().parents[1])
-sys.path.insert(0, PROJECT_ROOT)
+sys.path.append( PROJECT_ROOT)
 
 from permission.engine import (
     # L1 认证

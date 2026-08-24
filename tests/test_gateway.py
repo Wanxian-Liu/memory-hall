@@ -10,9 +10,9 @@ import tempfile
 from mimir_paths import get_mimicore_root
 
 PROJECT_ROOT = str(get_mimicore_root())
-sys.path.insert(0, PROJECT_ROOT)
+sys.path.append( PROJECT_ROOT)
 
-from gateway.gateway import (
+from mimicore.gateway.gateway import (
     Gateway, Config, LRUCache,
     write, read, search, delete, generate_id,
     get_audit_logs, get_cache_stats, clear_cache,

@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, PROJECT_ROOT)
+sys.path.append( PROJECT_ROOT)
 
 from plugin.plugin import (
     PluginInterface, PluginMetadata, PluginRegistry, PluginLoader,

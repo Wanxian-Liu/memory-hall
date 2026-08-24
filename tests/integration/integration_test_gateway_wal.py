@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Dict, Any, List
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, PROJECT_ROOT)
+sys.path.append( PROJECT_ROOT)
 
 from base_wal.wal import WALManager, WALEntryType, WALPhase
 from gateway.gateway import Gateway, LRUCache, Config

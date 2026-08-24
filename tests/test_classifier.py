@@ -9,7 +9,7 @@ import pytest
 from mimir_paths import get_mimicore_root
 
 PROJECT_ROOT = str(get_mimicore_root())
-sys.path.insert(0, PROJECT_ROOT)
+sys.path.append( PROJECT_ROOT)
 
 from classifier.classifier import (
     TaskStatus, ClassificationResult, ClassificationTask,
