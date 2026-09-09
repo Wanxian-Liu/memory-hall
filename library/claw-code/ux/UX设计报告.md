@@ -1,7 +1,7 @@
 # Claw-Code CLI/UX Design Analysis Report
 
 **分析日期**: 2026-04-06  
-**分析对象**: claw-code (~/.openclaw/workspace/claw-code/)  
+**分析对象**: claw-code ($WORKSPACE/claw-code/)  
 **分析维度**: Slash命令系统 · REPL循环设计 · 流式输出处理 · 会话管理命令 · 配置系统
 
 ---

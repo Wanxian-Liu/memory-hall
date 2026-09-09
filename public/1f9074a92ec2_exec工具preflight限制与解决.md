@@ -45,7 +45,7 @@ fusing to run without script preflight validation
 
 ## 验证方法
 
-正确：/home/rayliu/.openclaw/sandbox/九重天量化系统/watch_300749.py（需要chmod +x）
+正确：~/.openclaw/sandbox/九重天量化系统/watch_300749.py（需要chmod +x）
 
 ## 注意事项
 

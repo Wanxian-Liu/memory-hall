@@ -1,12 +1,12 @@
 {
   "version": "1.0.0",
   "generated_at": "2026-04-10T22:52:03.430449",
-  "project_root": "/home/rayliu/.openclaw/projects/Mimir-Core",
+  "project_root": "~/.openclaw/projects/Mimir-Core",
   "total_modules": 105,
   "modules": {
     "gene_mapper.py": {
       "name": "gene_mapper",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/gene_mapper.py",
+      "path": "~/.openclaw/projects/Mimir-Core/gene_mapper.py",
       "relative_path": "gene_mapper.py",
       "classes": [
         "GeneType",
@@ -43,7 +43,7 @@
     },
     "gdi_scorer.py": {
       "name": "gdi_scorer",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/gdi_scorer.py",
+      "path": "~/.openclaw/projects/Mimir-Core/gdi_scorer.py",
       "relative_path": "gdi_scorer.py",
       "classes": [
         "CapsuleType",
@@ -78,7 +78,7 @@
     },
     "benchmark.py": {
       "name": "benchmark",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/benchmark.py",
+      "path": "~/.openclaw/projects/Mimir-Core/benchmark.py",
       "relative_path": "benchmark.py",
       "classes": [],
       "functions": [
@@ -118,7 +118,7 @@
     },
     "test_gdi_gene.py": {
       "name": "test_gdi_gene",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/test_gdi_gene.py",
+      "path": "~/.openclaw/projects/Mimir-Core/test_gdi_gene.py",
       "relative_path": "test_gdi_gene.py",
       "classes": [],
       "functions": [
@@ -143,7 +143,7 @@
     },
     "run.py": {
       "name": "run",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/run.py",
+      "path": "~/.openclaw/projects/Mimir-Core/run.py",
       "relative_path": "run.py",
       "classes": [],
       "functions": [
@@ -198,7 +198,7 @@
     },
     "capsule_generator.py": {
       "name": "capsule_generator",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/capsule_generator.py",
+      "path": "~/.openclaw/projects/Mimir-Core/capsule_generator.py",
       "relative_path": "capsule_generator.py",
       "classes": [
         "GeneType",
@@ -238,7 +238,7 @@
     },
     "evomap_validator.py": {
       "name": "evomap_validator",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/evomap_validator.py",
+      "path": "~/.openclaw/projects/Mimir-Core/evomap_validator.py",
       "relative_path": "evomap_validator.py",
       "classes": [
         "EvoMapStatus",
@@ -274,7 +274,7 @@
     },
     "verify_tool_invocation.py": {
       "name": "verify_tool_invocation",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/verify_tool_invocation.py",
+      "path": "~/.openclaw/projects/Mimir-Core/verify_tool_invocation.py",
       "relative_path": "verify_tool_invocation.py",
       "classes": [],
       "functions": [
@@ -302,7 +302,7 @@
     },
     "permission/engine.py": {
       "name": "permission.engine",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/permission/engine.py",
+      "path": "~/.openclaw/projects/Mimir-Core/permission/engine.py",
       "relative_path": "permission/engine.py",
       "classes": [
         "PermissionLevel",
@@ -338,7 +338,7 @@
     },
     "permission/__init__.py": {
       "name": "permission",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/permission/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/permission/__init__.py",
       "relative_path": "permission/__init__.py",
       "classes": [],
       "functions": [],
@@ -350,7 +350,7 @@
     },
     "cli/router.py": {
       "name": "cli.router",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/cli/router.py",
+      "path": "~/.openclaw/projects/Mimir-Core/cli/router.py",
       "relative_path": "cli/router.py",
       "classes": [
         "ArgType",
@@ -389,7 +389,7 @@
     },
     "cli/commands.py": {
       "name": "cli.commands",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/cli/commands.py",
+      "path": "~/.openclaw/projects/Mimir-Core/cli/commands.py",
       "relative_path": "cli/commands.py",
       "classes": [
         "MemoryStore",
@@ -429,7 +429,7 @@
     },
     "cli/__init__.py": {
       "name": "cli",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/cli/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/cli/__init__.py",
       "relative_path": "cli/__init__.py",
       "classes": [],
       "functions": [],
@@ -441,7 +441,7 @@
     },
     "cli/tui.py": {
       "name": "cli.tui",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/cli/tui.py",
+      "path": "~/.openclaw/projects/Mimir-Core/cli/tui.py",
       "relative_path": "cli/tui.py",
       "classes": [
         "Colors",
@@ -494,7 +494,7 @@
     },
     "sensory/cache_invalidation.py": {
       "name": "sensory.cache_invalidation",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/sensory/cache_invalidation.py",
+      "path": "~/.openclaw/projects/Mimir-Core/sensory/cache_invalidation.py",
       "relative_path": "sensory/cache_invalidation.py",
       "classes": [
         "CacheEntry",
@@ -529,7 +529,7 @@
     },
     "sensory/semantic_search.py": {
       "name": "sensory.semantic_search",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/sensory/semantic_search.py",
+      "path": "~/.openclaw/projects/Mimir-Core/sensory/semantic_search.py",
       "relative_path": "sensory/semantic_search.py",
       "classes": [
         "GatewayConfig",
@@ -591,7 +591,7 @@
     },
     "sensory/__init__.py": {
       "name": "sensory",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/sensory/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/sensory/__init__.py",
       "relative_path": "sensory/__init__.py",
       "classes": [],
       "functions": [],
@@ -604,7 +604,7 @@
     },
     "optimize/adaptive_compression.py": {
       "name": "optimize.adaptive_compression",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/optimize/adaptive_compression.py",
+      "path": "~/.openclaw/projects/Mimir-Core/optimize/adaptive_compression.py",
       "relative_path": "optimize/adaptive_compression.py",
       "classes": [
         "CompressionLevel",
@@ -649,7 +649,7 @@
     },
     "optimize/__init__.py": {
       "name": "optimize",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/optimize/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/optimize/__init__.py",
       "relative_path": "optimize/__init__.py",
       "classes": [],
       "functions": [],
@@ -661,7 +661,7 @@
     },
     "repair/backup_manager.py": {
       "name": "repair.backup_manager",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/repair/backup_manager.py",
+      "path": "~/.openclaw/projects/Mimir-Core/repair/backup_manager.py",
       "relative_path": "repair/backup_manager.py",
       "classes": [
         "VerificationStatus",
@@ -705,7 +705,7 @@
     },
     "repair/__init__.py": {
       "name": "repair",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/repair/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/repair/__init__.py",
       "relative_path": "repair/__init__.py",
       "classes": [],
       "functions": [],
@@ -717,7 +717,7 @@
     },
     "config/loader.py": {
       "name": "config.loader",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/config/loader.py",
+      "path": "~/.openclaw/projects/Mimir-Core/config/loader.py",
       "relative_path": "config/loader.py",
       "classes": [
         "ConfigLoader"
@@ -745,7 +745,7 @@
     },
     "config/__init__.py": {
       "name": "config",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/config/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/config/__init__.py",
       "relative_path": "config/__init__.py",
       "classes": [],
       "functions": [],
@@ -757,7 +757,7 @@
     },
     "task/task_manager.py": {
       "name": "task.task_manager",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/task/task_manager.py",
+      "path": "~/.openclaw/projects/Mimir-Core/task/task_manager.py",
       "relative_path": "task/task_manager.py",
       "classes": [
         "TaskStatus",
@@ -803,7 +803,7 @@
     },
     "task/__init__.py": {
       "name": "task",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/task/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/task/__init__.py",
       "relative_path": "task/__init__.py",
       "classes": [],
       "functions": [],
@@ -815,7 +815,7 @@
     },
     "mini_agent/hooks.py": {
       "name": "mini_agent.hooks",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/mini_agent/hooks.py",
+      "path": "~/.openclaw/projects/Mimir-Core/mini_agent/hooks.py",
       "relative_path": "mini_agent/hooks.py",
       "classes": [
         "TimeoutError",
@@ -864,7 +864,7 @@
     },
     "mini_agent/test_mini_agent.py": {
       "name": "mini_agent.test_mini_agent",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/mini_agent/test_mini_agent.py",
+      "path": "~/.openclaw/projects/Mimir-Core/mini_agent/test_mini_agent.py",
       "relative_path": "mini_agent/test_mini_agent.py",
       "classes": [
         "TestRunner"
@@ -914,7 +914,7 @@
     },
     "mini_agent/registry.py": {
       "name": "mini_agent.registry",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/mini_agent/registry.py",
+      "path": "~/.openclaw/projects/Mimir-Core/mini_agent/registry.py",
       "relative_path": "mini_agent/registry.py",
       "classes": [
         "TaskStatus",
@@ -957,7 +957,7 @@
     },
     "mini_agent/compact.py": {
       "name": "mini_agent.compact",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/mini_agent/compact.py",
+      "path": "~/.openclaw/projects/Mimir-Core/mini_agent/compact.py",
       "relative_path": "mini_agent/compact.py",
       "classes": [
         "CompactionConfig",
@@ -998,7 +998,7 @@
     },
     "mini_agent/__init__.py": {
       "name": "mini_agent",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/mini_agent/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/mini_agent/__init__.py",
       "relative_path": "mini_agent/__init__.py",
       "classes": [],
       "functions": [],
@@ -1012,7 +1012,7 @@
     },
     "gateway/gateway.py": {
       "name": "gateway.gateway",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/gateway/gateway.py",
+      "path": "~/.openclaw/projects/Mimir-Core/gateway/gateway.py",
       "relative_path": "gateway/gateway.py",
       "classes": [
         "Config",
@@ -1088,7 +1088,7 @@
     },
     "gateway/__init__.py": {
       "name": "gateway",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/gateway/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/gateway/__init__.py",
       "relative_path": "gateway/__init__.py",
       "classes": [],
       "functions": [],
@@ -1100,7 +1100,7 @@
     },
     "interfaces/imemory_vault.py": {
       "name": "interfaces.imemory_vault",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/interfaces/imemory_vault.py",
+      "path": "~/.openclaw/projects/Mimir-Core/interfaces/imemory_vault.py",
       "relative_path": "interfaces/imemory_vault.py",
       "classes": [
         "SearchResult",
@@ -1117,7 +1117,7 @@
     },
     "interfaces/verify_interface.py": {
       "name": "interfaces.verify_interface",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/interfaces/verify_interface.py",
+      "path": "~/.openclaw/projects/Mimir-Core/interfaces/verify_interface.py",
       "relative_path": "interfaces/verify_interface.py",
       "classes": [],
       "functions": [
@@ -1134,7 +1134,7 @@
     },
     "interfaces/__init__.py": {
       "name": "interfaces",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/interfaces/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/interfaces/__init__.py",
       "relative_path": "interfaces/__init__.py",
       "classes": [],
       "functions": [],
@@ -1147,7 +1147,7 @@
     },
     "agent/task_dispatcher.py": {
       "name": "agent.task_dispatcher",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/agent/task_dispatcher.py",
+      "path": "~/.openclaw/projects/Mimir-Core/agent/task_dispatcher.py",
       "relative_path": "agent/task_dispatcher.py",
       "classes": [
         "DispatcherConfig",
@@ -1189,7 +1189,7 @@
     },
     "agent/lifecycle_manager.py": {
       "name": "agent.lifecycle_manager",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/agent/lifecycle_manager.py",
+      "path": "~/.openclaw/projects/Mimir-Core/agent/lifecycle_manager.py",
       "relative_path": "agent/lifecycle_manager.py",
       "classes": [
         "LifecycleConfig",
@@ -1230,7 +1230,7 @@
     },
     "agent/role_registry.py": {
       "name": "agent.role_registry",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/agent/role_registry.py",
+      "path": "~/.openclaw/projects/Mimir-Core/agent/role_registry.py",
       "relative_path": "agent/role_registry.py",
       "classes": [
         "RegistryInner",
@@ -1262,7 +1262,7 @@
     },
     "agent/models.py": {
       "name": "agent.models",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/agent/models.py",
+      "path": "~/.openclaw/projects/Mimir-Core/agent/models.py",
       "relative_path": "agent/models.py",
       "classes": [
         "RoleType",
@@ -1290,7 +1290,7 @@
     },
     "agent/test_agent.py": {
       "name": "agent.test_agent",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/agent/test_agent.py",
+      "path": "~/.openclaw/projects/Mimir-Core/agent/test_agent.py",
       "relative_path": "agent/test_agent.py",
       "classes": [],
       "functions": [
@@ -1316,7 +1316,7 @@
     },
     "agent/__init__.py": {
       "name": "agent",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/agent/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/agent/__init__.py",
       "relative_path": "agent/__init__.py",
       "classes": [],
       "functions": [],
@@ -1330,7 +1330,7 @@
     },
     "memory_layer/rl_access.py": {
       "name": "memory_layer.rl_access",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/memory_layer/rl_access.py",
+      "path": "~/.openclaw/projects/Mimir-Core/memory_layer/rl_access.py",
       "relative_path": "memory_layer/rl_access.py",
       "classes": [
         "MemoryTier",
@@ -1365,7 +1365,7 @@
     },
     "memory_layer/__init__.py": {
       "name": "memory_layer",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/memory_layer/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/memory_layer/__init__.py",
       "relative_path": "memory_layer/__init__.py",
       "classes": [],
       "functions": [],
@@ -1377,7 +1377,7 @@
     },
     "fence/fence.py": {
       "name": "fence.fence",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/fence/fence.py",
+      "path": "~/.openclaw/projects/Mimir-Core/fence/fence.py",
       "relative_path": "fence/fence.py",
       "classes": [
         "SpaceType",
@@ -1419,7 +1419,7 @@
     },
     "fence/__init__.py": {
       "name": "fence",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/fence/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/fence/__init__.py",
       "relative_path": "fence/__init__.py",
       "classes": [],
       "functions": [],
@@ -1431,7 +1431,7 @@
     },
     "utils/deepseek_client.py": {
       "name": "utils.deepseek_client",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/utils/deepseek_client.py",
+      "path": "~/.openclaw/projects/Mimir-Core/utils/deepseek_client.py",
       "relative_path": "utils/deepseek_client.py",
       "classes": [
         "LLMConfig",
@@ -1462,7 +1462,7 @@
     },
     "utils/__init__.py": {
       "name": "utils",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/utils/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/utils/__init__.py",
       "relative_path": "utils/__init__.py",
       "classes": [],
       "functions": [],
@@ -1472,7 +1472,7 @@
     },
     "health/threshold.py": {
       "name": "health.threshold",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/threshold.py",
+      "path": "~/.openclaw/projects/Mimir-Core/health/threshold.py",
       "relative_path": "health/threshold.py",
       "classes": [
         "AdaptiveThresholdCalculator"
@@ -1489,7 +1489,7 @@
     },
     "health/data_classes.py": {
       "name": "health.data_classes",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/data_classes.py",
+      "path": "~/.openclaw/projects/Mimir-Core/health/data_classes.py",
       "relative_path": "health/data_classes.py",
       "classes": [
         "SixDimensionData",
@@ -1507,7 +1507,7 @@
     },
     "health/metrics.py": {
       "name": "health.metrics",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/metrics.py",
+      "path": "~/.openclaw/projects/Mimir-Core/health/metrics.py",
       "relative_path": "health/metrics.py",
       "classes": [
         "SixDimensionMetrics"
@@ -1531,7 +1531,7 @@
     },
     "health/circuit_breaker.py": {
       "name": "health.circuit_breaker",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/circuit_breaker.py",
+      "path": "~/.openclaw/projects/Mimir-Core/health/circuit_breaker.py",
       "relative_path": "health/circuit_breaker.py",
       "classes": [
         "CircuitBreaker"
@@ -1555,7 +1555,7 @@
     },
     "health/checker.py": {
       "name": "health.checker",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/checker.py",
+      "path": "~/.openclaw/projects/Mimir-Core/health/checker.py",
       "relative_path": "health/checker.py",
       "classes": [
         "HealthChecker"
@@ -1579,7 +1579,7 @@
     },
     "health/health_check.py": {
       "name": "health.health_check",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/health_check.py",
+      "path": "~/.openclaw/projects/Mimir-Core/health/health_check.py",
       "relative_path": "health/health_check.py",
       "classes": [],
       "functions": [
@@ -1597,7 +1597,7 @@
     },
     "health/enums.py": {
       "name": "health.enums",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/enums.py",
+      "path": "~/.openclaw/projects/Mimir-Core/health/enums.py",
       "relative_path": "health/enums.py",
       "classes": [
         "HealthStatus",
@@ -1612,7 +1612,7 @@
     },
     "health/panel.py": {
       "name": "health.panel",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/panel.py",
+      "path": "~/.openclaw/projects/Mimir-Core/health/panel.py",
       "relative_path": "health/panel.py",
       "classes": [
         "CircuitBreakerPanel"
@@ -1632,7 +1632,7 @@
     },
     "health/diagnostic.py": {
       "name": "health.diagnostic",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/diagnostic.py",
+      "path": "~/.openclaw/projects/Mimir-Core/health/diagnostic.py",
       "relative_path": "health/diagnostic.py",
       "classes": [
         "DiagnosticEngine"
@@ -1655,7 +1655,7 @@
     },
     "health/__init__.py": {
       "name": "health",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/health/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/health/__init__.py",
       "relative_path": "health/__init__.py",
       "classes": [],
       "functions": [],
@@ -1674,7 +1674,7 @@
     },
     "integrate/stats.py": {
       "name": "integrate.stats",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/integrate/stats.py",
+      "path": "~/.openclaw/projects/Mimir-Core/integrate/stats.py",
       "relative_path": "integrate/stats.py",
       "classes": [
         "MemoryStats"
@@ -1690,7 +1690,7 @@
     },
     "integrate/config.py": {
       "name": "integrate.config",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/integrate/config.py",
+      "path": "~/.openclaw/projects/Mimir-Core/integrate/config.py",
       "relative_path": "integrate/config.py",
       "classes": [
         "IntegrationConfig"
@@ -1708,7 +1708,7 @@
     },
     "integrate/__init__.py": {
       "name": "integrate",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/integrate/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/integrate/__init__.py",
       "relative_path": "integrate/__init__.py",
       "classes": [
         "MemoryPalaceIntegration"
@@ -1743,7 +1743,7 @@
     },
     "plugin/plugin.py": {
       "name": "plugin.plugin",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/plugin/plugin.py",
+      "path": "~/.openclaw/projects/Mimir-Core/plugin/plugin.py",
       "relative_path": "plugin/plugin.py",
       "classes": [
         "PluginState",
@@ -1806,7 +1806,7 @@
     },
     "plugin/__init__.py": {
       "name": "plugin",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/plugin/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/plugin/__init__.py",
       "relative_path": "plugin/__init__.py",
       "classes": [],
       "functions": [],
@@ -1819,7 +1819,7 @@
     },
     "extractor/adaptive_compression.py": {
       "name": "extractor.adaptive_compression",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/extractor/adaptive_compression.py",
+      "path": "~/.openclaw/projects/Mimir-Core/extractor/adaptive_compression.py",
       "relative_path": "extractor/adaptive_compression.py",
       "classes": [
         "CompressionLevel",
@@ -1852,7 +1852,7 @@
     },
     "extractor/extractor.py": {
       "name": "extractor.extractor",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/extractor/extractor.py",
+      "path": "~/.openclaw/projects/Mimir-Core/extractor/extractor.py",
       "relative_path": "extractor/extractor.py",
       "classes": [
         "MemoryType",
@@ -1882,7 +1882,7 @@
     },
     "extractor/__init__.py": {
       "name": "extractor",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/extractor/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/extractor/__init__.py",
       "relative_path": "extractor/__init__.py",
       "classes": [],
       "functions": [],
@@ -1895,7 +1895,7 @@
     },
     "base_wal/wal.py": {
       "name": "base_wal.wal",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/base_wal/wal.py",
+      "path": "~/.openclaw/projects/Mimir-Core/base_wal/wal.py",
       "relative_path": "base_wal/wal.py",
       "classes": [
         "WALPhase",
@@ -1960,7 +1960,7 @@
     },
     "base_wal/__init__.py": {
       "name": "base_wal",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/base_wal/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/base_wal/__init__.py",
       "relative_path": "base_wal/__init__.py",
       "classes": [],
       "functions": [],
@@ -1972,7 +1972,7 @@
     },
     "normalizer/deduplicator.py": {
       "name": "normalizer.deduplicator",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/normalizer/deduplicator.py",
+      "path": "~/.openclaw/projects/Mimir-Core/normalizer/deduplicator.py",
       "relative_path": "normalizer/deduplicator.py",
       "classes": [
         "SimHash",
@@ -2018,7 +2018,7 @@
     },
     "normalizer/__init__.py": {
       "name": "normalizer",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/normalizer/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/normalizer/__init__.py",
       "relative_path": "normalizer/__init__.py",
       "classes": [],
       "functions": [],
@@ -2030,7 +2030,7 @@
     },
     "evolve/three_ring_architecture.py": {
       "name": "evolve.three_ring_architecture",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/evolve/three_ring_architecture.py",
+      "path": "~/.openclaw/projects/Mimir-Core/evolve/three_ring_architecture.py",
       "relative_path": "evolve/three_ring_architecture.py",
       "classes": [
         "RingStatus",
@@ -2067,7 +2067,7 @@
     },
     "evolve/self_evolution.py": {
       "name": "evolve.self_evolution",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/evolve/self_evolution.py",
+      "path": "~/.openclaw/projects/Mimir-Core/evolve/self_evolution.py",
       "relative_path": "evolve/self_evolution.py",
       "classes": [
         "ConfidenceLevel",
@@ -2104,7 +2104,7 @@
     },
     "evolve/__init__.py": {
       "name": "evolve",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/evolve/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/evolve/__init__.py",
       "relative_path": "evolve/__init__.py",
       "classes": [],
       "functions": [],
@@ -2117,7 +2117,7 @@
     },
     "audit/audit.py": {
       "name": "audit.audit",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/audit/audit.py",
+      "path": "~/.openclaw/projects/Mimir-Core/audit/audit.py",
       "relative_path": "audit/audit.py",
       "classes": [
         "AuditLevel",
@@ -2180,7 +2180,7 @@
     },
     "audit/__init__.py": {
       "name": "audit",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/audit/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/audit/__init__.py",
       "relative_path": "audit/__init__.py",
       "classes": [],
       "functions": [],
@@ -2192,7 +2192,7 @@
     },
     "classifier/monitor.py": {
       "name": "classifier.monitor",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/classifier/monitor.py",
+      "path": "~/.openclaw/projects/Mimir-Core/classifier/monitor.py",
       "relative_path": "classifier/monitor.py",
       "classes": [
         "ClassificationStats",
@@ -2219,7 +2219,7 @@
     },
     "classifier/classifier.py": {
       "name": "classifier.classifier",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/classifier/classifier.py",
+      "path": "~/.openclaw/projects/Mimir-Core/classifier/classifier.py",
       "relative_path": "classifier/classifier.py",
       "classes": [
         "TaskStatus",
@@ -2282,7 +2282,7 @@
     },
     "classifier/__init__.py": {
       "name": "classifier",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/classifier/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/classifier/__init__.py",
       "relative_path": "classifier/__init__.py",
       "classes": [],
       "functions": [],
@@ -2294,7 +2294,7 @@
     },
     "tests/test_cli_commands.py": {
       "name": "tests.test_cli_commands",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_cli_commands.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_cli_commands.py",
       "relative_path": "tests/test_cli_commands.py",
       "classes": [
         "TestMemoryStore",
@@ -2328,7 +2328,7 @@
     },
     "tests/test_fence.py": {
       "name": "tests.test_fence",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_fence.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_fence.py",
       "relative_path": "tests/test_fence.py",
       "classes": [
         "TestSpaceType",
@@ -2372,7 +2372,7 @@
     },
     "tests/test_plugin.py": {
       "name": "tests.test_plugin",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_plugin.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_plugin.py",
       "relative_path": "tests/test_plugin.py",
       "classes": [
         "TestPlugin",
@@ -2444,7 +2444,7 @@
     },
     "tests/test_task.py": {
       "name": "tests.test_task",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_task.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_task.py",
       "relative_path": "tests/test_task.py",
       "classes": [
         "TestTaskStatus",
@@ -2497,7 +2497,7 @@
     },
     "tests/test_extractor.py": {
       "name": "tests.test_extractor",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_extractor.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_extractor.py",
       "relative_path": "tests/test_extractor.py",
       "classes": [
         "TestMemoryType",
@@ -2546,7 +2546,7 @@
     },
     "tests/test_sensory.py": {
       "name": "tests.test_sensory",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_sensory.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_sensory.py",
       "relative_path": "tests/test_sensory.py",
       "classes": [
         "TestGatewayConfig",
@@ -2588,7 +2588,7 @@
     },
     "tests/test_normalizer.py": {
       "name": "tests.test_normalizer",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_normalizer.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_normalizer.py",
       "relative_path": "tests/test_normalizer.py",
       "classes": [
         "TestSimHash",
@@ -2657,7 +2657,7 @@
     },
     "tests/test_classifier.py": {
       "name": "tests.test_classifier",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_classifier.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_classifier.py",
       "relative_path": "tests/test_classifier.py",
       "classes": [
         "TestTaskStatus",
@@ -2737,7 +2737,7 @@
     },
     "tests/test_permission.py": {
       "name": "tests.test_permission",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_permission.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_permission.py",
       "relative_path": "tests/test_permission.py",
       "classes": [
         "TestPermissionLevel",
@@ -2769,7 +2769,7 @@
     },
     "tests/test_audit.py": {
       "name": "tests.test_audit",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_audit.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_audit.py",
       "relative_path": "tests/test_audit.py",
       "classes": [
         "TestAuditLevel",
@@ -2827,7 +2827,7 @@
     },
     "tests/test_health.py": {
       "name": "tests.test_health",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_health.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_health.py",
       "relative_path": "tests/test_health.py",
       "classes": [
         "TestHealthStatus",
@@ -2884,7 +2884,7 @@
     },
     "tests/test_base_wal.py": {
       "name": "tests.test_base_wal",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_base_wal.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_base_wal.py",
       "relative_path": "tests/test_base_wal.py",
       "classes": [
         "TestWALEntryType",
@@ -2932,7 +2932,7 @@
     },
     "tests/conftest.py": {
       "name": "tests.conftest",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/conftest.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/conftest.py",
       "relative_path": "tests/conftest.py",
       "classes": [],
       "functions": [
@@ -2965,7 +2965,7 @@
     },
     "tests/test_cli_router.py": {
       "name": "tests.test_cli_router",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_cli_router.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_cli_router.py",
       "relative_path": "tests/test_cli_router.py",
       "classes": [
         "TestArgType",
@@ -3018,7 +3018,7 @@
     },
     "tests/test_gateway.py": {
       "name": "tests.test_gateway",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/test_gateway.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/test_gateway.py",
       "relative_path": "tests/test_gateway.py",
       "classes": [
         "TestConfig",
@@ -3106,7 +3106,7 @@
     },
     "tests/__init__.py": {
       "name": "tests",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/__init__.py",
       "relative_path": "tests/__init__.py",
       "classes": [],
       "functions": [],
@@ -3116,7 +3116,7 @@
     },
     "pipeline/cross_reference.py": {
       "name": "pipeline.cross_reference",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/pipeline/cross_reference.py",
+      "path": "~/.openclaw/projects/Mimir-Core/pipeline/cross_reference.py",
       "relative_path": "pipeline/cross_reference.py",
       "classes": [
         "SimilarityMethod",
@@ -3149,7 +3149,7 @@
     },
     "pipeline/__init__.py": {
       "name": "pipeline",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/pipeline/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/pipeline/__init__.py",
       "relative_path": "pipeline/__init__.py",
       "classes": [],
       "functions": [],
@@ -3161,7 +3161,7 @@
     },
     "interfaces/adapters/file_system_adapter.py": {
       "name": "interfaces.adapters.file_system_adapter",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/interfaces/adapters/file_system_adapter.py",
+      "path": "~/.openclaw/projects/Mimir-Core/interfaces/adapters/file_system_adapter.py",
       "relative_path": "interfaces/adapters/file_system_adapter.py",
       "classes": [
         "FileSystemAdapter"
@@ -3180,7 +3180,7 @@
     },
     "interfaces/adapters/__init__.py": {
       "name": "interfaces.adapters",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/interfaces/adapters/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/interfaces/adapters/__init__.py",
       "relative_path": "interfaces/adapters/__init__.py",
       "classes": [],
       "functions": [],
@@ -3192,7 +3192,7 @@
     },
     "plugin/test_plugins/test_dummy.py": {
       "name": "plugin.test_plugins.test_dummy",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/plugin/test_plugins/test_dummy.py",
+      "path": "~/.openclaw/projects/Mimir-Core/plugin/test_plugins/test_dummy.py",
       "relative_path": "plugin/test_plugins/test_dummy.py",
       "classes": [
         "DummyPlugin"
@@ -3211,7 +3211,7 @@
     },
     "tests/integration/integration_test_gateway_wal.py": {
       "name": "tests.integration.integration_test_gateway_wal",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/integration_test_gateway_wal.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/integration/integration_test_gateway_wal.py",
       "relative_path": "tests/integration/integration_test_gateway_wal.py",
       "classes": [
         "TestGatewayWALCollaboration",
@@ -3249,7 +3249,7 @@
     },
     "tests/integration/integration_test_gateway_permission.py": {
       "name": "tests.integration.integration_test_gateway_permission",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/integration_test_gateway_permission.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/integration/integration_test_gateway_permission.py",
       "relative_path": "tests/integration/integration_test_gateway_permission.py",
       "classes": [
         "TestGatewayPermissionCollaboration",
@@ -3289,7 +3289,7 @@
     },
     "tests/integration/integration_test_plugin_modules.py": {
       "name": "tests.integration.integration_test_plugin_modules",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/integration_test_plugin_modules.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/integration/integration_test_plugin_modules.py",
       "relative_path": "tests/integration/integration_test_plugin_modules.py",
       "classes": [
         "TestPluginA",
@@ -3357,7 +3357,7 @@
     },
     "tests/integration/run_tests.py": {
       "name": "tests.integration.run_tests",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/run_tests.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/integration/run_tests.py",
       "relative_path": "tests/integration/run_tests.py",
       "classes": [],
       "functions": [
@@ -3378,7 +3378,7 @@
     },
     "tests/integration/integration_test_cli_modules.py": {
       "name": "tests.integration.integration_test_cli_modules",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/integration_test_cli_modules.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/integration/integration_test_cli_modules.py",
       "relative_path": "tests/integration/integration_test_cli_modules.py",
       "classes": [
         "TestCLICommands",
@@ -3428,7 +3428,7 @@
     },
     "tests/integration/conftest.py": {
       "name": "tests.integration.conftest",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/conftest.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/integration/conftest.py",
       "relative_path": "tests/integration/conftest.py",
       "classes": [],
       "functions": [
@@ -3459,7 +3459,7 @@
     },
     "tests/integration/__init__.py": {
       "name": "tests.integration",
-      "path": "/home/rayliu/.openclaw/projects/Mimir-Core/tests/integration/__init__.py",
+      "path": "~/.openclaw/projects/Mimir-Core/tests/integration/__init__.py",
       "relative_path": "tests/integration/__init__.py",
       "classes": [
         "BaseIntegrationTest"

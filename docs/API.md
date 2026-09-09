@@ -649,7 +649,7 @@ config = IntegrationConfig(
     base_compression_interval=300.0,
     compression_target_ratio=0.2,
     confidence_threshold=0.85,
-    backup_dir="~/.openclaw/workspace/memory_backups"
+    backup_dir="$WORKSPACE/memory_backups"
 )
 ```
 
